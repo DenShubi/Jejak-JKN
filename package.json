@@ -1,0 +1,18 @@
+{
+  "name": "jejak-jkn",
+  "version": "0.2.0",
+  "private": true,
+  "description": "JEJAK JKN — Sistem Penelusuran Bukti Layanan untuk Deteksi Dini Klaim Fiktif pada Program JKN (BPJS Kesehatan Healthkathon 2026 - TranspemGo)",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && node scripts/build-offline.mjs",
+    "build:web": "vite build",
+    "build:offline": "node scripts/build-offline.mjs",
+    "preview": "vite preview",
+    "test": "node --test tests/engine.test.mjs"
+  },
+  "devDependencies": {
+    "vite": "^6.2.0"
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "created_at": "2026-10-31T12:41:00.000Z",
+  "rule_version": "JEJAK-RULES-0.1.0",
+  "scope": "Uji fungsi deterministik pada data sintetis; bukan akurasi deteksi fraud lapangan.",
+  "passed": 16,
+  "total": 16,
+  "results": [
+    {
+      "name": "40 episode memiliki ID unik",
+      "status": "passed"
+    },
+    {
+      "name": "Snapshot awal memiliki 20 konsisten 14 klarifikasi 6 belum lengkap",
+      "status": "passed"
+    },
+    {
+      "name": "12 sesi ditagihkan 8 catatan cocok menunjukkan 4 sesi yang belum cocok",
+      "status": "passed"
+    },
+    {
+      "name": "Sumber belum lengkap menghasilkan permintaan data tanpa R1",
+      "status": "passed"
+    },
+    {
+      "name": "Sinkronisasi parsial meninggalkan 2 sesi untuk klarifikasi",
+      "status": "passed"
+    },
+    {
+      "name": "Sinkronisasi lengkap pada episode terlambat menghapus permintaan data",
+      "status": "passed"
+    },
+    {
+      "name": "Sinkronisasi ulang tidak menggandakan catatan",
+      "status": "passed"
+    },
+    {
+      "name": "Catatan personal identik menghubungkan dua peserta berbeda",
+      "status": "passed"
+    },
+    {
+      "name": "Formulir standar sama tidak menghasilkan peringatan",
+      "status": "passed"
+    },
+    {
+      "name": "Teks personal kosong tidak menghasilkan pasangan duplikasi",
+      "status": "passed"
+    },
+    {
+      "name": "Pembatalan resmi mengurangi sesi aktif dan mengecualikan catatan not-done",
+      "status": "passed"
+    },
+    {
+      "name": "Catatan salah peserta masuk masalah kualitas data",
+      "status": "passed"
+    },
+    {
+      "name": "Tanggal layanan salah tidak bisa mengisi sesi yang hilang",
+      "status": "passed"
+    },
+    {
+      "name": "Pengiriman ulang record_id sama dihitung sekali",
+      "status": "passed"
+    },
+    {
+      "name": "Versi catatan terbaru mengalahkan versi lama",
+      "status": "passed"
+    },
+    {
+      "name": "Label skenario tidak digunakan oleh mesin pemeriksaan",
+      "status": "passed"
+    }
+  ],
+  "browser_ui_validation": "Terverifikasi tanpa galat runtime pada Google Chrome (desktop 1480px, tablet 768px, mobile 390px) baik pada bundel statis Vite/GitHub Pages maupun berkas mandiri file:// JEJAK-JKN-Demo-Offline.html."
+}

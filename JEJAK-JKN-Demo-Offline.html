@@ -1,0 +1,935 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="JEJAK JKN — Sistem Penelusuran Bukti Layanan untuk Deteksi Dini Klaim Fiktif pada Program JKN (Prototipe Fungsional Healthkathon BPJS Kesehatan 2026 oleh TranspemGo).">
+  <meta name="color-scheme" content="light">
+  <title>JEJAK JKN — Penelusuran Bukti Layanan Fisioterapi</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23082845'/%3E%3Cpath d='M9 8h13v16H9z' fill='none' stroke='%237ee0e6' stroke-width='2'/%3E%3Cpath d='m12 16 3 3 6-7' fill='none' stroke='white' stroke-width='2.2'/%3E%3C/svg%3E">
+  
+  <style>
+*{box-sizing:border-box}:root{--navy-950: #061d33;--navy: #082845;--navy-700: #123e66;--ink: #13283c;--ink-soft: #354b60;--muted: #5c6f82;--teal: #006d79;--teal-hover: #005862;--teal-soft: #e6f4f6;--accent: #0c7c59;--accent-hover: #096347;--line: #d8e2ec;--line-strong: #c2d1e0;--paper: #ffffff;--bg: #f2f6fa;--bg-subtle: #f8fafc;--warn-ink: #8f3b08;--warn-bg: #fff5eb;--warn-border: #edc399;--warn-solid: #d97706;--info-ink: #185385;--info-bg: #edf5fe;--info-border: #b8d5f0;--info-solid: #2573b8;--ok-ink: #145e44;--ok-bg: #eaf7f1;--ok-border: #b2dfc9;--ok-solid: #158060;--shadow-sm: 0 1px 2px rgba(8, 40, 69, .05), 0 4px 12px rgba(8, 40, 69, .03);--shadow-md: 0 8px 26px rgba(8, 40, 69, .09);--radius-sm: 6px;--radius-md: 10px;--radius-lg: 12px}body{margin:0;background:var(--bg);color:var(--ink);font-family:Plus Jakarta Sans,Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}button,input,select,textarea{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #229eb2;outline-offset:2px}button:disabled{cursor:not-allowed;opacity:.52}code{font-family:JetBrains Mono,Cascadia Code,Consolas,monospace;font-size:.9em}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}.app-header{background:linear-gradient(135deg,var(--navy-950) 0%,var(--navy) 60%,#0b3c58 100%);color:#fff;border-bottom:1px solid rgba(255,255,255,.1)}.header-inner{max-width:1540px;margin:0 auto;padding:16px 3.5vw;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:14px}.brand-mark{display:grid;place-items:center;width:44px;height:44px;border-radius:10px;background:linear-gradient(145deg,#136179,#0c445c);border:1px solid rgba(132,224,230,.45);box-shadow:inset 0 1px #fff3;flex:none}.brand-mark svg{width:24px;height:24px}.brand-text strong{font-size:21px;letter-spacing:.02em;display:flex;align-items:center;gap:8px}.brand-text strong span{color:#7ee0e6}.team-pill{font-size:11px;font-weight:600;letter-spacing:.05em;background:#ffffff1c;border:1px solid rgba(255,255,255,.18);color:#d9ecf7;padding:2px 8px;border-radius:999px}.brand-text small{display:block;color:#bdd2e4;font-size:12.5px;margin-top:1px}.header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.demo-label{font-size:11.5px;font-weight:700;letter-spacing:.08em;border:1px solid rgba(126,224,230,.35);background:#0c445c8c;padding:5px 10px;border-radius:6px;color:#e4f5f8}.rule-ver-pill{font-size:11.5px;color:#c6d9ea;background:#ffffff14;padding:5px 9px;border-radius:6px;font-family:Consolas,monospace}.user-chip{display:flex;align-items:center;gap:8px;padding-left:6px}.avatar{display:grid;place-items:center;width:32px;height:32px;background:#214a68;border:1px solid rgba(255,255,255,.2);border-radius:50%;font-size:11.5px;font-weight:700}.role{font-size:13px;color:#dce9f5}.subbar{background:var(--paper);border-bottom:1px solid var(--line);box-shadow:0 1px 3px #08284508}.subbar-inner{max-width:1540px;margin:0 auto;padding:10px 3.5vw;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}.view-tabs{display:flex;gap:6px;background:#edf2f7;padding:4px;border-radius:8px}.view-tab{border:0;background:transparent;color:var(--ink-soft);padding:8px 14px;border-radius:6px;font-size:13.5px;font-weight:600;display:inline-flex;align-items:center;gap:7px;transition:background .15s,color .15s}.view-tab:hover{color:var(--navy)}.view-tab.active{background:var(--paper);color:var(--navy);box-shadow:0 1px 3px #0828451a}.tab-badge{font-size:11.5px;padding:1px 7px;border-radius:999px;background:var(--teal-soft);color:var(--teal);font-weight:700}.top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.button{border:1px solid var(--line-strong);background:var(--paper);color:var(--ink);border-radius:7px;padding:8px 13px;font-weight:600;font-size:13.5px;line-height:1.35;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:background .15s,border-color .15s,transform .08s}.button:hover:not(:disabled){background:#edf4fa;border-color:#a9bfd4}.button.primary{background:var(--teal);color:#fff;border-color:var(--teal)}.button.primary:hover:not(:disabled){background:var(--teal-hover);border-color:var(--teal-hover)}.button.accent{background:var(--accent);color:#fff;border-color:var(--accent)}.button.accent:hover:not(:disabled){background:var(--accent-hover);border-color:var(--accent-hover)}.button.pitch-toggle{background:#f0f8fa;color:var(--teal);border-color:#9ad1d8}.button.pitch-toggle.active{background:var(--navy);color:#fff;border-color:var(--navy)}.button.secondary{color:var(--navy)}.button.ghost{border-color:transparent;background:transparent;color:var(--ink-soft)}.button.ghost:hover:not(:disabled){background:#eaf1f7}.button.small{padding:7px 11px;font-size:13px}.button.tiny{padding:5px 9px;font-size:12px}.full-btn{width:100%;margin-top:12px}main{max-width:1540px;margin:0 auto;padding:22px 3.5vw 28px}.pitch-bar{background:linear-gradient(135deg,#092c4c,#0d3d59);color:#fff;border-radius:var(--radius-md);padding:15px 18px;margin-bottom:18px;box-shadow:var(--shadow-md);border:1px solid rgba(126,224,230,.28)}.pitch-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-bottom:11px;border-bottom:1px solid rgba(255,255,255,.12)}.pitch-title-group{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.pitch-pill{font-size:11px;font-weight:700;letter-spacing:.08em;background:#7ee0e62e;color:#93ebef;padding:3px 9px;border-radius:999px}.pitch-step-title{font-size:15px;color:#fff}.pitch-dots{display:flex;gap:5px}.pitch-dot{width:26px;height:26px;border-radius:50%;border:1px solid rgba(255,255,255,.28);background:#ffffff14;color:#d4e6f5;font-size:12px;font-weight:700}.pitch-dot.active{background:#7ee0e6;color:var(--navy-950);border-color:#7ee0e6}.pitch-close{border:0;background:#ffffff1a;color:#dceaf6;border-radius:5px;padding:4px 9px;font-size:12px}.pitch-body{display:flex;align-items:center;justify-content:space-between;gap:18px;padding-top:12px;flex-wrap:wrap}.pitch-copy{flex:1 1 520px}.pitch-script{margin:0 0 5px;font-size:14.5px;color:#f4f9fd;font-weight:500}.pitch-hint{margin:0;font-size:12.5px;color:#b5d2e8}.pitch-hint span{color:#7ee0e6;font-weight:600}.pitch-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.pitch-nav-btns{display:flex;gap:6px}.pitch-done-chip{font-size:12.5px;color:#9ef0c8;background:#15806059;border:1px solid rgba(158,240,200,.35);padding:5px 10px;border-radius:6px}.page-banner{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:16px;flex-wrap:wrap}.eyebrow{margin:0 0 4px;color:var(--teal);font-size:11.5px;font-weight:700;letter-spacing:.1em}.eyebrow-sm{display:block;color:var(--teal);font-size:11px;font-weight:700;letter-spacing:.09em;margin-bottom:4px}h1{font-size:26px;letter-spacing:-.025em;line-height:1.2;margin:0 0 4px;color:var(--navy)}.intro{color:var(--muted);margin:0;font-size:14px}.banner-guardrail{font-size:12.5px;color:var(--ink-soft);background:#e9f2f9;border:1px solid #cadeef;padding:8px 13px;border-radius:8px;max-width:440px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:20px}.stat{background:var(--paper);border:1px solid var(--line);border-top:3px solid var(--navy);border-radius:var(--radius-md);padding:15px 18px;text-align:left;box-shadow:var(--shadow-sm);transition:transform .12s,border-color .15s,box-shadow .15s}.stat:hover{transform:translateY(-1px);box-shadow:0 4px 16px #08284514}.stat.active-kpi{box-shadow:0 0 0 2px var(--teal),var(--shadow-sm)}.stat.review{border-top-color:var(--warn-solid)}.stat.incomplete{border-top-color:var(--info-solid)}.stat.consistent{border-top-color:var(--ok-solid)}.stat-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.stat-label{font-size:13px;font-weight:600;color:var(--ink-soft)}.stat-pct{font-size:11.5px;font-weight:700;color:var(--muted);background:var(--bg);padding:2px 7px;border-radius:999px}.stat-value{font-size:29px;font-weight:800;line-height:1.25;color:var(--navy);margin:4px 0 3px}.stat-foot{font-size:12px;color:var(--muted)}.workspace{display:grid;grid-template-columns:360px minmax(0,1fr);gap:18px;align-items:start}.queue-panel,.detail-panel,.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);min-width:0}.queue-panel{overflow:hidden;position:sticky;top:14px}.panel-heading{display:flex;align-items:flex-start;justify-content:space-between;padding:16px 17px 11px;gap:8px}.panel-heading h2{font-size:16px;margin:0;color:var(--navy)}.sub-caption{display:block;font-size:12px;color:var(--muted);margin-top:2px}.count-pill{font-size:12px;font-weight:700;color:var(--navy);background:#ebf2f8;padding:3px 9px;border-radius:999px}.queue-controls{padding:0 15px 12px}.search-label{display:flex;align-items:center;border:1px solid var(--line-strong);border-radius:7px;padding:7px 10px;gap:8px;background:var(--bg-subtle);margin-bottom:10px}.search-label:focus-within{background:var(--paper);border-color:var(--teal)}.search-label svg{width:16px;height:16px;stroke:#687b8f;fill:none;stroke-width:1.9;flex:none}.search-label input{width:100%;border:0;outline:0;font-size:13.5px;background:transparent;min-width:0}.filters{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:8px}.filter{font-size:12px;font-weight:600;border:1px solid transparent;border-radius:6px;padding:6px 4px;color:var(--ink-soft);background:#eff3f8;text-align:center}.filter span{font-weight:700;opacity:.82}.filter.active{background:var(--navy);color:#fff}.sub-filters{display:grid;grid-template-columns:1fr 1fr;gap:6px}.compact-select select{width:100%;border:1px solid var(--line);border-radius:6px;padding:6px 8px;font-size:12.5px;color:var(--ink-soft);background:var(--paper)}.active-filter-bar{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding:5px 9px;background:var(--teal-soft);border-radius:6px;font-size:12px;color:var(--teal)}.link-btn{border:0;background:transparent;color:var(--teal);font-weight:700;text-decoration:underline;padding:0;font-size:12px}.queue-list{max-height:670px;overflow-y:auto;border-top:1px solid var(--line)}.queue-item{width:100%;display:block;text-align:left;border:0;border-bottom:1px solid #e8eef4;border-left:3px solid transparent;padding:13px 16px;background:var(--paper);transition:background .12s}.queue-item:hover{background:#f5f9fd}.queue-item.selected{background:#eaf4fa;border-left-color:var(--teal)}.queue-item-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}.queue-id-wrap{display:flex;align-items:center;gap:6px}.queue-id-wrap strong{font-size:14.5px;color:var(--navy)}.reviewed-dot{font-size:11px;font-weight:700;color:var(--ok-ink);background:var(--ok-bg);padding:1px 6px;border-radius:4px}.queue-facility{display:block;font-size:12.5px;color:var(--muted);margin-bottom:7px}.queue-progress-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}.mini-bar{flex:1;height:6px;background:#e7eef5;border-radius:999px;overflow:hidden}.mini-bar i{display:block;height:100%;border-radius:999px}.fill-review{background:var(--warn-solid)}.fill-incomplete{background:var(--info-solid)}.fill-consistent{background:var(--ok-solid)}.queue-ratio{font-size:12px;color:var(--ink-soft);white-space:nowrap}.queue-tags{display:flex;gap:5px;flex-wrap:wrap}.q-tag{font-size:11px;font-weight:700;padding:1px 6px;border-radius:4px}.tag-r0{background:var(--info-bg);color:var(--info-ink)}.tag-r1,.tag-r2{background:var(--warn-bg);color:var(--warn-ink)}.tag-neutral{background:#edf1f5;color:#546678}.tag-sync{background:#e3f5ef;color:#0e694b}.badge{display:inline-block;font-size:11.5px;line-height:1.35;font-weight:700;border-radius:5px;padding:3px 8px;white-space:nowrap}.badge.review{background:var(--warn-bg);color:var(--warn-ink);border:1px solid var(--warn-border)}.badge.incomplete{background:var(--info-bg);color:var(--info-ink);border:1px solid var(--info-border)}.badge.consistent{background:var(--ok-bg);color:var(--ok-ink);border:1px solid var(--ok-border)}.queue-foot{font-size:11.5px;color:var(--muted);padding:11px 16px;margin:0;background:var(--bg-subtle);border-top:1px solid var(--line)}.empty{padding:28px 18px;text-align:center;color:var(--muted);font-size:13.5px}.empty p{margin:6px 0 0;font-size:12.5px}.detail-header{padding:22px 24px 16px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fff,#f9fbfd);border-radius:var(--radius-lg) var(--radius-lg) 0 0}.detail-top-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}.detail-title-line{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.detail-title-line h2{margin:0;font-size:22px;color:var(--navy)}.human-pill{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;background:#eef3f8;color:var(--navy);border:1px solid #cbd9e6}.human-pill.outcome-legitimate{background:var(--ok-bg);color:var(--ok-ink);border-color:var(--ok-border)}.human-pill.outcome-confirmed{background:var(--warn-bg);color:var(--warn-ink);border-color:var(--warn-border)}.detail-meta{font-size:13.5px;color:var(--ink-soft);margin:6px 0 12px}.detail-actions{display:flex;gap:8px;flex-wrap:wrap}.detail-snapshot{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:12px;color:var(--muted);padding-top:10px;border-top:1px dashed #dde6ef}.detail-snapshot b{color:var(--ink-soft)}.content-pad{padding:20px 24px 24px}.gate-pipeline{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}.gate-step{border:1px solid var(--line);border-radius:8px;padding:11px 13px;background:var(--bg-subtle)}.gate-step.gate-pass{border-color:var(--ok-border);background:#f5fbf8}.gate-step.gate-hold{border-color:var(--info-border);background:#f3f8fe}.gate-step.gate-warn{border-color:var(--warn-border);background:#fff9f3}.gate-step-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}.gate-code{font-size:11.5px;font-weight:800;padding:2px 6px;border-radius:4px;background:var(--navy);color:#fff}.gate-badge{font-size:11.5px;font-weight:700;color:var(--ink-soft)}.gate-step strong{display:block;font-size:13px;color:var(--navy);margin-bottom:3px}.gate-step p{margin:0;font-size:12px;color:var(--muted);line-height:1.4}.reason{padding:12px 15px;border:1px solid var(--warn-border);background:#fffaf4;border-radius:8px;margin-bottom:10px}.reason.data{border-color:var(--info-border);background:#f4f9ff}.reason-top{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:var(--navy)}.rule-code{font-size:11.5px;font-weight:800;display:inline-block;background:#f3dfc8;color:var(--warn-ink);padding:2px 7px;border-radius:4px}.data .rule-code,.rule-code.code-r0{background:#d8eafb;color:var(--info-ink)}.rule-code.code-ok{background:var(--ok-bg);color:var(--ok-ink)}.reason p{font-size:13.5px;margin:5px 0 0;color:var(--ink-soft)}.consistent-note{background:var(--ok-bg);border:1px solid var(--ok-border);color:var(--ok-ink);padding:12px 15px;border-radius:8px;margin-bottom:14px;font-size:13.5px}.consistent-note strong{display:block;margin-bottom:2px}.evidence-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin:14px 0 20px}.mini-metric{border:1px solid var(--line);border-radius:8px;padding:12px 15px;background:var(--paper)}.mini-metric.metric-ok{border-left:3px solid var(--ok-solid)}.mini-metric.metric-warn{border-left:3px solid var(--warn-solid)}.mini-metric.metric-info{border-left:3px solid var(--info-solid)}.mini-metric span{display:block;font-size:12.5px;color:var(--muted)}.mini-metric strong{display:block;font-size:25px;font-weight:800;color:var(--navy);line-height:1.25;margin:2px 0}.mini-metric small{font-size:11.5px;color:var(--muted)}.section-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin:22px 0 11px;flex-wrap:wrap}.section-heading h2,.section-heading h3{font-size:16px;margin:0;color:var(--navy)}.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--muted)}.legend span:before{content:"";display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:-1px}.leg-has:before{background:var(--ok-solid)}.leg-missing:before{background:var(--warn-solid)}.leg-waiting:before{background:var(--info-solid)}.leg-reused:before{background:#c26a1b}.leg-cancelled:before{background:#9aa8b8}.session-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.session{border:1px solid var(--line);border-radius:8px;padding:10px 8px;text-align:center;background:var(--paper);min-width:0;transition:transform .1s,box-shadow .12s,border-color .12s;display:flex;flex-direction:column;align-items:center;gap:2px}.session:hover{transform:translateY(-1px);border-color:#8eb0cc}.session.selected-session{box-shadow:0 0 0 2.5px var(--teal);border-color:var(--teal)}.session-num{font-size:13.5px;font-weight:700;color:var(--navy)}.session-date{font-size:11.5px;color:var(--ink-soft)}.session-status{font-size:11px;font-weight:600;color:var(--muted)}.session-rec{font-size:10.5px;color:var(--muted);background:#ffffffb8;padding:1px 5px;border-radius:4px;margin-top:2px;max-width:100%;overflow:hidden;text-overflow:ellipsis}.session.has{border-color:var(--ok-border);background:#f2fbf6}.session.has .session-status{color:var(--ok-ink)}.session.missing{border-color:var(--warn-border);background:#fff6ec}.session.missing .session-status{color:var(--warn-ink)}.session.waiting{border-color:var(--info-border);background:#eff6fe}.session.waiting .session-status{color:var(--info-ink)}.session.cancelled{background:#f1f4f8;border-style:dashed;color:#6b7c8e}.session.reused{border-color:#df9f57;background:#fff3e0}.session.reused .session-status{color:var(--warn-ink)}.inspector-card{margin-top:14px;border:1px solid #bfd3e6;border-radius:10px;background:#f8fbfe;overflow:hidden}.inspector-header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;background:#edf4fb;border-bottom:1px solid #d4e2f0;flex-wrap:wrap}.inspector-kicker{display:block;font-size:10.5px;font-weight:800;letter-spacing:.08em;color:var(--teal)}.inspector-title h4{margin:2px 0 0;font-size:15px;color:var(--navy)}.inspector-nav{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.session-state-pill{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px}.pill-has{background:var(--ok-bg);color:var(--ok-ink)}.pill-missing,.pill-reused,.pill-multiple{background:var(--warn-bg);color:var(--warn-ink)}.pill-waiting{background:var(--info-bg);color:var(--info-ink)}.pill-cancelled{background:#e6ecf2;color:#526375}.inspector-grid{display:grid;grid-template-columns:1fr 1.35fr;gap:14px;padding:15px 16px}.source-pane{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:13px 15px}.pane-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #edf2f7}.pane-tag{font-size:11px;font-weight:800;letter-spacing:.05em;color:var(--navy)}.rev-chip{font-size:11px;font-weight:700;padding:2px 7px;border-radius:4px;background:#eef3f8;color:var(--ink-soft)}.rev-chip.missing-chip{background:var(--warn-bg);color:var(--warn-ink)}.kv-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px 12px;margin:0}.kv-grid dt{font-size:11.5px;color:var(--muted)}.kv-grid dd{margin:2px 0 0;font-size:13px;color:var(--ink)}.pane-callout{margin:12px 0 0;padding:9px 11px;font-size:12px;color:var(--ink-soft);background:var(--bg-subtle);border-radius:6px;border-left:3px solid var(--teal)}.pane-callout.neutral{border-left-color:#93a3b5}.latency-chip{display:inline-block;font-size:11.5px;font-weight:600;color:var(--ok-ink);background:var(--ok-bg);padding:1px 7px;border-radius:4px}.latency-chip.delayed{color:var(--info-ink);background:var(--info-bg)}.timestamp-bar{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px 14px;font-size:11.5px;color:var(--muted);margin:10px 0;padding:7px 10px;background:var(--bg-subtle);border-radius:6px}.clinical-notes-split{display:grid;gap:8px}.note-block{border:1px solid var(--line);border-radius:6px;padding:9px 11px;font-size:12.5px}.note-block.template-block{background:#f9fbfd;color:var(--muted)}.note-block.personal-block{background:#fff;border-color:#c7d9ea}.note-block.reused-highlight{background:#fff8ef;border-color:#e4ab6b}.note-block-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px}.note-block p{margin:0;line-height:1.45}.note-rule-chip{font-size:11px;font-weight:700;padding:1px 6px;border-radius:4px}.note-rule-chip.excluded{background:#eaeff5;color:#5b6d80}.note-rule-chip.checked{background:var(--teal-soft);color:var(--teal)}.note-rule-chip.flagged{background:var(--warn-bg);color:var(--warn-ink)}.missing-record-state{padding:12px 14px;border-radius:7px;font-size:13px}.missing-record-state.state-r1{background:var(--warn-bg);border:1px solid var(--warn-border);color:var(--warn-ink)}.missing-record-state.state-r0{background:var(--info-bg);border:1px solid var(--info-border);color:var(--info-ink)}.missing-record-state p{margin:6px 0 0;color:var(--ink-soft)}.late-preview-hint{margin-top:10px;padding:8px 10px;background:#fffc;border-radius:6px;font-size:12px;color:var(--ink)}.r2-diff-list{display:grid;gap:10px}.r2-diff-card{border:1px solid var(--warn-border);background:#fffaf4;border-radius:9px;padding:14px 16px}.r2-diff-columns{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;margin-bottom:11px}.r2-col{background:var(--paper);border:1px solid #ead5be;border-radius:7px;padding:10px 12px}.r2-col-label{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.r2-col strong{display:block;font-size:14px;color:var(--navy);margin:2px 0}.r2-col small{display:block;font-size:12px;color:var(--ink-soft)}.r2-jump{margin-top:7px}.r2-connector{font-size:12px;font-weight:800;color:var(--warn-ink);background:#fbe5ce;padding:5px 10px;border-radius:999px;white-space:nowrap}.r2-shared-text span{font-size:12px;color:var(--muted);display:block;margin-bottom:5px}.r2-shared-text blockquote{margin:0;padding:10px 13px;background:var(--paper);border-left:3px solid var(--warn-solid);border-radius:5px;font-size:13px;color:var(--ink)}.table-accordion{margin-top:20px;border:1px solid var(--line);border-radius:8px;overflow:hidden}.table-accordion summary{padding:11px 15px;background:var(--bg-subtle);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--navy)}.table-accordion summary small{font-weight:500;font-size:12px;color:var(--muted)}.table-scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;background:#f2f6fa;color:#4f667d;font-size:11.5px;padding:9px 11px;font-weight:700;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}td{padding:9px 11px;border-bottom:1px solid #eaeff5;white-space:nowrap}.clickable-row{cursor:pointer}.clickable-row:hover{background:#f4f9fd}.active-table-row{background:#eaf4fb}.row-muted{color:#778797}.table-state{font-weight:600;font-size:12px}.state-has{color:var(--ok-ink)}.state-missing,.state-reused{color:var(--warn-ink)}.state-waiting{color:var(--info-ink)}.review-box{border-top:1px solid var(--line);margin-top:24px;padding-top:20px}.review-box-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}.review-box-head h3{font-size:16px;margin:0 0 4px;color:var(--navy)}.review-box-head p{font-size:13px;color:var(--muted);margin:0}.governance-badge{font-size:11px;font-weight:700;background:#edf3f9;color:var(--navy);padding:4px 9px;border-radius:999px;white-space:nowrap}.review-saved{padding:12px 14px;border-radius:8px;border:1px solid #cbd9e6;background:#f6f9fc;margin-bottom:13px}.review-saved.outcome-box-legitimate{background:var(--ok-bg);border-color:var(--ok-border)}.review-saved.outcome-box-confirmed{background:var(--warn-bg);border-color:var(--warn-border)}.review-saved-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:12.5px;margin-bottom:4px}.review-saved p{margin:0;font-size:13.5px}.quick-templates{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:11px}.template-caption{font-size:12px;color:var(--muted)}.chip-btn{border:1px solid #c6d6e6;background:#f5f9fc;color:var(--navy);border-radius:999px;padding:4px 10px;font-size:12px;font-weight:600}.chip-btn:hover{background:#e4eff9;border-color:var(--teal)}.review-controls{display:grid;grid-template-columns:minmax(190px,1fr) minmax(240px,2.2fr);gap:12px}.review-controls label{font-size:12.5px;font-weight:600;color:var(--ink-soft)}.review-controls select,.review-controls textarea{display:block;width:100%;border:1px solid #c5d3e1;border-radius:7px;padding:9px 10px;margin-top:5px;font-size:13.5px;color:var(--ink);background:var(--paper)}.review-controls textarea{resize:vertical;min-height:76px}.review-form-actions{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:12px}.source-note{font-size:12px;color:var(--muted);max-width:520px}.audit{list-style:none;padding:0;margin:0}.audit li{position:relative;border-left:2px solid #d4e1ee;padding:0 0 13px 16px;margin-left:5px;font-size:13px}.audit li:before{content:"";position:absolute;width:8px;height:8px;left:-5px;top:5px;border-radius:50%;background:var(--teal)}.audit b{font-size:13px;color:var(--navy);display:block}.audit span{display:block;color:var(--muted);font-size:11.5px}.audit p{margin:3px 0 0;color:var(--ink-soft)}.analytics-grid-top{display:grid;grid-template-columns:1.85fr 1fr;gap:16px}.card{padding:20px 22px}.card h2{margin:0;font-size:18px;color:var(--navy)}.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:18px}.synced-all-badge{font-size:12px;font-weight:700;color:var(--ok-ink);background:var(--ok-bg);border:1px solid var(--ok-border);padding:5px 10px;border-radius:999px}.portfolio-visual-row{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center}.donut-wrap{display:flex;align-items:center;gap:16px}.donut-svg{width:132px;height:132px;flex:none}.donut-big{font-size:26px;font-weight:800;fill:var(--navy)}.donut-sub{font-size:11.5px;fill:var(--muted)}.donut-legend{display:grid;gap:8px;font-size:13px}.donut-legend div{display:grid;grid-template-columns:10px auto;column-gap:8px;align-items:center}.donut-legend b{grid-column:2;font-size:12.5px;color:var(--navy)}.donut-legend i{width:10px;height:10px;border-radius:3px;display:inline-block}.dot-consistent{background:var(--ok-solid)}.dot-review{background:var(--warn-solid)}.dot-incomplete{background:var(--info-solid)}.session-coverage-box{background:var(--bg-subtle);border:1px solid var(--line);border-radius:10px;padding:15px 17px}.coverage-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px}.coverage-big{display:block;font-size:22px;font-weight:800;color:var(--navy)}.coverage-big span{font-size:14px;font-weight:600;color:var(--teal)}.stacked-bar{display:flex;height:13px;border-radius:999px;overflow:hidden;background:#e5edf5;gap:2px}.compact-bar{height:9px;margin:12px 0}.seg-matched{background:var(--ok-solid)}.seg-clarify{background:var(--warn-solid)}.seg-waiting{background:var(--info-solid)}.seg-cancelled{background:#95a5b7}.session-stat-chips{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.s-chip{background:var(--paper);border:1px solid var(--line);border-radius:7px;padding:8px 10px}.s-chip b{display:block;font-size:17px;color:var(--navy)}.s-chip span{font-size:11.5px;color:var(--muted)}.gov-progress-num{margin:14px 0;padding:12px 14px;background:var(--bg-subtle);border-radius:8px;border:1px solid var(--line)}.gov-progress-num strong{font-size:28px;color:var(--navy);display:block;line-height:1.15}.gov-progress-num strong span{font-size:17px;color:var(--muted)}.gov-progress-num small{color:var(--muted);font-size:12px}.gov-list{display:grid;gap:6px}.gov-row{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px dashed #e5edf5}.Facility,.facility-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.facility-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.fac-code{font-size:11px;font-weight:700;color:var(--muted);font-family:Consolas,monospace}.facility-head h3{margin:2px 0 0;font-size:16.5px;color:var(--navy)}.fac-rate{font-size:19px;font-weight:800;color:var(--teal);text-align:right}.fac-rate span{display:block;font-size:11px;font-weight:600;color:var(--muted)}.fac-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px 0;border-top:1px solid #ecf1f6;border-bottom:1px solid #ecf1f6}.fac-metrics span{display:block;font-size:11px;color:var(--muted)}.fac-metrics strong{font-size:17px;color:var(--navy)}.fac-foot-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:9px}.rules-analytics-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.rule-stat-card p{font-size:13px;color:var(--ink-soft);margin:8px 0 12px}.border-r0{border-top:3px solid var(--info-solid)}.border-r1,.border-r2{border-top:3px solid var(--warn-solid)}.border-ok{border-top:3px solid var(--ok-solid)}.rule-stat-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.rule-count-pill{margin-left:auto;font-size:12px;font-weight:700;color:var(--muted);background:var(--bg);padding:2px 8px;border-radius:999px}.ep-chip-list{display:flex;flex-wrap:wrap;gap:6px}.ep-chip{border:1px solid #cbd9e6;background:var(--bg-subtle);color:var(--navy);font-size:12px;font-weight:700;padding:4px 9px;border-radius:6px}.ep-chip:hover{background:#e3eff9;border-color:var(--teal)}.pair-chip{background:#fff6ec;border-color:#eab985;color:var(--warn-ink)}.ok-chip{background:var(--ok-bg);border-color:var(--ok-border);color:var(--ok-ink)}.arch-card{margin-top:18px}.arch-note-pill{font-size:12px;color:var(--ink-soft);background:#edf3f9;padding:5px 11px;border-radius:999px}.arch-flow-diagram{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr auto 1fr;gap:8px;align-items:stretch}.arch-stage{border:1px solid var(--line);border-radius:8px;padding:12px 13px;background:var(--bg-subtle);display:flex;flex-direction:column;gap:4px}.arch-stage.highlight-r0{background:#f2f8ff;border-color:var(--info-border)}.arch-stage.highlight-r12{background:#fffaf3;border-color:var(--warn-border)}.arch-stage.highlight-gov{background:#f2fbf7;border-color:var(--ok-border)}.stage-num{font-size:11px;font-weight:800;color:var(--teal);text-transform:uppercase}.arch-stage strong{font-size:13px;color:var(--navy)}.arch-stage small{font-size:11.5px;color:var(--muted);line-height:1.4}.arch-arrow{display:grid;place-items:center;font-weight:800;color:#7c93a8;font-size:18px}.fhir-pills{display:flex;flex-wrap:wrap;gap:4px;margin-top:auto;padding-top:6px}.fhir-pills span{font-size:10.5px;font-family:Consolas,monospace;background:var(--paper);border:1px solid #cddae7;color:var(--navy);padding:1px 6px;border-radius:4px}.methodology{margin-top:20px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--paper);padding:14px 20px}.methodology summary{font-weight:700;color:var(--navy);cursor:pointer}.method-body{display:grid;grid-template-columns:1fr 1fr;gap:26px;padding:14px 0 2px}.method-body h3{font-size:14.5px;margin:0 0 8px;color:var(--navy)}.method-body p{font-size:13.5px;color:var(--muted);margin:0 0 8px}footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-top:18px;color:var(--muted);font-size:12px}.modal-backdrop{position:fixed;inset:0;background:#061d339e;display:grid;place-items:center;padding:22px;z-index:80;overflow-y:auto}.modal-dialog{background:var(--paper);border-radius:12px;max-width:900px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 50px #061d3359;border:1px solid var(--line)}.modal-toolbar{position:sticky;top:0;background:#f4f8fc;border-bottom:1px solid var(--line);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;z-index:2}.modal-toolbar-left,.modal-toolbar-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.ticket-sheet{padding:26px 30px 30px}.ticket-sheet-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding-bottom:16px;border-bottom:2px solid var(--navy)}.ticket-kicker{margin:0 0 4px;font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--teal)}.ticket-sheet-header h2{margin:0 0 5px;font-size:19px;color:var(--navy)}.ticket-ref{margin:0;font-size:12.5px;color:var(--muted)}.ticket-stamp{border:1.5px solid var(--navy);border-radius:6px;padding:6px 11px;text-align:center;flex:none}.ticket-stamp span{display:block;font-size:11px;font-weight:800;color:var(--navy);letter-spacing:.07em}.ticket-stamp small{font-size:10.5px;color:var(--muted)}.ticket-meta-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 20px;margin:16px 0;padding:13px 16px;background:var(--bg-subtle);border:1px solid var(--line);border-radius:8px}.ticket-meta-grid span{display:block;font-size:11.5px;color:var(--muted)}.ticket-meta-grid strong{font-size:13.5px;color:var(--navy)}.ticket-section{margin-top:18px}.ticket-section h3{font-size:14px;color:var(--navy);margin:0 0 9px}.ticket-items{display:grid;gap:8px}.ticket-item{border:1px solid var(--line);border-radius:7px;padding:10px 13px}.ticket-item-head{display:flex;align-items:center;gap:8px;margin-bottom:4px}.ticket-item p{margin:0;font-size:13px;color:var(--ink-soft)}.ticket-table th,.ticket-table td{padding:7px 9px;font-size:12px}.ticket-review-box{border:1px solid #c5d6e6;background:#f6f9fc;border-radius:7px;padding:11px 14px}.ticket-review-box p{margin:5px 0;font-size:13px}.ticket-governance{margin-top:20px;padding-top:14px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted)}.ticket-governance ul{margin:6px 0 0;padding-left:18px}.ticket-governance li{margin-bottom:4px}.muted{color:var(--muted);font-size:13px}.text-muted{color:var(--muted)}.text-ink{color:var(--ink)}.text-green{color:var(--ok-ink)}.text-warn{color:var(--warn-ink)}.text-info{color:var(--info-ink)}.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%);max-width:92vw;background:var(--navy-950);color:#fff;padding:11px 18px;border-radius:8px;font-size:13.5px;font-weight:500;box-shadow:0 8px 28px #061d3352;z-index:100}@media(max-width:1180px){.workspace{grid-template-columns:315px minmax(0,1fr)}.inspector-grid,.analytics-grid-top,.portfolio-visual-row,.arch-flow-diagram{grid-template-columns:1fr}.arch-arrow{transform:rotate(90deg);height:18px}}@media(max-width:920px){.stats{grid-template-columns:repeat(2,1fr)}.workspace{grid-template-columns:1fr}.queue-panel{position:static}.queue-list{max-height:290px}.gate-pipeline,.facility-grid,.rules-analytics-grid,.r2-diff-columns,.review-controls{grid-template-columns:1fr}.r2-connector{justify-self:start}.session-grid{grid-template-columns:repeat(4,1fr)}.session-stat-chips{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.header-inner,.subbar-inner,main{padding-left:4.5vw;padding-right:4.5vw}.header-inner{flex-wrap:wrap;gap:10px}.user-chip,.rule-ver-pill{display:none}.demo-label{font-size:10.5px;padding:4px 8px;white-space:nowrap}.view-tabs{width:100%}.view-tab{flex:1;justify-content:center}h1{font-size:22px}.session-grid{grid-template-columns:repeat(3,1fr)}.evidence-metrics,.kv-grid,.ticket-meta-grid,.method-body,.sub-filters{grid-template-columns:1fr}.detail-header,.content-pad,.card,.ticket-sheet{padding:16px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}@media print{body{background:#fff;font-size:12px}.app-header,.subbar,main,.no-print,.toast{display:none!important}#ticket-modal-root{display:block!important}.modal-backdrop{position:static;background:transparent;padding:0;display:block}.modal-dialog{max-width:100%;max-height:none;overflow:visible;box-shadow:none;border:0}.ticket-sheet{padding:0}}
+
+</style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 28 28" fill="none">
+            <rect x="4" y="3.5" width="16" height="21" rx="2.5" stroke="#7ee0e6" stroke-width="2"/>
+            <path d="M8 9.5h8M8 13.5h5" stroke="#c8e9f5" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="19.5" cy="18.5" r="5.5" fill="#082845" stroke="#ffffff" stroke-width="1.8"/>
+            <path d="m17.2 18.5 1.6 1.6 3.2-3.4" stroke="#7ee0e6" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <div class="brand-text">
+          <strong>JEJAK <span>JKN</span> <em class="team-pill">TranspemGo</em></strong>
+          <small>Setiap Klaim, Ada Jejaknya · Pemeriksaan Bukti Sesi Layanan</small>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <span class="rule-ver-pill">JEJAK-RULES-0.1.0</span>
+        <span class="demo-label">DATA SINTETIS · 40 EPISODE</span>
+        <div class="user-chip">
+          <span class="avatar" aria-hidden="true">VD</span>
+          <span class="role">Verifikator Demo</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="subbar" aria-label="Navigasi ruang kerja dan aksi utama">
+    <div class="subbar-inner">
+      <div class="view-tabs" role="tablist" aria-label="Pilih tampilan">
+        <button type="button" role="tab" class="view-tab active" data-view="workspace" aria-selected="true">
+          Ruang Kerja Verifikator <span class="tab-badge" id="tab-queue-badge">40</span>
+        </button>
+        <button type="button" role="tab" class="view-tab" data-view="analytics" aria-selected="false">
+          Analitik Faskes &amp; Portofolio
+        </button>
+      </div>
+
+      <div class="top-actions">
+        <button type="button" class="button pitch-toggle small" id="toggle-pitch" aria-pressed="false">
+          ▶ Panduan Presentasi (4 Menit)
+        </button>
+        <button type="button" class="button secondary small" id="export-csv">
+          Ekspor Ringkasan CSV
+        </button>
+        <button type="button" class="button secondary small" id="reset">
+          Ulangi Demo
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div id="pitch-root" hidden></div>
+
+    <div class="page-banner">
+      <div>
+        <p class="eyebrow">LAYANAN FISIOTERAPI · PERIODE SIMULASI SEPTEMBER 2026</p>
+        <h1>Telusuri kesesuaian tagihan sesi dengan bukti tindakan.</h1>
+        <p class="intro">Pisahkan keterlambatan pengiriman sumber dari ketidaksesuaian sesi yang memerlukan klarifikasi verifikator.</p>
+      </div>
+      <div class="banner-guardrail">
+        <strong>Prinsip Tata Kelola:</strong> Tanpa skor probabilitas fraud &amp; tanpa klaim AI. Keputusan akhir tetap berada pada verifikator berwenang.
+      </div>
+    </div>
+
+    <div class="stats" id="stats" aria-live="polite"></div>
+
+    <div id="view-root"></div>
+
+    <details class="methodology">
+      <summary>Dasar pemeriksaan deterministik, rujukan regulasi, dan batas ruang lingkup prototipe</summary>
+      <div class="method-body">
+        <div>
+          <h3>Tiga aturan yang dapat dijelaskan (JEJAK-RULES-0.1.0)</h3>
+          <p><b>R0 — Gerbang Kelengkapan Sumber:</b> Cakupan pengiriman batch dan kesesuaian identitas peserta/episode/fasilitas diperiksa terlebih dahulu sebelum menarik selisih sesi.</p>
+          <p><b>R1 — Pencocokan Sesi Aktif:</b> Setiap sesi tagihan aktif dicocokkan dengan catatan selesai berdasarkan episode, token peserta, fasilitas, indeks sesi, dan tanggal layanan. Sesi dibatalkan resmi dikecualikan dan versi catatan terbaru menjadi acuan.</p>
+          <p><b>R2 — Kesamaan Isi Personal:</b> Teks individual (≥60 karakter setelah normalisasi) dibandingkan lintas episode berbeda; teks formulir standar (<code>template_text</code>) dikecualikan.</p>
+        </div>
+        <div>
+          <h3>Arti hasil &amp; batas kematangan saat ini</h3>
+          <p><b>“Bukti konsisten”</b> hanya menyatakan kecocokan antarsumber data yang diterima, bukan pembuktian mutlak layanan klinis terlaksana di lapangan dan bukan putusan bebas kecurangan.</p>
+          <p>Prototipe memproses 40 episode sintetis di browser tanpa koneksi produksi BPJS Kesehatan atau RME rumah sakit. Riwayat tindak lanjut hanya tersimpan selama sesi halaman ini dibuka.</p>
+          <p>Nominal penghematan rupiah per episode tidak dihitung dari selisih jumlah sesi karena pada skema paket pembayaran, dampak finansial hanya diakui setelah keputusan ajudikasi resmi (Permenkes No. 16 Tahun 2019 &amp; UU PDP No. 27 Tahun 2022).</p>
+        </div>
+      </div>
+    </details>
+
+    <footer>
+      <span>JEJAK JKN · PROTOTIPE FUNGSIONAL (JEJAK-RULES-0.1.0) · TIM TRANSPEMGO</span>
+      <span>BPJS Kesehatan Healthkathon 2026 · Alat bantu penelusuran bukti klaim</span>
+    </footer>
+  </main>
+
+  <div id="ticket-modal-root" hidden></div>
+  <div class="toast" role="status" id="toast" hidden></div>
+
+<script>
+(function(){
+'use strict';
+(function(){const e=document.createElement("link").relList;if(e&&e.supports&&e.supports("modulepreload"))return;for(const t of document.querySelectorAll('link[rel="modulepreload"]'))n(t);new MutationObserver(t=>{for(const r of t)if(r.type==="childList")for(const d of r.addedNodes)d.tagName==="LINK"&&d.rel==="modulepreload"&&n(d)}).observe(document,{childList:!0,subtree:!0});function s(t){const r={};return t.integrity&&(r.integrity=t.integrity),t.referrerPolicy&&(r.referrerPolicy=t.referrerPolicy),t.crossOrigin==="use-credentials"?r.credentials="include":t.crossOrigin==="anonymous"?r.credentials="omit":r.credentials="same-origin",r}function n(t){if(t.ep)return;t.ep=!0;const r=s(t);fetch(t.href,r)}})();const I="JEJAK-RULES-0.1.0",A="2026-10-04T04:00:00Z",U={consistent:"Bukti konsisten",review:"Perlu klarifikasi",incomplete:"Lengkapi data"},L={pending:"Perlu bukti tambahan",legitimate:"Penjelasan sah diterima",confirmed:"Ketidaksesuaian terkonfirmasi"},Z=i=>JSON.parse(JSON.stringify(i)),W=i=>`2026-09-${String(1+(i-1)*2).padStart(2,"0")}`,j=i=>String(i||"").toLowerCase().replace(/\s+/g," ").trim();function Y(){const i=[];for(let e=1;e<=40;e++){const s=String(e).padStart(3,"0"),n=e===1||e>=10&&e<=14?"delayed":e>=2&&e<=9?"mismatch":e>=15&&e<=20?"reuse":"normal",t=e<=9||e===1?12:6,r=n==="delayed"?t-2:n==="mismatch"?t-(e===2?4:2):t,d={episode_id:`EP-${s}`,claim_id:`CLM-${s}`,patient_token:`P-DEMO-${s}`,facility_id:`F-DEMO-${1+e%3}`,facility_name:`RS Simulasi ${["Aruna","Bima","Cakra"][e%3]}`,period:"September 2026",source_complete:n!=="delayed",source_received_at:A,rule_version:I,claim_version:1,claims:[],records:[],late_records:[],review:null,events:[],scenario_label:n};e===1&&(d.initial_available=8);for(let k=1;k<=t;k++){const h=W(k);d.claims.push({line_id:`${d.claim_id}-S${k}`,session_index:k,service_date:h,status:"active",revision:1});const v={record_id:`REC-${s}-${k}`,episode_id:d.episode_id,patient_token:d.patient_token,facility_id:d.facility_id,session_index:k,service_date:h,status:"completed",created_at:`${h}T08:00:00Z`,received_at:`${h}T10:00:00Z`,therapist_token:`T-DEMO-${1+e%4}`,version:1,source_system:"RME simulasi",template_text:"Terapi latihan dan evaluasi respons pasien.",patient_specific_text:`Peserta ${s} sesi ${k}. Nyeri awal ${2+(e+k)%6} dari 10, nyeri akhir ${1+(e+k)%4} dari 10. Target latihan ${8+e+k} repetisi. Respons dan tindak lanjut individual dicatat untuk sesi ${s}-${k}.`};if(n==="reuse"&&k===2){const $=Math.floor((e-15)/2)+1;v.patient_specific_text=`Keluhan khas kelompok ${$}: lutut kanan nyeri 6 dari 10 setelah naik tangga. Latihan individu 17 repetisi, respons akhir nyeri 3 dari 10. Catatan tindak lanjut personal kode pasangan ${$}.`}k<=r&&!(e===1&&k>8)?d.records.push(v):n==="delayed"&&(e!==1||k<=10)&&d.late_records.push({...v,received_at:"2026-10-04T04:10:00Z"})}e===39&&(d.claims.slice(-2).forEach(k=>{k.status="cancelled",k.revision=2}),d.records.slice(-2).forEach(k=>{k.status="not-done",k.version=2}),d.claim_version=2),d.events.push({at:A,actor:"Konektor demo",action:"Snapshot diterima",detail:`${d.records.length} catatan; cakupan sumber ${d.source_complete?"lengkap":"belum lengkap"}.`}),i.push(d)}return{schema_version:"0.1",synthetic:!0,as_of:A,episodes:i}}function M(i){const e=new Map;return i.forEach(s=>{const n=e.get(s.record_id);(!n||s.version>n.version||s.version===n.version&&s.received_at>n.received_at)&&e.set(s.record_id,s)}),[...e.values()]}function K(i,e){const s=i.claims.filter(a=>a.status==="active"),n=M(i.records),t=n.filter(a=>a.episode_id!==i.episode_id||a.patient_token!==i.patient_token||a.facility_id!==i.facility_id),r=n.filter(a=>a.episode_id===i.episode_id&&a.patient_token===i.patient_token&&a.facility_id===i.facility_id&&a.status==="completed"),d=new Map;s.forEach(a=>d.set(a.line_id,r.filter(f=>f.session_index===a.session_index&&f.service_date===a.service_date)));const k=s.filter(a=>d.get(a.line_id).length>0),h=s.filter(a=>!d.get(a.line_id).length),v=r.filter(a=>!s.some(f=>f.session_index===a.session_index&&f.service_date===a.service_date)),$=s.filter(a=>d.get(a.line_id).length>1),p=[];r.forEach(a=>{const f=j(a.patient_specific_text);f.length<60||e.filter(y=>y.episode_id!==i.episode_id).forEach(y=>{M(y.records).filter(o=>o.status==="completed"&&o.patient_token===y.patient_token&&o.episode_id===y.episode_id&&o.facility_id===y.facility_id).forEach(o=>{j(o.patient_specific_text)===f&&p.push({record_id:a.record_id,other_record_id:o.record_id,other_episode_id:y.episode_id,other_patient_token:y.patient_token,other_facility_name:y.facility_name,session_index:a.session_index,text:a.patient_specific_text})})})});const u=i.source_complete&&t.length===0,b=[];u||b.push({code:"R0",title:"Kelengkapan sumber belum memadai",detail:t.length?`${t.length} catatan memiliki identitas yang tidak cocok.`:"Batch sumber belum dinyatakan lengkap. Selisih bersifat sementara."}),u&&(h.length||v.length||$.length)&&b.push({code:"R1",title:"Pencocokan sesi perlu klarifikasi",detail:`${h.length} sesi ditagihkan belum memiliki catatan yang cocok; ${v.length} catatan di luar sesi aktif; ${$.length} sesi dengan lebih dari satu catatan.`}),p.length&&b.push({code:"R2",title:"Isi personal sama pada episode lain",detail:`${p.length} pasangan catatan memiliki isi personal yang identik. Teks formulir standar dikecualikan.`});const m=u?b.length?"review":"consistent":"incomplete";return{status:m,label:U[m],claimed:s.length,matched:k.length,missing:h.length,missing_indexes:h.map(a=>a.session_index),valid_records:r.length,unclaimed:v.length,multiple:$.length,cancelled:i.claims.length-s.length,reasons:b,reused:p,complete:u,matches:Object.fromEntries([...d].map(([a,f])=>[a,f.map(y=>y.record_id)])),rule_version:I}}function Q(i){if(!i.late_records.length)return!1;const e=i.late_records.length;return i.records.push(...i.late_records),i.late_records=[],i.source_complete=!0,i.source_received_at="2026-10-04T04:10:00Z",i.events.push({at:i.source_received_at,actor:"Konektor demo",action:"Catatan terlambat disinkronkan",detail:`${e} catatan masuk. Batch sumber dinyatakan lengkap untuk pemeriksaan ulang.`}),!0}function J(i,e){if(!i||!e)return{label:"Waktu tidak lengkap",isDelayed:!1,hours:0};const s=Date.parse(e)-Date.parse(i);if(Number.isNaN(s)||s<0)return{label:"0 jam",isDelayed:!1,hours:0};const n=Math.round(s/6e4),t=Math.floor(n/1440),r=Math.floor(n%1440/60);return t>=1?{label:`+${t} hari${r?` ${r} jam`:""} (sinkronisasi susulan)`,isDelayed:!0,hours:Math.round(n/60)}:{label:`+${r||1} jam (hari layanan sama)`,isDelayed:!1,hours:r}}function B(i,e){const s=K(i,e),n=M(i.records),t=n.filter(v=>v.episode_id!==i.episode_id||v.patient_token!==i.patient_token||v.facility_id!==i.facility_id),r=i.claims.map(v=>{const $=s.matches[v.line_id]||[],p=n.filter(w=>$.includes(w.record_id)),u=v.status==="cancelled"&&n.find(w=>w.session_index===v.session_index&&w.service_date===v.service_date&&w.status!=="completed")||null,b=p[0]||u||null,m=b?s.reused.filter(w=>w.record_id===b.record_id):[],a=i.late_records.find(w=>w.session_index===v.session_index&&w.service_date===v.service_date)||null,f=v.status==="cancelled",y=!!(b&&m.length>0),o=p.length>1,c=f?"cancelled":y?"reused":o?"multiple":p.length>0?"has":s.complete?"missing":"waiting",g=c==="cancelled"?"Dibatalkan resmi":c==="reused"?"Cocok · Isi sama (R2)":c==="multiple"?"Catatan ganda (R1)":c==="has"?"Catatan cocok":c==="missing"?"Perlu klarifikasi (R1)":"Menunggu data (R0)",S=c==="cancelled"?"Dibatalkan":c==="reused"?"Isi sama":c==="multiple"?"Ganda":c==="has"?"Catatan cocok":c==="missing"?"Belum cocok":"Menunggu data",_=b?J(b.created_at,b.received_at):null,P=b?j(b.patient_specific_text).length:0;return{sessionIndex:v.session_index,claim:v,record:b,matchedRecords:p,queuedLateRecord:a,reusedPairs:m,cancelled:f,reused:y,multiple:o,state:c,stateLabel:g,shortStatus:S,latency:_,normalizedPersonalLength:P}}),d=r.find(v=>v.state==="reused")||r.find(v=>v.state==="missing")||r.find(v=>v.state==="waiting")||r.find(v=>v.state==="cancelled")||r[0],k=s.complete&&(s.missing>0||s.unclaimed>0||s.multiple>0),h=[{code:"R0",name:"Gerbang Kelengkapan Sumber",status:s.complete?"pass":"hold",badge:s.complete?"Memadai":"Belum lengkap",summary:s.complete?`Batch sumber lengkap (${n.length} catatan unik).`:t.length?`${t.length} catatan salah identitas peserta/episode.`:`Batch sumber belum lengkap (${i.late_records.length} catatan di antrean tunda).`},{code:"R1",name:"Pencocokan Sesi Aktif",status:s.complete?k?"warn":"pass":"muted",badge:s.complete?k?`${s.missing} selisih sesi`:`${s.matched}/${s.claimed} cocok`:"Menunggu R0",summary:s.complete?k?`${s.matched} dari ${s.claimed} sesi aktif cocok; ${s.missing} sesi perlu klarifikasi.`:`Seluruh ${s.claimed} sesi tagihan aktif memiliki catatan tindakan selesai${s.cancelled?` (${s.cancelled} batal dikecualikan)`:""}.`:"Evaluasi selisih akhir ditunda hingga batch sumber dinyatakan lengkap."},{code:"R2",name:"Kesamaan Isi Personal",status:s.reused.length?"warn":"pass",badge:s.reused.length?`${s.reused.length} kemiripan`:"Unik / normal",summary:s.reused.length?`Ditemukan isi personal identik (≥60 karakter) dengan ${s.reused.map(v=>v.other_episode_id).join(", ")}.`:"Tidak ada duplikasi isi personal lintas episode (teks formulir standar dikecualikan)."}];return{result:s,sessions:r,identityErrors:t,recommendedSessionIndex:d?d.sessionIndex:1,gates:h}}function H(i){const e=i.map(u=>({ep:u,r:K(u,i)})),s={episodes:e.length,consistent:0,review:0,incomplete:0,claimedSessions:0,matchedSessions:0,missingClarificationSessions:0,waitingDataSessions:0,cancelledSessions:0,reusedEpisodes:0,pendingSyncEpisodes:0,pendingSyncRecords:0,reviewedCount:0},n=new Map,t=[],r=[],d=[],k=[],h=new Set,v=[],$={unreviewed:0,pending:0,legitimate:0,confirmed:0};e.forEach(({ep:u,r:b})=>{s[b.status]+=1,s.claimedSessions+=b.claimed,s.matchedSessions+=b.matched,s.cancelledSessions+=b.cancelled,b.complete?s.missingClarificationSessions+=b.missing:s.waitingDataSessions+=b.missing,u.late_records.length>0&&(s.pendingSyncEpisodes+=1,s.pendingSyncRecords+=u.late_records.length),u.review?(s.reviewedCount+=1,$[u.review.outcome]!==void 0&&($[u.review.outcome]+=1)):$.unreviewed+=1,b.complete||t.push(u.episode_id),b.reasons.some(a=>a.code==="R1")&&r.push(u.episode_id),b.reused.length>0&&(s.reusedEpisodes+=1,d.push(u.episode_id),b.reused.forEach(a=>{const f=[u.episode_id,a.other_episode_id].sort().join("↔");h.has(f)||(h.add(f),v.push({key:f,leftEpisode:u.episode_id,rightEpisode:a.other_episode_id,leftRecord:a.record_id,rightRecord:a.other_record_id,sessionIndex:a.session_index||2}))})),b.cancelled>0&&k.push(u.episode_id),n.has(u.facility_id)||n.set(u.facility_id,{facility_id:u.facility_id,facility_name:u.facility_name,episodes:0,consistent:0,review:0,incomplete:0,claimedSessions:0,matchedSessions:0,missingSessions:0,pendingSyncEpisodes:0,reviewedCount:0,reusedCount:0});const m=n.get(u.facility_id);m.episodes+=1,m[b.status]+=1,m.claimedSessions+=b.claimed,m.matchedSessions+=b.matched,m.missingSessions+=b.missing,u.late_records.length>0&&(m.pendingSyncEpisodes+=1),u.review&&(m.reviewedCount+=1),b.reused.length>0&&(m.reusedCount+=1)});const p=[...n.values()].map(u=>({...u,matchRate:u.claimedSessions?Math.round(u.matchedSessions/u.claimedSessions*100):100})).sort((u,b)=>u.facility_name.localeCompare(b.facility_name));return s.matchRate=s.claimedSessions?Math.round(s.matchedSessions/s.claimedSessions*100):100,{totals:s,facilities:p,rules:{r0Episodes:t,r1Episodes:r,r2Episodes:d,cancelledEpisodes:k,r2Pairs:v},reviewOutcomes:$}}function V(i,e){const s=B(i,e),{result:n,sessions:t}=s,r=`KLAR-${i.episode_id.replace("EP-","")}-202609`,d=n.status==="incomplete"?"PERMINTAAN PELENGKAPAN DATA SUMBER (R0)":n.status==="review"?"PERMINTAAN KLARIFIKASI BUKTI SESI LAYANAN (R1/R2)":"RINGKASAN PEMERIKSAAN BUKTI SESI KONSISTEN",k=[];if(!n.complete){const p=t.filter(u=>u.state==="waiting");k.push({code:"R0",heading:"Konfirmasi Kelengkapan Pengiriman Batch RME",description:`Cakupan sumber untuk ${i.episode_id} (${i.period}) tercatat belum lengkap. Mohon konfirmasi sinkronisasi catatan tindakan fisioterapi pada ${p.length} sesi yang belum diterima: ${p.map(u=>`Sesi ${u.sessionIndex} (${u.claim.service_date}, ref ${u.claim.line_id})`).join("; ")||"periksa pemetaan identitas catatan"}.`})}const h=t.filter(p=>p.state==="missing");if(h.length>0&&k.push({code:"R1",heading:"Klarifikasi Sesi Aktif Tanpa Catatan Tindakan Cocok",description:`Batch sumber telah dinyatakan lengkap, namun terdapat ${h.length} sesi tagihan aktif tanpa rujukan catatan RME berstatus selesai: ${h.map(p=>`Sesi ${p.sessionIndex} (${p.claim.service_date} · ${p.claim.line_id})`).join(", ")}. Mohon lampirkan bukti pelayanan/registrasi kunjungan atau konfirmasi koreksi tagihan.`}),n.reused.length>0&&n.reused.forEach(p=>{k.push({code:"R2",heading:`Konfirmasi Kesamaan Isi Catatan Personal (${p.record_id})`,description:`Jumlah sesi tagihan cocok (${n.matched}/${n.claimed}), namun teks tindak lanjut individual pada ${p.record_id} identik setelah normalisasi dengan catatan episode lain (${p.other_record_id} / ${p.other_episode_id}). Formulir standar telah dikecualikan. Mohon konfirmasi dokumentasi asesmen klinis individual pada sesi tersebut.`})}),n.cancelled>0){const p=t.filter(u=>u.cancelled);k.push({code:"INFO",heading:"Pengecualian Sesi Dibatalkan Resmi",description:`${n.cancelled} sesi yang dibatalkan resmi (${p.map(u=>`${u.claim.line_id} rev.${u.claim.revision}`).join(", ")}) telah dikecualikan dari kewajiban bukti sesi aktif.`})}k.length===0&&k.push({code:"OK",heading:"Kesesuaian Bukti Sesi Terpenuhi",description:`Seluruh ${n.claimed} sesi tagihan aktif pada ${i.episode_id} memiliki rujukan catatan RME selesai yang saling bersesuaian (${t.filter(p=>p.record).map(p=>p.record.record_id).join(", ")}). Tidak diperlukan permintaan klarifikasi tambahan saat ini.`});const v=["Dokumen simulasi ini adalah alat bantu penelusuran administrasi klaim berdasarkan Permenkes No. 16 Tahun 2019, bukan putusan kecurangan (fraud) atau pemotongan pembayaran otomatis.","Sesuai prinsip pelindungan data pribadi (UU No. 27 Tahun 2022), antarmuka analitik menggunakan token peserta (P-DEMO-xxx); pencocokan identitas pasien sebenarnya hanya dilakukan pada lingkungan berizin di fasilitas kesehatan / BPJS Kesehatan.","Keputusan akhir verifikasi dan dampak pembiayaan tetap mengikuti prosedur ajudikasi resmi pejabat berwenang."],$=[`=== JEJAK JKN — ${d} ===`,`Nomor Referensi : ${r}`,`Fasilitas       : ${i.facility_name} (${i.facility_id})`,`Episode / Klaim : ${i.episode_id} / ${i.claim_id} (Revisi v${i.claim_version})`,`Token Peserta   : ${i.patient_token} [DATA SINTETIS]`,`Periode Layanan : ${i.period}`,`Status Mesin    : ${n.label} (${n.matched}/${n.claimed} sesi aktif cocok · ${I})`,"","POIN PENELUSURAN & KLARIFIKASI:",...k.map((p,u)=>`${u+1}. [${p.code}] ${p.heading}
+   ${p.description}`),"",i.review?`CATATAN VERIFIKATOR (${L[i.review.outcome]}):
+"${i.review.note}" — ${i.review.actor} (${i.review.at})
+`:`CATATAN VERIFIKATOR:
+Belum ada catatan tindak lanjut manual yang disimpan.
+`,"CATATAN TATA KELOLA:",...v.map(p=>`- ${p}`)];return{ticketNumber:r,categoryTitle:d,generatedAt:new Date().toISOString(),episode:i,result:n,sessions:t,items:k,governanceNotes:v,plainText:$.join(`
+`)}}const G={VERSION:I,ASOF:A,labels:U,outcomeLabels:L,clone:Z,normalize:j,makeDataset:Y,latestRecords:M,evaluate:K,sync:Q,formatLatency:J,inspectEpisode:B,computePortfolioAnalytics:H,buildClarificationTicket:V};typeof globalThis<"u"&&(globalThis.JejakEngine=G);const R=[{step:1,timeRange:"0:00 – 0:30",title:"Ringkasan Portofolio Awal (40 Episode)",view:"analytics",episodeId:"EP-002",actionLabel:null,script:"“Kami memeriksa 40 episode fisioterapi buatan: 14 membutuhkan klarifikasi, 6 membutuhkan pelengkapan data sumber, dan 20 memiliki bukti konsisten.”",highlight:"Pisahkan keterlambatan data sumber (R0) dari selisih yang layak diklarifikasi (R1/R2)."},{step:2,timeRange:"0:30 – 1:10",title:"Selisih Sesi Aktif — Buka EP-002 (R1)",view:"workspace",episodeId:"EP-002",sessionIndex:9,actionLabel:null,script:"“Episode EP-002 memiliki 12 sesi tagihan aktif dan 8 catatan cocok. Sesi 9 sampai 12 perlu ditelusuri. Sistem menampilkan ID sumber dan alasan R1; petugas tetap memeriksa penjelasannya.”",highlight:"Klik kotak Sesi 9–12 untuk membandingkan baris tagihan dengan kekosongan catatan RME."},{step:3,timeRange:"1:10 – 1:50",title:"Gerbang R0 & Sinkronisasi Parsial — EP-001",view:"workspace",episodeId:"EP-001",sessionIndex:9,actionType:"sync",actionLabel:"Sinkronkan 2 catatan EP-001",script:"“Awalnya sumber EP-001 belum lengkap sehingga berstatus Lengkapi data. Setelah 2 catatan terlambat masuk dan batch lengkap, bukti cocok menjadi 10; 2 sesi sisanya beralih ke Perlu klarifikasi.”",highlight:"Mencegah tuduhan prematur saat pengiriman data RME rumah sakit belum selesai."},{step:4,timeRange:"1:50 – 2:20",title:"Keterlambatan Sah Terselesaikan — EP-010",view:"workspace",episodeId:"EP-010",sessionIndex:5,actionType:"sync",actionLabel:"Sinkronkan 2 catatan EP-010",script:"“Pada EP-010, setelah 2 catatan susulan diterima, seluruh 6 sesi memiliki bukti cocok dan status berubah menjadi Bukti konsisten. Keterlambatan sumber tidak langsung dianggap kecurangan.”",highlight:"Menurunkan beban klarifikasi pada kasus sah yang hanya mengalami jeda sinkronisasi."},{step:5,timeRange:"2:20 – 3:00",title:"Sinyal R2 Isi Personal Identik — EP-015 ↔ EP-016",view:"workspace",episodeId:"EP-015",sessionIndex:2,actionLabel:"Lompat ke pasangan EP-016",actionType:"open-related",relatedEpisodeId:"EP-016",script:"“Pada EP-015, jumlah sesi cocok 6 dari 6, tetapi isi catatan personal Sesi 2 identik dengan EP-016 milik peserta berbeda. Formulir standar dikecualikan. Kemiripan memicu pertanyaan, bukan vonis.”",highlight:"Mendeteksi potensi cloning catatan ketika pengecekan jumlah sesi biasa terlihat normal."},{step:6,timeRange:"3:00 – 3:25",title:"Pembatalan Resmi & Versi Catatan — EP-039",view:"workspace",episodeId:"EP-039",sessionIndex:5,actionLabel:null,script:"“Pada EP-039, dua sesi terakhir yang dibatalkan resmi (revisi v2 / not-done) dikecualikan otomatis. Empat sesi aktif memiliki empat bukti cocok sehingga berstatus Bukti konsisten.”",highlight:"Memperhitungkan koreksi tagihan dan versi catatan terbaru tanpa salah menandai selisih."},{step:7,timeRange:"3:25 – 4:00",title:"Tindak Lanjut Verifikator & Tiket Klarifikasi — EP-002",view:"workspace",episodeId:"EP-002",sessionIndex:9,actionType:"demo-review",actionLabel:"Isi contoh tindak lanjut & buka tiket",script:"“Verifikator mencatat keputusan pemeriksaan serta mencetak tiket klarifikasi faskes atau kartu bukti JSON. Keputusan manusia disimpan terpisah dari sinyal mesin; penghematan hanya diakui setelah ajudikasi resmi.”",highlight:"Tata kelola manusia (human-in-the-loop) menjaga jejak audit tanpa menghapus alasan aturan."}],C=[{id:"demo-ep002",label:"Contoh Presentasi (EP-002)",outcome:"pending",note:"Meminta konfirmasi petugas RME mengenai sesi 9 sampai 12 dan bukti registrasi kunjungan. Referensi demo: CLM-002-S9 sampai CLM-002-S12."},{id:"r0-sync",label:"Minta Sinkronisasi Batch RME (R0)",outcome:"pending",note:"Menghubungi pengelola data faskes untuk melengkapi pengiriman batch RME periode berjalan sebelum evaluasi selisih sesi dilakukan."},{id:"r2-clinical",label:"Klarifikasi Catatan Serupa (R2)",outcome:"pending",note:"Meminta konfirmasi fisioterapis pelaksana terkait kesamaan redaksi catatan progres individual pada Sesi 2 lintas peserta."},{id:"legitimate-doc",label:"Penjelasan Sah Diterima",outcome:"legitimate",note:"Bukti kunjungan dan asesmen fisioterapi terverifikasi sah melalui dokumen pendukung faskes; perbedaan pencatatan bersifat administratif."}],l=i=>String(i??"").replace(/[&<>"']/g,e=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[e]),D=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];function X(i){if(!i||typeof i!="string")return"-";const e=i.slice(0,10).split("-");if(e.length!==3)return i;const s=Number(e[1])-1;return`${Number(e[2])} ${D[s]||e[1]} ${e[0]}`}function ee(i){if(!i||typeof i!="string")return"-";const e=i.slice(0,10).split("-");if(e.length!==3)return i;const s=Number(e[1])-1;return`${Number(e[2])} ${D[s]||e[1]}`}function T(i){if(!i)return"-";const e=new Date(i);if(Number.isNaN(e.getTime()))return i;const s=String(e.getUTCDate()).padStart(2,"0"),n=D[e.getUTCMonth()],t=e.getUTCFullYear(),r=String(e.getUTCHours()).padStart(2,"0"),d=String(e.getUTCMinutes()).padStart(2,"0");return`${s} ${n} ${t}, ${r}:${d} UTC`}function q(i,e,s){if(!e.pitchOpen){i.hidden=!0,i.innerHTML="";return}i.hidden=!1;const n=R[e.pitchIndex]||R[0],t=e.dataset.episodes.find(p=>p.episode_id===n.episodeId);let r=!1,d="";n.actionType==="sync"&&t?(r=t.late_records.length>0,r||(d="Catatan terlambat sudah disinkronkan")):(n.actionType==="open-related"||n.actionType==="demo-review")&&(r=!0),i.innerHTML=`
+    <div class="pitch-bar" role="region" aria-label="Panduan alur presentasi 4 menit">
+      <div class="pitch-top">
+        <div class="pitch-title-group">
+          <span class="pitch-pill">MODE PRESENTASI JURI · ${l(n.timeRange)}</span>
+          <strong class="pitch-step-title">Langkah ${n.step}/7 — ${l(n.title)}</strong>
+        </div>
+        <div class="pitch-dots" role="tablist" aria-label="Pilih langkah presentasi">
+          ${R.map((p,u)=>`
+              <button
+                type="button"
+                class="pitch-dot ${u===e.pitchIndex?"active":""}"
+                data-pitch-step="${u}"
+                aria-label="Langkah ${p.step}: ${l(p.title)}"
+                aria-selected="${u===e.pitchIndex}"
+                title="${l(p.timeRange)} · ${l(p.title)}"
+              >${p.step}</button>
+            `).join("")}
+        </div>
+        <button type="button" class="pitch-close" id="pitch-close" aria-label="Tutup panduan presentasi">Tutup ✕</button>
+      </div>
+
+      <div class="pitch-body">
+        <div class="pitch-copy">
+          <p class="pitch-script">${l(n.script)}</p>
+          <p class="pitch-hint"><span>Fokus pesan:</span> ${l(n.highlight)}</p>
+        </div>
+        <div class="pitch-controls">
+          ${n.actionLabel?r?`<button type="button" class="button accent small" id="pitch-run-action">${l(n.actionLabel)}</button>`:`<span class="pitch-done-chip">✓ ${l(d)}</span>`:""}
+          <div class="pitch-nav-btns">
+            <button type="button" class="button secondary small" id="pitch-prev" ${e.pitchIndex===0?"disabled":""}>← Sebelumnya</button>
+            <button type="button" class="button primary small" id="pitch-next" ${e.pitchIndex===R.length-1?"disabled":""}>Berikutnya →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,i.querySelectorAll("[data-pitch-step]").forEach(p=>{p.addEventListener("click",()=>s.onGoStep(Number(p.dataset.pitchStep)))});const k=i.querySelector("#pitch-prev"),h=i.querySelector("#pitch-next"),v=i.querySelector("#pitch-close"),$=i.querySelector("#pitch-run-action");k&&k.addEventListener("click",()=>s.onGoStep(e.pitchIndex-1)),h&&h.addEventListener("click",()=>s.onGoStep(e.pitchIndex+1)),v&&v.addEventListener("click",()=>s.onClosePitch()),$&&$.addEventListener("click",()=>s.onStepAction(n))}function x(i,e,s){if(!e.ticketEpisodeId){i.hidden=!0,i.innerHTML="";return}const n=e.dataset.episodes.find(h=>h.episode_id===e.ticketEpisodeId);if(!n){i.hidden=!0,i.innerHTML="";return}const t=V(n,e.dataset.episodes),{result:r,sessions:d}=t;i.hidden=!1,i.innerHTML=`
+    <div class="modal-backdrop" id="ticket-backdrop">
+      <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="ticket-modal-title">
+        <div class="modal-toolbar no-print">
+          <div class="modal-toolbar-left">
+            <span class="badge ${r.status}">${l(r.label)}</span>
+            <span class="muted">Pratinjau Dokumen Koordinasi Faskes (Simulasi)</span>
+          </div>
+          <div class="modal-toolbar-actions">
+            <button type="button" class="button secondary small" id="ticket-copy">Salin Teks</button>
+            <button type="button" class="button secondary small" id="ticket-json">Unduh JSON</button>
+            <button type="button" class="button primary small" id="ticket-print">Cetak / Simpan PDF</button>
+            <button type="button" class="button ghost small" id="ticket-close" aria-label="Tutup jendela tiket">✕</button>
+          </div>
+        </div>
+
+        <div class="ticket-sheet" id="printable-ticket">
+          <div class="ticket-sheet-header">
+            <div>
+              <p class="ticket-kicker">JEJAK JKN · DUKUNGAN VERIFIKASI KLAIM FISIOTERAPI (DATA SINTETIS)</p>
+              <h2 id="ticket-modal-title">${l(t.categoryTitle)}</h2>
+              <p class="ticket-ref">No. Referensi: <strong>${l(t.ticketNumber)}</strong> · Dibuat: ${l(T(t.generatedAt))}</p>
+            </div>
+            <div class="ticket-stamp">
+              <span>SIMULASI DEMO</span>
+              <small>${l(I)}</small>
+            </div>
+          </div>
+
+          <div class="ticket-meta-grid">
+            <div>
+              <span>Fasilitas Tujuan</span>
+              <strong>${l(n.facility_name)} (${l(n.facility_id)})</strong>
+            </div>
+            <div>
+              <span>ID Episode &amp; Klaim</span>
+              <strong>${l(n.episode_id)} / ${l(n.claim_id)} (Rev. v${n.claim_version})</strong>
+            </div>
+            <div>
+              <span>Token Peserta</span>
+              <strong>${l(n.patient_token)}</strong>
+            </div>
+            <div>
+              <span>Periode &amp; Cakupan Sumber</span>
+              <strong>${l(n.period)} · ${r.complete?"Batch Lengkap":"Batch Belum Lengkap"}</strong>
+            </div>
+          </div>
+
+          <div class="ticket-section">
+            <h3>1. Rincian Poin Permintaan Data / Klarifikasi</h3>
+            <div class="ticket-items">
+              ${t.items.map(h=>`
+                  <div class="ticket-item">
+                    <div class="ticket-item-head">
+                      <span class="rule-code ${h.code==="R0"?"code-r0":h.code==="OK"||h.code==="INFO"?"code-ok":""}">${l(h.code)}</span>
+                      <strong>${l(h.heading)}</strong>
+                    </div>
+                    <p>${l(h.description)}</p>
+                  </div>
+                `).join("")}
+            </div>
+          </div>
+
+          <div class="ticket-section">
+            <h3>2. Matriks Rujukan Sesi &amp; Bukti Sumber (${r.matched}/${r.claimed} Sesi Aktif Cocok)</h3>
+            <table class="ticket-table">
+              <thead>
+                <tr>
+                  <th>Sesi</th>
+                  <th>ID Baris Klaim</th>
+                  <th>Tgl Layanan</th>
+                  <th>ID Catatan RME</th>
+                  <th>Status Pencocokan</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${d.map(h=>`
+                    <tr class="${h.cancelled?"row-muted":""}">
+                      <td>Sesi ${h.sessionIndex}</td>
+                      <td><code>${l(h.claim.line_id)}</code></td>
+                      <td>${l(h.claim.service_date)}</td>
+                      <td>${h.cancelled?"Dikecualikan (v2)":h.record?`<code>${l(h.record.record_id)}</code>`:"<em>Belum tersedia</em>"}</td>
+                      <td>${l(h.stateLabel)}</td>
+                    </tr>
+                  `).join("")}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="ticket-section">
+            <h3>3. Catatan Tindak Lanjut Verifikator</h3>
+            ${n.review?`
+                  <div class="ticket-review-box">
+                    <strong>Keputusan Pemeriksaan: ${l(L[n.review.outcome])}</strong>
+                    <p>${l(n.review.note)}</p>
+                    <small>Dicatat oleh ${l(n.review.actor)} pada ${l(T(n.review.at))}</small>
+                  </div>
+                `:'<p class="muted">Belum ada catatan tindak lanjut manual yang disimpan verifikator pada sesi demo ini.</p>'}
+          </div>
+
+          <div class="ticket-governance">
+            <strong>Keterangan Tata Kelola &amp; Pelindungan Data:</strong>
+            <ul>
+              ${t.governanceNotes.map(h=>`<li>${l(h)}</li>`).join("")}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;const k=()=>s.onCloseTicket();i.querySelector("#ticket-close").addEventListener("click",k),i.querySelector("#ticket-backdrop").addEventListener("click",h=>{h.target.id==="ticket-backdrop"&&k()}),i.querySelector("#ticket-copy").addEventListener("click",async()=>{try{if(navigator.clipboard?.writeText)await navigator.clipboard.writeText(t.plainText),s.onToast("Teks tiket klarifikasi disalin ke papan klip.");else throw new Error("Clipboard API unavailable")}catch{s.onDownload(`${n.episode_id}-tiket-klarifikasi.txt`,t.plainText,"text/plain;charset=utf-8")}}),i.querySelector("#ticket-json").addEventListener("click",()=>{s.onExportEvidence(n)}),i.querySelector("#ticket-print").addEventListener("click",()=>{window.print()})}const O={review:0,incomplete:1,consistent:2};function ae(i,e,s){if(i.dataset.mounted==="workspace")return;i.dataset.mounted="workspace",i.innerHTML=`
+    <section class="workspace" aria-label="Ruang pemeriksaan verifikator">
+      <aside class="queue-panel" aria-label="Antrean episode">
+        <div class="panel-heading">
+          <div>
+            <h2>Antrean Pemeriksaan</h2>
+            <span class="sub-caption">Urutan prioritas klarifikasi &amp; kelengkapan</span>
+          </div>
+          <span id="queue-count" class="count-pill"></span>
+        </div>
+
+        <div class="queue-controls">
+          <label class="search-label">
+            <span class="sr-only">Cari episode, klaim, peserta, atau fasilitas</span>
+            <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 5 5"></path></svg>
+            <input id="search" type="search" placeholder="Cari EP-002, peserta, faskes…" value="${l(e.query)}">
+          </label>
+
+          <div class="filters" id="filters" role="group" aria-label="Filter status pemeriksaan"></div>
+
+          <div class="sub-filters">
+            <label class="compact-select">
+              <span class="sr-only">Filter fasilitas kesehatan</span>
+              <select id="facility-filter" aria-label="Filter fasilitas kesehatan">
+                <option value="all">Semua Faskes (3 RS)</option>
+                <option value="RS Simulasi Aruna">RS Simulasi Aruna</option>
+                <option value="RS Simulasi Bima">RS Simulasi Bima</option>
+                <option value="RS Simulasi Cakra">RS Simulasi Cakra</option>
+              </select>
+            </label>
+            <label class="compact-select">
+              <span class="sr-only">Filter aturan atau sinyal</span>
+              <select id="signal-filter" aria-label="Filter sinyal aturan">
+                <option value="all">Semua Sinyal</option>
+                <option value="R0">R0 · Sumber Belum Lengkap</option>
+                <option value="R1">R1 · Selisih Sesi Aktif</option>
+                <option value="R2">R2 · Isi Personal Sama</option>
+                <option value="cancelled">Ada Sesi Dibatalkan</option>
+                <option value="reviewed">Sudah Ditindaklanjuti</option>
+                <option value="unreviewed">Belum Ditindaklanjuti</option>
+              </select>
+            </label>
+          </div>
+          <div id="active-filter-bar" class="active-filter-bar" hidden></div>
+        </div>
+
+        <div class="queue-list" id="queue-list" role="list"></div>
+        <p class="queue-foot">40 episode sintetis · Kategori dihitung deterministik oleh ${l(I)}.</p>
+      </aside>
+
+      <article class="detail-panel" id="detail" aria-label="Detail penelusuran bukti episode"></article>
+    </section>
+  `;const n=i.querySelector("#search"),t=i.querySelector("#facility-filter"),r=i.querySelector("#signal-filter");n.addEventListener("input",d=>{s.onFilterChange({query:d.target.value},{queueOnly:!0})}),t.addEventListener("change",d=>{s.onFilterChange({facilityFilter:d.target.value},{queueOnly:!0})}),r.addEventListener("change",d=>{s.onFilterChange({signalFilter:d.target.value},{queueOnly:!0})})}function ie(i,e,s){return s==="all"?!0:s==="R0"?!e.complete:s==="R1"?e.reasons.some(n=>n.code==="R1"):s==="R2"?e.reused.length>0:s==="cancelled"?e.cancelled>0:s==="reviewed"?!!i.review:s==="unreviewed"?!i.review:!0}function N(i,e,s,n){const t=i.querySelector("#search");t&&t.value!==s.query&&(t.value=s.query);const r=i.querySelector("#facility-filter");r&&(r.value=s.facilityFilter);const d=i.querySelector("#signal-filter");d&&(d.value=s.signalFilter);const k={all:e.length,review:e.filter(a=>a.r.status==="review").length,incomplete:e.filter(a=>a.r.status==="incomplete").length,consistent:e.filter(a=>a.r.status==="consistent").length},h=i.querySelector("#filters"),v=[["all","Semua",k.all],["review","Klarifikasi",k.review],["incomplete","Data",k.incomplete],["consistent","Konsisten",k.consistent]];h.innerHTML=v.map(([a,f,y])=>`
+        <button
+          type="button"
+          data-filter="${a}"
+          class="filter ${s.filter===a?"active":""}"
+          aria-pressed="${s.filter===a}"
+        >${f} <span>${y}</span></button>
+      `).join(""),h.querySelectorAll("[data-filter]").forEach(a=>{a.addEventListener("click",()=>{n.onFilterChange({filter:a.dataset.filter},{queueOnly:!0})})});const $=s.filter!=="all"||s.facilityFilter!=="all"||s.signalFilter!=="all"||s.query.trim().length>0,p=i.querySelector("#active-filter-bar");$?(p.hidden=!1,p.innerHTML=`
+      <span>Filter aktif diterapkan</span>
+      <button type="button" class="link-btn" id="clear-filters">Reset filter</button>
+    `,p.querySelector("#clear-filters").addEventListener("click",()=>{n.onFilterChange({filter:"all",facilityFilter:"all",signalFilter:"all",query:""},{queueOnly:!0})})):(p.hidden=!0,p.innerHTML="");const u=s.query.trim().toLowerCase(),b=e.filter(({ep:a,r:f})=>{const y=s.filter==="all"||f.status===s.filter,o=s.facilityFilter==="all"||a.facility_name===s.facilityFilter,c=ie(a,f,s.signalFilter),g=!u||[a.episode_id,a.claim_id,a.patient_token,a.facility_name].join(" ").toLowerCase().includes(u);return y&&o&&c&&g}).sort((a,f)=>O[a.r.status]-O[f.r.status]||a.ep.episode_id.localeCompare(f.ep.episode_id));i.querySelector("#queue-count").textContent=`${b.length}/${e.length}`;const m=i.querySelector("#queue-list");if(!b.length){m.innerHTML=`
+      <div class="empty">
+        <strong>Tidak ada episode yang cocok.</strong>
+        <p>Ubah kata kunci pencarian atau reset filter untuk melihat kembali antrean.</p>
+      </div>
+    `;return}m.innerHTML=b.map(({ep:a,r:f})=>{const y=f.claimed?Math.round(f.matched/f.claimed*100):100,o=f.reasons.map(c=>c.code);return`
+        <button
+          type="button"
+          class="queue-item ${a.episode_id===s.selected?"selected":""}"
+          data-episode="${a.episode_id}"
+          aria-pressed="${a.episode_id===s.selected}"
+        >
+          <span class="queue-item-top">
+            <span class="queue-id-wrap">
+              <strong>${l(a.episode_id)}</strong>
+              ${a.review?'<span class="reviewed-dot" title="Sudah ditindaklanjuti verifikator">✓ Ditinjau</span>':""}
+            </span>
+            <span class="badge ${f.status}">${l(f.label)}</span>
+          </span>
+          <span class="queue-facility">${l(a.facility_name)} · ${l(a.patient_token)}</span>
+          <span class="queue-progress-row">
+            <span class="mini-bar"><i class="fill-${f.status}" style="width:${y}%"></i></span>
+            <span class="queue-ratio"><b>${f.matched}/${f.claimed}</b> sesi</span>
+          </span>
+          <span class="queue-tags">
+            ${o.map(c=>`<span class="q-tag tag-${c.toLowerCase()}">${c}</span>`).join("")}
+            ${f.cancelled?`<span class="q-tag tag-neutral">${f.cancelled} batal</span>`:""}
+            ${a.late_records.length?`<span class="q-tag tag-sync">+${a.late_records.length} tunda</span>`:""}
+          </span>
+        </button>
+      `}).join(""),m.querySelectorAll("[data-episode]").forEach(a=>{a.addEventListener("click",()=>n.onOpenEpisode(a.dataset.episode))})}function te(i,e,s){const n=e.sessions.find(p=>p.sessionIndex===s)||e.sessions[0];if(!n)return"";const{claim:t,record:r,queuedLateRecord:d,reusedPairs:k,latency:h,normalizedPersonalLength:v}=n,$=e.sessions.length;return`
+    <div class="inspector-card" id="session-inspector">
+      <div class="inspector-header">
+        <div class="inspector-title">
+          <span class="inspector-kicker">INSPEKSI BUKTI SESI TERPILIH</span>
+          <h4>Sesi ${n.sessionIndex} dari ${$} · ${l(X(t.service_date))}</h4>
+        </div>
+        <div class="inspector-nav">
+          <span class="session-state-pill pill-${n.state}">${l(n.stateLabel)}</span>
+          <button type="button" class="button ghost tiny" data-session-step="-1" ${n.sessionIndex<=1?"disabled":""} aria-label="Sesi sebelumnya">← Sesi</button>
+          <button type="button" class="button ghost tiny" data-session-step="1" ${n.sessionIndex>=$?"disabled":""} aria-label="Sesi berikutnya">Sesi →</button>
+        </div>
+      </div>
+
+      <div class="inspector-grid">
+        <div class="source-pane claim-pane">
+          <div class="pane-head">
+            <span class="pane-tag">TAGIHAN KLAIM · ChargeItem / Claim</span>
+            <span class="rev-chip">Revisi v${t.revision}</span>
+          </div>
+          <dl class="kv-grid">
+            <div><dt>ID Baris Tagihan</dt><dd><code>${l(t.line_id)}</code></dd></div>
+            <div><dt>Status Tagihan</dt><dd><strong class="${t.status==="cancelled"?"text-muted":"text-ink"}">${t.status==="cancelled"?"Cancelled (Dibatalkan resmi)":"Active (Ditagihkan)"}</strong></dd></div>
+            <div><dt>Tanggal Layanan</dt><dd>${l(t.service_date)}</dd></div>
+            <div><dt>Episode &amp; Peserta</dt><dd>${l(i.episode_id)} · ${l(i.patient_token)}</dd></div>
+          </dl>
+          ${t.status==="cancelled"?`<p class="pane-callout neutral">Baris tagihan ini dibatalkan pada revisi klaim v${t.revision}, sehingga dikecualikan dari perhitungan sesi aktif oleh aturan <b>R1</b>.</p>`:'<p class="pane-callout">Baris tagihan aktif memerlukan catatan tindakan RME berstatus <code>completed</code> pada tanggal layanan dan identitas yang sama.</p>'}
+        </div>
+
+        <div class="source-pane rme-pane">
+          <div class="pane-head">
+            <span class="pane-tag">CATATAN LAYANAN · RME / Procedure</span>
+            ${r?`<span class="rev-chip">Versi v${r.version}</span>`:'<span class="rev-chip missing-chip">0 Catatan Cocok</span>'}
+          </div>
+          ${r?`
+                <dl class="kv-grid">
+                  <div><dt>ID Catatan Sumber</dt><dd><code>${l(r.record_id)}</code></dd></div>
+                  <div><dt>Status Tindakan</dt><dd><strong class="${r.status==="completed"?"text-green":"text-muted"}">${l(r.status)}${r.status==="not-done"?" (Tidak jadi dilaksanakan)":""}</strong></dd></div>
+                  <div><dt>Pelaksana &amp; Sistem</dt><dd>${l(r.therapist_token)} · ${l(r.source_system)}</dd></div>
+                  <div><dt>Jeda Penerimaan</dt><dd><span class="latency-chip ${h?.isDelayed?"delayed":""}">${l(h?.label||"-")}</span></dd></div>
+                </dl>
+                <div class="timestamp-bar">
+                  <span>Dibuat RME: <code>${l(T(r.created_at))}</code></span>
+                  <span>Diterima: <code>${l(T(r.received_at))}</code></span>
+                </div>
+                <div class="clinical-notes-split">
+                  <div class="note-block template-block">
+                    <div class="note-block-head">
+                      <strong>template_text (Formulir Standar)</strong>
+                      <span class="note-rule-chip excluded">Dikecualikan R2</span>
+                    </div>
+                    <p>${l(r.template_text)}</p>
+                  </div>
+                  <div class="note-block personal-block ${k.length?"reused-highlight":""}">
+                    <div class="note-block-head">
+                      <strong>patient_specific_text (Isi Individual)</strong>
+                      <span class="note-rule-chip ${k.length?"flagged":"checked"}">
+                        ${v} kar. · ${k.length?"Identik lintas episode (R2)":"Diperiksa R2 (≥60 kar.)"}
+                      </span>
+                    </div>
+                    <p>${l(r.patient_specific_text)}</p>
+                  </div>
+                </div>
+              `:`
+                <div class="missing-record-state ${e.result.complete?"state-r1":"state-r0"}">
+                  <strong>${e.result.complete?"Tidak ditemukan catatan tindakan RME yang cocok (Sinyal R1)":"Menunggu kelengkapan pengiriman batch RME (Gerbang R0)"}</strong>
+                  <p>${e.result.complete?`Cakupan sumber dari ${l(i.facility_name)} telah dinyatakan lengkap, tetapi belum ada catatan berstatus completed untuk Sesi ${n.sessionIndex} (${l(t.service_date)}).`:`Batch pengiriman sumber untuk ${l(i.episode_id)} belum dinyatakan lengkap. Selisih pada Sesi ${n.sessionIndex} masih berstatus sementara.`}</p>
+                  ${d?`<div class="late-preview-hint">Simulasi konektor: tersedia catatan susulan <code>${l(d.record_id)}</code> di antrean terlambat. Klik tombol <b>Sinkronkan</b> di atas untuk menguji perhitungan ulang.</div>`:e.result.complete?"":`<div class="late-preview-hint muted-hint">Catatan: Sesi ${n.sessionIndex} ini juga belum ada di paket susulan konektor; jika batch dinyatakan lengkap tanpa catatan ini, status akan beralih ke klarifikasi R1.</div>`}
+                </div>
+              `}
+        </div>
+      </div>
+    </div>
+  `}function F(i,e,s){const n=i.querySelector("#detail"),t=e.dataset.episodes.find(a=>a.episode_id===e.selected);if(!t)return;const r=B(t,e.dataset.episodes),{result:d,sessions:k,gates:h}=r,v=e.selectedSessionByEpisode[t.episode_id]||r.recommendedSessionIndex,$=e.reviewDrafts[t.episode_id]||{outcome:t.review?.outcome||"pending",note:""};n.innerHTML=`
+    <div class="detail-header">
+      <div class="detail-top-row">
+        <div>
+          <div class="detail-title-line">
+            <h2>${l(t.episode_id)} <span class="muted">/ ${l(t.claim_id)}</span></h2>
+            <span class="badge ${d.status}">${l(d.label)}</span>
+            ${t.review?`<span class="human-pill outcome-${l(t.review.outcome)}">Keputusan manusia: ${l(L[t.review.outcome])}</span>`:""}
+          </div>
+          <p class="detail-meta">
+            <strong>${l(t.facility_name)}</strong> (${l(t.facility_id)}) · Peserta <code>${l(t.patient_token)}</code> · ${l(t.period)}
+          </p>
+        </div>
+
+        <div class="detail-actions">
+          ${t.late_records.length?`<button type="button" id="sync" class="button accent">↻ Sinkronkan ${t.late_records.length} catatan terlambat</button>`:""}
+          <button type="button" id="open-ticket" class="button secondary">Tiket Klarifikasi Faskes</button>
+          <button type="button" id="export-case" class="button secondary">Ekspor Kartu Bukti</button>
+        </div>
+      </div>
+
+      <div class="detail-snapshot">
+        <span>Mesin Aturan: <b>${l(I)}</b></span>
+        <span>Revisi Klaim: <b>v${t.claim_version}</b></span>
+        <span>Cakupan Sumber: <b>${d.complete?"Batch lengkap":"Batch belum lengkap"}</b></span>
+        <span>Snapshot Diterima: <b>${l(T(t.source_received_at))}</b></span>
+      </div>
+    </div>
+
+    <div class="content-pad">
+      <div class="gate-pipeline" aria-label="Alur pemeriksaan tiga tahap">
+        ${h.map(a=>`
+            <div class="gate-step gate-${a.status}">
+              <div class="gate-step-top">
+                <span class="gate-code">${l(a.code)}</span>
+                <span class="gate-badge">${l(a.badge)}</span>
+              </div>
+              <strong>${l(a.name)}</strong>
+              <p>${l(a.summary)}</p>
+            </div>
+          `).join("")}
+      </div>
+
+      ${d.reasons.map(a=>`
+          <div class="reason ${a.code==="R0"?"data":a.code==="R2"?"reuse-reason":""}">
+            <div class="reason-top">
+              <span class="rule-code">${l(a.code)}</span>
+              <span>${l(a.title)}</span>
+            </div>
+            <p>${l(a.detail)}</p>
+          </div>
+        `).join("")}
+
+      ${d.status==="consistent"?`<div class="consistent-note">
+               <strong>Bukti sesi yang diterima saling bersesuaian.</strong>
+               <span>Seluruh tagihan sesi aktif memiliki catatan tindakan selesai tanpa duplikasi isi personal lintas episode. Hasil ini menunjukkan konsistensi data, bukan pembuktian mutlak pelaksanaan klinis di lapangan.</span>
+             </div>`:""}
+
+      <div class="evidence-metrics">
+        <div class="mini-metric">
+          <span>Sesi tagihan aktif</span>
+          <strong>${d.claimed}</strong>
+          <small>${d.cancelled?`${d.cancelled} sesi dibatalkan dikecualikan`:"Unit pemeriksaan internal"}</small>
+        </div>
+        <div class="mini-metric metric-ok">
+          <span>Catatan sesi cocok</span>
+          <strong>${d.matched}</strong>
+          <small>${d.claimed?Math.round(d.matched/d.claimed*100):100}% sesi aktif memiliki rujukan RME</small>
+        </div>
+        <div class="mini-metric ${d.missing?d.complete?"metric-warn":"metric-info":""}">
+          <span>${d.complete?"Belum cocok (klarifikasi)":"Belum cocok sementara"}</span>
+          <strong>${d.missing}</strong>
+          <small>${d.missing_indexes.length?`Sesi: ${d.missing_indexes.join(", ")}`:"Tidak ada selisih sesi aktif"}</small>
+        </div>
+      </div>
+
+      <div class="section-heading">
+        <div>
+          <h3>Jejak Setiap Sesi Layanan</h3>
+          <span class="sub-caption">Klik kotak sesi untuk membandingkan baris tagihan klaim dan catatan RME secara berdampingan</span>
+        </div>
+        <div class="legend">
+          <span class="leg-has">Cocok</span>
+          <span class="leg-missing">Klarifikasi</span>
+          <span class="leg-waiting">Menunggu data</span>
+          <span class="leg-reused">Isi sama (R2)</span>
+          <span class="leg-cancelled">Dibatalkan</span>
+        </div>
+      </div>
+
+      <div class="session-grid" role="listbox" aria-label="Pilih sesi fisioterapi untuk diinspeksi">
+        ${k.map(a=>`
+            <button
+              type="button"
+              role="option"
+              aria-selected="${a.sessionIndex===v}"
+              class="session ${a.state} ${a.sessionIndex===v?"selected-session":""}"
+              data-select-session="${a.sessionIndex}"
+              title="${l(a.claim.line_id)} · ${l(a.stateLabel)}"
+            >
+              <span class="session-num">Sesi ${a.sessionIndex}</span>
+              <small class="session-date">${l(ee(a.claim.service_date))}</small>
+              <small class="session-status">${l(a.shortStatus)}</small>
+              <code class="session-rec">${a.cancelled?"v2 batal":a.record?l(a.record.record_id):"—"}</code>
+            </button>
+          `).join("")}
+      </div>
+
+      ${te(t,r,v)}
+
+      ${d.reused.length?`
+            <div class="section-heading">
+              <div>
+                <h3>Perbandingan Keterkaitan Isi Personal Lintas Episode (Sinyal R2)</h3>
+                <span class="sub-caption">Kesamaan isi setelah normalisasi spasi &amp; huruf kecil merupakan petunjuk klarifikasi, bukan vonis kecurangan</span>
+              </div>
+            </div>
+            <div class="r2-diff-list">
+              ${d.reused.map(a=>`
+                  <div class="r2-diff-card">
+                    <div class="r2-diff-columns">
+                      <div class="r2-col">
+                        <span class="r2-col-label">Episode Saat Ini</span>
+                        <strong>${l(t.episode_id)} · ${l(t.patient_token)}</strong>
+                        <small>${l(t.facility_name)} · Catatan <code>${l(a.record_id)}</code> (Sesi ${a.session_index||2})</small>
+                      </div>
+                      <div class="r2-connector" aria-hidden="true">⇄ Identik 100%</div>
+                      <div class="r2-col linked">
+                        <span class="r2-col-label">Episode Pasangan Berbeda</span>
+                        <strong>${l(a.other_episode_id)} · ${l(a.other_patient_token)}</strong>
+                        <small>${l(a.other_facility_name||"RS Simulasi")} · Catatan <code>${l(a.other_record_id)}</code></small>
+                        <button type="button" class="button secondary tiny r2-jump" data-related="${l(a.other_episode_id)}">Buka ${l(a.other_episode_id)} →</button>
+                      </div>
+                    </div>
+                    <div class="r2-shared-text">
+                      <span>Teks personal identik yang terdeteksi (formulir standar tidak ikut dibandingkan):</span>
+                      <blockquote>“${l(a.text)}”</blockquote>
+                    </div>
+                  </div>
+                `).join("")}
+            </div>
+          `:""}
+
+      <details class="table-accordion" open>
+        <summary>
+          <span>Daftar Bukti Lengkap Seluruh Sesi (${k.length} baris)</span>
+          <small>Klik baris tabel untuk memilih sesi pada panel inspeksi</small>
+        </summary>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Sesi</th>
+                <th scope="col">ID Baris Klaim</th>
+                <th scope="col">Tgl Layanan</th>
+                <th scope="col">ID Catatan RME</th>
+                <th scope="col">Pelaksana &amp; Versi</th>
+                <th scope="col">Hasil Pencocokan</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${k.map(a=>`
+                  <tr
+                    class="clickable-row ${a.cancelled?"row-muted":""} ${a.sessionIndex===v?"active-table-row":""}"
+                    data-select-session="${a.sessionIndex}"
+                  >
+                    <td><b>Sesi ${a.sessionIndex}</b></td>
+                    <td><code>${l(a.claim.line_id)}</code></td>
+                    <td>${l(a.claim.service_date)}</td>
+                    <td>${a.cancelled?"Dikecualikan":a.record?`<code>${l(a.record.record_id)}</code>`:'<span class="muted">Belum tersedia</span>'}</td>
+                    <td>${a.record?`${l(a.record.therapist_token)} · v${a.record.version}`:"—"}</td>
+                    <td><span class="table-state state-${a.state}">${l(a.stateLabel)}</span></td>
+                  </tr>
+                `).join("")}
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <div class="review-box" id="review-section">
+        <div class="review-box-head">
+          <div>
+            <h3>Tindak Lanjut Verifikator (Human-in-the-Loop)</h3>
+            <p>Catat hasil penelusuran beserta rujukan ID bukti. Menyimpan keputusan tidak menghapus sinyal aturan mesin agar riwayat audit tetap utuh.</p>
+          </div>
+          <span class="governance-badge">Tata Kelola Bab 8.4</span>
+        </div>
+
+        ${t.review?`
+              <div class="review-saved outcome-box-${l(t.review.outcome)}">
+                <div class="review-saved-top">
+                  <strong>${l(L[t.review.outcome])}</strong>
+                  <span>${l(t.review.actor)} · ${l(T(t.review.at))}</span>
+                </div>
+                <p>${l(t.review.note)}</p>
+              </div>
+            `:""}
+
+        <div class="quick-templates">
+          <span class="template-caption">Isi cepat contoh catatan:</span>
+          ${C.map(a=>`
+              <button type="button" class="chip-btn" data-tpl="${l(a.id)}">${l(a.label)}</button>
+            `).join("")}
+        </div>
+
+        <form id="review-form">
+          <div class="review-controls">
+            <label>
+              Hasil pemeriksaan manusia
+              <select id="outcome">
+                <option value="pending" ${$.outcome==="pending"?"selected":""}>Perlu bukti tambahan</option>
+                <option value="legitimate" ${$.outcome==="legitimate"?"selected":""}>Penjelasan sah diterima</option>
+                <option value="confirmed" ${$.outcome==="confirmed"?"selected":""}>Ketidaksesuaian terkonfirmasi</option>
+              </select>
+            </label>
+            <label>
+              Catatan verifikator &amp; rujukan ID bukti (tanpa data identitas pasien asli)
+              <textarea
+                id="review-note"
+                required
+                maxlength="600"
+                placeholder="Contoh: Meminta konfirmasi petugas RME mengenai sesi 9 sampai 12 dan bukti registrasi kunjungan…"
+              >${l($.note)}</textarea>
+            </label>
+          </div>
+          <div class="review-form-actions">
+            <button type="submit" class="button primary">Simpan Tindak Lanjut</button>
+            <span class="source-note">Nominal pembiayaan tidak dihitung otomatis dari selisih sesi; dampak finansial mengikuti keputusan ajudikasi resmi.</span>
+          </div>
+        </form>
+      </div>
+
+      <div class="section-heading">
+        <div>
+          <h3>Riwayat Pemeriksaan Sesi Demo</h3>
+          <span class="sub-caption">Tersimpan di memori browser selama halaman dibuka</span>
+        </div>
+      </div>
+      <ul class="audit">
+        ${t.events.slice().reverse().map(a=>`
+            <li>
+              <b>${l(a.action)}</b>
+              <span>${l(a.actor)} · ${l(T(a.at))}</span>
+              <p>${l(a.detail)}</p>
+            </li>
+          `).join("")}
+      </ul>
+    </div>
+  `;const p=n.querySelector("#sync");p&&p.addEventListener("click",()=>s.onSyncEpisode(t.episode_id)),n.querySelector("#open-ticket").addEventListener("click",()=>{s.onOpenTicket(t.episode_id)}),n.querySelector("#export-case").addEventListener("click",()=>{s.onExportEvidence(t)}),n.querySelectorAll("[data-select-session]").forEach(a=>{a.addEventListener("click",()=>{s.onSelectSession(t.episode_id,Number(a.dataset.selectSession))})}),n.querySelectorAll("[data-session-step]").forEach(a=>{a.addEventListener("click",()=>{const f=v+Number(a.dataset.sessionStep);f>=1&&f<=k.length&&s.onSelectSession(t.episode_id,f)})}),n.querySelectorAll("[data-related]").forEach(a=>{a.addEventListener("click",()=>s.onOpenEpisode(a.dataset.related,2))});const u=n.querySelector("#outcome"),b=n.querySelector("#review-note"),m=()=>{s.onUpdateDraft(t.episode_id,u.value,b.value)};u.addEventListener("change",m),b.addEventListener("input",m),n.querySelectorAll("[data-tpl]").forEach(a=>{a.addEventListener("click",()=>{const f=C.find(y=>y.id===a.dataset.tpl);f&&(u.value=f.outcome,b.value=f.note,m(),b.focus())})}),n.querySelector("#review-form").addEventListener("submit",a=>{a.preventDefault(),s.onSaveReview(t.episode_id,u.value,b.value)})}function se(i,e,s){const n=Math.max(i+e+s,1),t=52,r=2*Math.PI*t,d=[{val:i,color:"#158060",label:"Bukti konsisten"},{val:e,color:"#d97706",label:"Perlu klarifikasi"},{val:s,color:"#2573b8",label:"Lengkapi data"}];let k=0;const h=d.filter(v=>v.val>0).map(v=>{const $=v.val/n*r,p=`${$} ${r-$}`,u=-k;return k+=$,`<circle cx="68" cy="68" r="${t}" fill="none" stroke="${v.color}" stroke-width="16" stroke-dasharray="${p}" stroke-dashoffset="${u}" transform="rotate(-90 68 68)" />`}).join("");return`
+    <svg class="donut-svg" viewBox="0 0 136 136" role="img" aria-label="Komposisi status 40 episode">
+      <circle cx="68" cy="68" r="${t}" fill="none" stroke="#e8eff6" stroke-width="16" />
+      ${h}
+      <text x="68" y="64" text-anchor="middle" class="donut-big">${n}</text>
+      <text x="68" y="81" text-anchor="middle" class="donut-sub">episode</text>
+    </svg>
+  `}function ne(i,e,s){i.dataset.mounted="analytics";const n=H(e.dataset.episodes),{totals:t,facilities:r,rules:d,reviewOutcomes:k}=n,h=t.claimedSessions+t.cancelledSessions,v=h?t.matchedSessions/h*100:0,$=h?t.missingClarificationSessions/h*100:0,p=h?t.waitingDataSessions/h*100:0,u=h?t.cancelledSessions/h*100:0;i.innerHTML=`
+    <section class="analytics-view" aria-label="Analitik fasilitas kesehatan dan portofolio">
+      <div class="analytics-grid-top">
+        <div class="card portfolio-card">
+          <div class="card-head">
+            <div>
+              <span class="eyebrow-sm">DISTRIBUSI PORTOFOLIO EPISODE &amp; SESI</span>
+              <h2>Ringkasan Kesiapan Bukti Layanan Fisioterapi</h2>
+            </div>
+            ${t.pendingSyncEpisodes>0?`<button type="button" class="button accent small" id="sync-all-btn">↻ Sinkronkan Semua Batch Terlambat (${t.pendingSyncEpisodes} Episode)</button>`:'<span class="synced-all-badge">✓ Seluruh batch terlambat telah disinkronkan</span>'}
+          </div>
+
+          <div class="portfolio-visual-row">
+            <div class="donut-wrap">
+              ${se(t.consistent,t.review,t.incomplete)}
+              <div class="donut-legend">
+                <div><i class="dot-consistent"></i><span>Bukti konsisten</span><b>${t.consistent} ep (${Math.round(t.consistent/t.episodes*100)}%)</b></div>
+                <div><i class="dot-review"></i><span>Perlu klarifikasi</span><b>${t.review} ep (${Math.round(t.review/t.episodes*100)}%)</b></div>
+                <div><i class="dot-incomplete"></i><span>Lengkapi data</span><b>${t.incomplete} ep (${Math.round(t.incomplete/t.episodes*100)}%)</b></div>
+              </div>
+            </div>
+
+            <div class="session-coverage-box">
+              <div class="coverage-top">
+                <div>
+                  <span class="muted">Cakupan Bukti Tingkat Sesi Aktif</span>
+                  <strong class="coverage-big">${t.matchedSessions} / ${t.claimedSessions} <span>sesi cocok (${t.matchRate}%)</span></strong>
+                </div>
+                <span class="muted">${h} total baris klaim (${t.cancelledSessions} batal resmi)</span>
+              </div>
+
+              <div class="stacked-bar" role="img" aria-label="Proporsi pencocokan seluruh sesi">
+                <span class="seg-matched" style="width:${v}%" title="Catatan cocok: ${t.matchedSessions}"></span>
+                <span class="seg-clarify" style="width:${$}%" title="Perlu klarifikasi: ${t.missingClarificationSessions}"></span>
+                <span class="seg-waiting" style="width:${p}%" title="Menunggu data R0: ${t.waitingDataSessions}"></span>
+                <span class="seg-cancelled" style="width:${u}%" title="Dibatalkan resmi: ${t.cancelledSessions}"></span>
+              </div>
+
+              <div class="session-stat-chips">
+                <div class="s-chip ok"><b>${t.matchedSessions}</b><span>Sesi aktif cocok</span></div>
+                <div class="s-chip warn"><b>${t.missingClarificationSessions}</b><span>Selisih sesi (R1)</span></div>
+                <div class="s-chip info"><b>${t.waitingDataSessions}</b><span>Menunggu batch (R0)</span></div>
+                <div class="s-chip neutral"><b>${t.cancelledSessions}</b><span>Dibatalkan resmi (v2)</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card governance-card">
+          <span class="eyebrow-sm">TATA KELOLA MANUSIA (BAB 8.4)</span>
+          <h2>Progres Tindak Lanjut Verifikator</h2>
+          <p class="muted">Keputusan pemeriksa dicatat terpisah dari status aturan ${l(I)}.</p>
+
+          <div class="gov-progress-num">
+            <strong>${t.reviewedCount}<span>/${t.episodes}</span></strong>
+            <small>episode telah diberi catatan tindak lanjut pada sesi ini</small>
+          </div>
+
+          <div class="gov-list">
+            <div class="gov-row">
+              <span>Perlu bukti tambahan</span>
+              <b>${k.pending}</b>
+            </div>
+            <div class="gov-row">
+              <span>Penjelasan sah diterima</span>
+              <b>${k.legitimate}</b>
+            </div>
+            <div class="gov-row">
+              <span>Ketidaksesuaian terkonfirmasi</span>
+              <b>${k.confirmed}</b>
+            </div>
+            <div class="gov-row muted-row">
+              <span>Belum ditindaklanjuti</span>
+              <b>${k.unreviewed}</b>
+            </div>
+          </div>
+
+          <button type="button" class="button secondary full-btn" id="open-priority-queue">
+            Buka Antrean Prioritas Klarifikasi (${t.review}) →
+          </button>
+        </div>
+      </div>
+
+      <div class="section-heading">
+        <div>
+          <h2>Perbandingan Antar Fasilitas Kesehatan Simulasi</h2>
+          <span class="sub-caption">Klik fasilitas untuk memfilter antrean ruang kerja verifikator</span>
+        </div>
+      </div>
+
+      <div class="facility-grid">
+        ${r.map(m=>{const a=m.consistent/m.episodes*100,f=m.review/m.episodes*100,y=m.incomplete/m.episodes*100;return`
+              <div class="card facility-card">
+                <div class="facility-head">
+                  <div>
+                    <span class="fac-code">${l(m.facility_id)}</span>
+                    <h3>${l(m.facility_name)}</h3>
+                  </div>
+                  <span class="fac-rate">${m.matchRate}% <span>sesi cocok</span></span>
+                </div>
+
+                <div class="stacked-bar compact-bar" title="Konsisten ${m.consistent}, Klarifikasi ${m.review}, Data ${m.incomplete}">
+                  <span class="seg-matched" style="width:${a}%"></span>
+                  <span class="seg-clarify" style="width:${f}%"></span>
+                  <span class="seg-waiting" style="width:${y}%"></span>
+                </div>
+
+                <div class="fac-metrics">
+                  <div><span>Total Episode</span><strong>${m.episodes}</strong></div>
+                  <div><span>Klarifikasi</span><strong class="text-warn">${m.review}</strong></div>
+                  <div><span>Lengkapi Data</span><strong class="text-info">${m.incomplete}</strong></div>
+                  <div><span>Konsisten</span><strong class="text-green">${m.consistent}</strong></div>
+                </div>
+
+                <div class="fac-foot-meta">
+                  <span>Sesi aktif cocok: <b>${m.matchedSessions}/${m.claimedSessions}</b></span>
+                  <span>${m.pendingSyncEpisodes?`${m.pendingSyncEpisodes} batch tunda`:"Batch lengkap"}</span>
+                </div>
+
+                <button type="button" class="button secondary small full-btn" data-open-facility="${l(m.facility_name)}">
+                  Buka Antrean ${l(m.facility_name)} →
+                </button>
+              </div>
+            `}).join("")}
+      </div>
+
+      <div class="section-heading">
+        <div>
+          <h2>Peta Sinyal Aturan yang Dapat Dijelaskan (${l(I)})</h2>
+          <span class="sub-caption">Klik chip episode untuk langsung membuka rincian bukti sesi terkait</span>
+        </div>
+      </div>
+
+      <div class="rules-analytics-grid">
+        <div class="card rule-stat-card border-r0">
+          <div class="rule-stat-top">
+            <span class="rule-code code-r0">R0</span>
+            <strong>Gerbang Kelengkapan Sumber</strong>
+            <span class="rule-count-pill">${d.r0Episodes.length} episode</span>
+          </div>
+          <p>Menahan penarikan kesimpulan selisih sesi apabila batch pengiriman RME belum lengkap atau terdapat salah pemetaan identitas.</p>
+          <div class="ep-chip-list">
+            ${d.r0Episodes.length?d.r0Episodes.map(m=>`<button type="button" class="ep-chip" data-jump-episode="${l(m)}">${l(m)}</button>`).join(""):'<span class="muted">Seluruh episode telah melewati gerbang R0.</span>'}
+          </div>
+        </div>
+
+        <div class="card rule-stat-card border-r1">
+          <div class="rule-stat-top">
+            <span class="rule-code">R1</span>
+            <strong>Selisih Pencocokan Sesi Aktif</strong>
+            <span class="rule-count-pill">${d.r1Episodes.length} episode</span>
+          </div>
+          <p>Mencocokkan setiap sesi tagihan aktif dengan catatan RME berstatus selesai pada tanggal &amp; identitas yang sama setelah sumber lengkap.</p>
+          <div class="ep-chip-list">
+            ${d.r1Episodes.map(m=>`<button type="button" class="ep-chip" data-jump-episode="${l(m)}">${l(m)}</button>`).join("")}
+          </div>
+        </div>
+
+        <div class="card rule-stat-card border-r2">
+          <div class="rule-stat-top">
+            <span class="rule-code">R2</span>
+            <strong>Kesamaan Isi Personal Lintas Episode</strong>
+            <span class="rule-count-pill">${d.r2Episodes.length} episode (${d.r2Pairs.length} pasang)</span>
+          </div>
+          <p>Mendeteksi teks progres individual identik (≥60 karakter ternormalisasi) antar peserta berbeda walaupun jumlah sesi cocok penuh.</p>
+          <div class="ep-chip-list">
+            ${d.r2Pairs.map(m=>`<button type="button" class="ep-chip pair-chip" data-jump-episode="${l(m.leftEpisode)}" data-jump-session="2">${l(m.leftEpisode)} ↔ ${l(m.rightEpisode)}</button>`).join("")}
+          </div>
+        </div>
+
+        <div class="card rule-stat-card border-ok">
+          <div class="rule-stat-top">
+            <span class="rule-code code-ok">v2</span>
+            <strong>Koreksi Pembatalan &amp; Versi Catatan</strong>
+            <span class="rule-count-pill">${d.cancelledEpisodes.length} episode</span>
+          </div>
+          <p>Mengecualikan sesi tagihan yang dibatalkan resmi serta mengacu pada versi catatan terbaru sehingga tidak salah ditandai sebagai selisih.</p>
+          <div class="ep-chip-list">
+            ${d.cancelledEpisodes.map(m=>`<button type="button" class="ep-chip ok-chip" data-jump-episode="${l(m)}" data-jump-session="5">${l(m)} (2 batal dikecualikan)</button>`).join("")}
+          </div>
+        </div>
+      </div>
+
+      <div class="card arch-card">
+        <div class="card-head">
+          <div>
+            <span class="eyebrow-sm">ARSITEKTUR TARGET &amp; PEMETAAN INTEROPERABILITAS (BAB 4.2 – 4.3)</span>
+            <h2>Alur Pemrosesan JEJAK JKN &amp; Rujukan Standar SATUSEHAT FHIR</h2>
+          </div>
+          <span class="arch-note-pill">Prototipe memproses data sintetis di browser · Konektor pilot direncanakan</span>
+        </div>
+
+        <div class="arch-flow-diagram" role="img" aria-label="Diagram alur pemrosesan dari sumber data ke gerbang R0, aturan R1 dan R2, hingga kartu bukti verifikator">
+          <div class="arch-stage">
+            <span class="stage-num">1. Sumber Data Berizin</span>
+            <strong>Tagihan, Kunjungan &amp; Catatan Tindakan</strong>
+            <small>Termasuk koreksi pembatalan &amp; penanda waktu terima</small>
+            <div class="fhir-pills"><span>Encounter</span><span>Procedure</span><span>ChargeItem</span><span>Claim</span></div>
+          </div>
+          <div class="arch-arrow" aria-hidden="true">→</div>
+          <div class="arch-stage">
+            <span class="stage-num">2. Pemetaan &amp; Tokenisasi</span>
+            <strong>Episode &amp; Identitas Bertoken</strong>
+            <small>Tanpa menampilkan NIK/nama asli di ruang analitik umum (UU PDP)</small>
+          </div>
+          <div class="arch-arrow" aria-hidden="true">→</div>
+          <div class="arch-stage highlight-r0">
+            <span class="stage-num">3. Gerbang R0</span>
+            <strong>Pemeriksaan Kelengkapan Sumber</strong>
+            <small>Belum lengkap → <em>Lengkapi data</em> &amp; hitung ulang saat sinkron</small>
+          </div>
+          <div class="arch-arrow" aria-hidden="true">→</div>
+          <div class="arch-stage highlight-r12">
+            <span class="stage-num">4. Mesin Aturan R1 &amp; R2</span>
+            <strong>Pencocokan Sesi &amp; Isi Personal</strong>
+            <small>Mengecualikan sesi batal &amp; teks formulir standar</small>
+          </div>
+          <div class="arch-arrow" aria-hidden="true">→</div>
+          <div class="arch-stage highlight-gov">
+            <span class="stage-num">5. Ruang Kerja &amp; Tata Kelola</span>
+            <strong>Kartu Bukti, Tiket Faskes &amp; Verifikator</strong>
+            <small>Keputusan pembayaran mengikuti proses ajudikasi resmi</small>
+            <div class="fhir-pills"><span>ClaimResponse</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;const b=i.querySelector("#sync-all-btn");b&&b.addEventListener("click",()=>s.onSyncAllLate()),i.querySelector("#open-priority-queue").addEventListener("click",()=>{s.onJumpToFilter({filter:"review",facilityFilter:"all",signalFilter:"all"})}),i.querySelectorAll("[data-open-facility]").forEach(m=>{m.addEventListener("click",()=>{s.onJumpToFilter({filter:"all",facilityFilter:m.dataset.openFacility,signalFilter:"all"})})}),i.querySelectorAll("[data-jump-episode]").forEach(m=>{m.addEventListener("click",()=>{const a=m.dataset.jumpSession?Number(m.dataset.jumpSession):void 0;s.onOpenEpisode(m.dataset.jumpEpisode,a)})})}function le(){const i=G,e={dataset:i.makeDataset(),view:"workspace",selected:"EP-002",selectedSessionByEpisode:{},reviewDrafts:{},filter:"all",facilityFilter:"all",signalFilter:"all",query:"",pitchOpen:!1,pitchIndex:0,ticketEpisodeId:null};let s=null;const n=o=>document.getElementById(o);function t(){return e.dataset.episodes.map(o=>({ep:o,r:i.evaluate(o,e.dataset.episodes)}))}function r(o){const c=n("toast");c&&(c.textContent=o,c.hidden=!1,s&&clearTimeout(s),s=setTimeout(()=>{c.hidden=!0},4e3))}function d(o,c,g){const S=URL.createObjectURL(new Blob([c],{type:g})),_=document.createElement("a");_.href=S,_.download=o,_.click(),setTimeout(()=>URL.revokeObjectURL(S),500),r(`Berkas ${o} berhasil disiapkan.`)}function k(o){return{synthetic:!0,exported_at:new Date().toISOString(),rule_version:i.VERSION,episode:{...o,late_records:void 0,scenario_label:void 0},result:i.evaluate(o,e.dataset.episodes),limitations:"Kartu ini berisi data sintetis dan log sesi browser. Ini bukan bukti audit produksi atau keputusan fraud."}}function h(o){d(`${o.episode_id}-kartu-bukti.json`,JSON.stringify(k(o),null,2),"application/json")}function v(o){const c=E=>o.filter(z=>z.r.status===E).length,g=o.filter(E=>!!E.ep.review).length,S=o.filter(E=>E.ep.late_records.length>0).length,_=o.length,P=[{key:"all",cls:"",title:"Episode diperiksa",value:_,pct:`${g}/${_} ditinjau`,sub:"Klik untuk tampilkan seluruh episode"},{key:"review",cls:"review",title:"Perlu klarifikasi",value:c("review"),pct:`${Math.round(c("review")/_*100)}%`,sub:"Sumber lengkap, ada selisih R1 / sinyal R2"},{key:"incomplete",cls:"incomplete",title:"Lengkapi data",value:c("incomplete"),pct:S?`${S} siap sinkron`:"0 tunda",sub:"Gerbang R0: selisih masih sementara"},{key:"consistent",cls:"consistent",title:"Bukti konsisten",value:c("consistent"),pct:`${Math.round(c("consistent")/_*100)}%`,sub:"Tagihan aktif & catatan saling cocok"}];n("stats").innerHTML=P.map(E=>`
+        <button
+          type="button"
+          class="stat ${E.cls} ${e.view==="workspace"&&e.filter===E.key?"active-kpi":""}"
+          data-kpi-filter="${E.key}"
+        >
+          <div class="stat-top">
+            <span class="stat-label">${l(E.title)}</span>
+            <span class="stat-pct">${l(E.pct)}</span>
+          </div>
+          <div class="stat-value">${E.value}</div>
+          <div class="stat-foot">${l(E.sub)}</div>
+        </button>
+      `).join(""),n("stats").querySelectorAll("[data-kpi-filter]").forEach(E=>{E.addEventListener("click",()=>{e.view="workspace",e.filter=E.dataset.kpiFilter,u()})});const w=n("tab-queue-badge");w&&(w.textContent=String(c("review")+c("incomplete")))}function $(){document.querySelectorAll("[data-view]").forEach(c=>{const g=c.dataset.view===e.view;c.classList.toggle("active",g),c.setAttribute("aria-selected",String(g))});const o=n("toggle-pitch");o&&(o.classList.toggle("active",e.pitchOpen),o.setAttribute("aria-pressed",String(e.pitchOpen)),o.textContent=e.pitchOpen?"▾ Tutup Panduan Presentasi":"▶ Panduan Presentasi (4 Menit)")}const p={onFilterChange(o,c={}){if(Object.assign(e,o),c.queueOnly&&e.view==="workspace"){const g=t();v(g),N(n("view-root"),g,e,p)}else u()},onOpenEpisode(o,c){b(o,c)},onSelectSession(o,c){e.selectedSessionByEpisode[o]=c,e.view==="workspace"&&F(n("view-root"),e,p)},onSyncEpisode(o){m(o)},onSyncAllLate(){a()},onUpdateDraft(o,c,g){e.reviewDrafts[o]={outcome:c,note:g}},onSaveReview(o,c,g){f(o,c,g)},onOpenTicket(o){e.ticketEpisodeId=o,x(n("ticket-modal-root"),e,p)},onCloseTicket(){e.ticketEpisodeId=null,x(n("ticket-modal-root"),e,p)},onExportEvidence(o){h(o)},onJumpToFilter(o){e.view="workspace",Object.assign(e,o),u()},onGoStep(o){y(o)},onClosePitch(){e.pitchOpen=!1,$(),q(n("pitch-root"),e,p)},onStepAction(o){if(o.actionType==="sync")m(o.episodeId);else if(o.actionType==="open-related"&&o.relatedEpisodeId)b(o.relatedEpisodeId,2);else if(o.actionType==="demo-review"){const c=C[0],g=e.dataset.episodes.find(S=>S.episode_id===o.episodeId);g&&!g.review&&f(o.episodeId,c.outcome,c.note),e.ticketEpisodeId=o.episodeId,x(n("ticket-modal-root"),e,p)}},onToast:r,onDownload:d};function u(){const o=t();$(),q(n("pitch-root"),e,p),v(o);const c=n("view-root");e.view==="analytics"?ne(c,e,p):(ae(c,e,p),N(c,o,e,p),F(c,e,p)),x(n("ticket-modal-root"),e,p)}function b(o,c){const g=e.dataset.episodes.find(S=>S.episode_id===o);if(!g)throw new Error("Episode tidak ditemukan.");return e.selected=o,e.view="workspace",typeof c=="number"&&(e.selectedSessionByEpisode[o]=c),u(),{episode_id:o,result:i.evaluate(g,e.dataset.episodes)}}function m(o){const c=e.dataset.episodes.find(g=>g.episode_id===o);if(!c)throw new Error("Episode tidak ditemukan.");if(!i.sync(c))throw new Error("Tidak ada catatan terlambat.");return e.selected=o,delete e.selectedSessionByEpisode[o],u(),r(`Catatan terlambat ${o} disinkronkan. Hasil aturan telah dihitung ulang.`),{episode_id:o,result:i.evaluate(c,e.dataset.episodes)}}function a(){let o=0;return e.dataset.episodes.forEach(c=>{i.sync(c)&&(o+=1,delete e.selectedSessionByEpisode[c.episode_id])}),u(),r(o?`${o} episode terlambat disinkronkan. Portofolio telah dihitung ulang.`:"Seluruh batch terlambat sudah disinkronkan sebelumnya."),o}function f(o,c,g){const S=e.dataset.episodes.find(w=>w.episode_id===o),_=String(g||"").trim();if(!S||!Object.hasOwn(i.outcomeLabels,c)||!_||_.length>600)throw new Error("Episode, hasil, atau catatan tidak valid.");const P=new Date().toISOString();return S.review={outcome:c,note:_,actor:"Verifikator demo",at:P},S.events.push({at:P,actor:"Verifikator demo",action:"Tindak lanjut dicatat",detail:`${i.outcomeLabels[c]}: ${_}`}),e.selected=o,e.reviewDrafts[o]={outcome:c,note:""},u(),r(`Tindak lanjut ${o} dicatat pada sesi demo ini.`),{episode_id:o,review:S.review}}function y(o){const c=Math.max(0,Math.min(R.length-1,o));e.pitchIndex=c;const g=R[c];e.view=g.view,e.filter="all",e.facilityFilter="all",e.signalFilter="all",e.query="",g.episodeId&&(e.selected=g.episodeId,g.sessionIndex&&(e.selectedSessionByEpisode[g.episodeId]=g.sessionIndex)),u()}if(document.querySelectorAll("[data-view]").forEach(o=>{o.addEventListener("click",()=>{e.view=o.dataset.view,u()})}),n("toggle-pitch").addEventListener("click",()=>{e.pitchOpen=!e.pitchOpen,e.pitchOpen?y(e.pitchIndex):u()}),n("reset").addEventListener("click",()=>{e.dataset=i.makeDataset(),e.selected="EP-002",e.selectedSessionByEpisode={},e.reviewDrafts={},e.filter="all",e.facilityFilter="all",e.signalFilter="all",e.query="",e.ticketEpisodeId=null,e.pitchOpen&&(e.pitchIndex=0,e.view=R[0].view),u(),r("Demo kembali ke snapshot awal (40 episode).")}),n("export-csv").addEventListener("click",()=>{const o=[["episode_id","patient_token","facility_id","facility_name","active_claim_sessions","matched_sessions","unmatched_sessions","status","rule_codes","review_outcome","rule_version","synthetic"]];t().forEach(({ep:g,r:S})=>o.push([g.episode_id,g.patient_token,g.facility_id,g.facility_name,S.claimed,S.matched,S.missing,S.label,S.reasons.map(_=>_.code).join("|"),g.review?i.outcomeLabels[g.review.outcome]:"",i.VERSION,"true"]));const c=o.map(g=>g.map(S=>`"${String(S).replace(/"/g,'""')}"`).join(",")).join(`\r
+`);d("JEJAK-JKN-ringkasan.csv",c,"text/csv;charset=utf-8")}),document.addEventListener("keydown",o=>{o.key==="Escape"&&e.ticketEpisodeId?p.onCloseTicket():e.pitchOpen&&o.altKey&&o.key==="ArrowRight"?(o.preventDefault(),y(e.pitchIndex+1)):e.pitchOpen&&o.altKey&&o.key==="ArrowLeft"&&(o.preventDefault(),y(e.pitchIndex-1))}),u(),window.JejakDemo={openEpisode:b,syncEpisode:m,syncAllLate:a,saveReview:f,openTicket:o=>p.onOpenTicket(o),setView:o=>{(o==="workspace"||o==="analytics")&&(e.view=o,u())},startPitch:(o=0)=>{e.pitchOpen=!0,y(o)},getState:()=>i.clone(e.dataset),getResult:o=>{const c=e.dataset.episodes.find(g=>g.episode_id===o);if(!c)throw new Error("Episode tidak ditemukan.");return i.evaluate(c,e.dataset.episodes)}},document.modelContext?.registerTool){const o=new AbortController;window.addEventListener("pagehide",()=>o.abort(),{once:!0}),[{name:"open_episode",title:"Buka episode",description:"Buka kartu bukti episode sintetis dan tampilkan hasil pemeriksaan.",annotations:{readOnlyHint:!1},inputSchema:{type:"object",properties:{episode_id:{type:"string"}},required:["episode_id"],additionalProperties:!1},execute:g=>{if(!g||typeof g.episode_id!="string"||Object.keys(g).some(S=>S!=="episode_id"))throw new Error("Input tidak valid.");return b(g.episode_id)}},{name:"sync_late_records",title:"Sinkronkan catatan demo",description:"Masukkan catatan terlambat sintetis untuk satu episode dan hitung ulang hasil.",annotations:{readOnlyHint:!1},inputSchema:{type:"object",properties:{episode_id:{type:"string"}},required:["episode_id"],additionalProperties:!1},execute:g=>{if(!g||typeof g.episode_id!="string"||Object.keys(g).some(S=>S!=="episode_id"))throw new Error("Input tidak valid.");return m(g.episode_id)}}].forEach(g=>{try{Promise.resolve(document.modelContext.registerTool(g,{signal:o.signal})).catch(()=>{})}catch{}})}}le();
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="JEJAK JKN — Sistem Penelusuran Bukti Layanan untuk Deteksi Dini Klaim Fiktif pada Program JKN (Prototipe Fungsional Healthkathon BPJS Kesehatan 2026 oleh TranspemGo).">
+  <meta name="color-scheme" content="light">
+  <title>JEJAK JKN — Penelusuran Bukti Layanan Fisioterapi</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23082845'/%3E%3Cpath d='M9 8h13v16H9z' fill='none' stroke='%237ee0e6' stroke-width='2'/%3E%3Cpath d='m12 16 3 3 6-7' fill='none' stroke='white' stroke-width='2.2'/%3E%3C/svg%3E">
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 28 28" fill="none">
+            <rect x="4" y="3.5" width="16" height="21" rx="2.5" stroke="#7ee0e6" stroke-width="2"/>
+            <path d="M8 9.5h8M8 13.5h5" stroke="#c8e9f5" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="19.5" cy="18.5" r="5.5" fill="#082845" stroke="#ffffff" stroke-width="1.8"/>
+            <path d="m17.2 18.5 1.6 1.6 3.2-3.4" stroke="#7ee0e6" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <div class="brand-text">
+          <strong>JEJAK <span>JKN</span> <em class="team-pill">TranspemGo</em></strong>
+          <small>Setiap Klaim, Ada Jejaknya · Pemeriksaan Bukti Sesi Layanan</small>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <span class="rule-ver-pill">JEJAK-RULES-0.1.0</span>
+        <span class="demo-label">DATA SINTETIS · 40 EPISODE</span>
+        <div class="user-chip">
+          <span class="avatar" aria-hidden="true">VD</span>
+          <span class="role">Verifikator Demo</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="subbar" aria-label="Navigasi ruang kerja dan aksi utama">
+    <div class="subbar-inner">
+      <div class="view-tabs" role="tablist" aria-label="Pilih tampilan">
+        <button type="button" role="tab" class="view-tab active" data-view="workspace" aria-selected="true">
+          Ruang Kerja Verifikator <span class="tab-badge" id="tab-queue-badge">40</span>
+        </button>
+        <button type="button" role="tab" class="view-tab" data-view="analytics" aria-selected="false">
+          Analitik Faskes &amp; Portofolio
+        </button>
+      </div>
+
+      <div class="top-actions">
+        <button type="button" class="button pitch-toggle small" id="toggle-pitch" aria-pressed="false">
+          ▶ Panduan Presentasi (4 Menit)
+        </button>
+        <button type="button" class="button secondary small" id="export-csv">
+          Ekspor Ringkasan CSV
+        </button>
+        <button type="button" class="button secondary small" id="reset">
+          Ulangi Demo
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div id="pitch-root" hidden></div>
+
+    <div class="page-banner">
+      <div>
+        <p class="eyebrow">LAYANAN FISIOTERAPI · PERIODE SIMULASI SEPTEMBER 2026</p>
+        <h1>Telusuri kesesuaian tagihan sesi dengan bukti tindakan.</h1>
+        <p class="intro">Pisahkan keterlambatan pengiriman sumber dari ketidaksesuaian sesi yang memerlukan klarifikasi verifikator.</p>
+      </div>
+      <div class="banner-guardrail">
+        <strong>Prinsip Tata Kelola:</strong> Tanpa skor probabilitas fraud &amp; tanpa klaim AI. Keputusan akhir tetap berada pada verifikator berwenang.
+      </div>
+    </div>
+
+    <div class="stats" id="stats" aria-live="polite"></div>
+
+    <div id="view-root"></div>
+
+    <details class="methodology">
+      <summary>Dasar pemeriksaan deterministik, rujukan regulasi, dan batas ruang lingkup prototipe</summary>
+      <div class="method-body">
+        <div>
+          <h3>Tiga aturan yang dapat dijelaskan (JEJAK-RULES-0.1.0)</h3>
+          <p><b>R0 — Gerbang Kelengkapan Sumber:</b> Cakupan pengiriman batch dan kesesuaian identitas peserta/episode/fasilitas diperiksa terlebih dahulu sebelum menarik selisih sesi.</p>
+          <p><b>R1 — Pencocokan Sesi Aktif:</b> Setiap sesi tagihan aktif dicocokkan dengan catatan selesai berdasarkan episode, token peserta, fasilitas, indeks sesi, dan tanggal layanan. Sesi dibatalkan resmi dikecualikan dan versi catatan terbaru menjadi acuan.</p>
+          <p><b>R2 — Kesamaan Isi Personal:</b> Teks individual (≥60 karakter setelah normalisasi) dibandingkan lintas episode berbeda; teks formulir standar (<code>template_text</code>) dikecualikan.</p>
+        </div>
+        <div>
+          <h3>Arti hasil &amp; batas kematangan saat ini</h3>
+          <p><b>“Bukti konsisten”</b> hanya menyatakan kecocokan antarsumber data yang diterima, bukan pembuktian mutlak layanan klinis terlaksana di lapangan dan bukan putusan bebas kecurangan.</p>
+          <p>Prototipe memproses 40 episode sintetis di browser tanpa koneksi produksi BPJS Kesehatan atau RME rumah sakit. Riwayat tindak lanjut hanya tersimpan selama sesi halaman ini dibuka.</p>
+          <p>Nominal penghematan rupiah per episode tidak dihitung dari selisih jumlah sesi karena pada skema paket pembayaran, dampak finansial hanya diakui setelah keputusan ajudikasi resmi (Permenkes No. 16 Tahun 2019 &amp; UU PDP No. 27 Tahun 2022).</p>
+        </div>
+      </div>
+    </details>
+
+    <footer>
+      <span>JEJAK JKN · PROTOTIPE FUNGSIONAL (JEJAK-RULES-0.1.0) · TIM TRANSPEMGO</span>
+      <span>BPJS Kesehatan Healthkathon 2026 · Alat bantu penelusuran bukti klaim</span>
+    </footer>
+  </main>
+
+  <div id="ticket-modal-root" hidden></div>
+  <div class="toast" role="status" id="toast" hidden></div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
