@@ -1,3 +1,4 @@
+// @ts-check
 import './styles/main.css';
 import { JejakEngine } from './engine/jejakEngine.js';
 import { PITCH_STEPS, REVIEW_TEMPLATES } from './data/pitchSteps.js';
@@ -9,14 +10,24 @@ import {
   renderEpisodeDetail
 } from './components/workspaceView.js';
 import { renderAnalyticsView } from './components/analyticsView.js';
+import { createFaskesPortal } from './components/faskesPortal.js';
+import { openConnectionModal } from './components/connectionModal.js';
+import { liveAlert } from './components/liveAlert.js';
+import { authService } from './services/authService.js';
+import { realtimeDb } from './services/realtimeDb.js';
+import { applySubmission, applyReview } from './engine/ingest.js';
 import { safe } from './utils/dom.js';
 
 function initJejakApp() {
   const E = JejakEngine;
 
+  // 1. Initialize Auth and Room
+  const initialUser = authService.init();
+  const initialRoom = authService.getCurrentRoom();
+
   const state = {
     dataset: E.makeDataset(),
-    view: 'workspace',
+    view: initialUser.role === 'faskes' ? 'faskes' : 'workspace',
     selected: 'EP-002',
     selectedSessionByEpisode: {},
     reviewDrafts: {},
@@ -29,6 +40,7 @@ function initJejakApp() {
     ticketEpisodeId: null
   };
 
+  let activeFaskesPortal = null;
   let toastTimer = null;
   const $ = (id) => document.getElementById(id);
 
@@ -85,6 +97,15 @@ function initJejakApp() {
   }
 
   function renderStats(items) {
+    const statsContainer = $('stats');
+    if (!statsContainer) return;
+
+    if (state.view === 'faskes') {
+      statsContainer.style.display = 'none';
+      return;
+    }
+    statsContainer.style.display = 'grid';
+
     const count = (status) => items.filter((x) => x.r.status === status).length;
     const reviewedCount = items.filter((x) => Boolean(x.ep.review)).length;
     const pendingLateCount = items.filter((x) => x.ep.late_records.length > 0).length;
@@ -125,7 +146,7 @@ function initJejakApp() {
       }
     ];
 
-    $('stats').innerHTML = cards
+    statsContainer.innerHTML = cards
       .map(
         (c) => `
         <button
@@ -144,7 +165,7 @@ function initJejakApp() {
       )
       .join('');
 
-    $('stats').querySelectorAll('[data-kpi-filter]').forEach((btn) => {
+    statsContainer.querySelectorAll('[data-kpi-filter]').forEach((btn) => {
       btn.addEventListener('click', () => {
         state.view = 'workspace';
         state.filter = btn.dataset.kpiFilter;
@@ -156,13 +177,49 @@ function initJejakApp() {
     if (badgeEl) badgeEl.textContent = String(count('review') + count('incomplete'));
   }
 
-  function updateNavState() {
+  function updateHeaderAndNav() {
+    const user = authService.getCurrentUser();
+    const connState = realtimeDb.getConnectionState();
+
+    // User Profile Chip
+    const userAvatar = $('user-avatar');
+    const userName = $('user-name');
+    if (userAvatar && userName) {
+      if (user.role === 'verifikator') {
+        userAvatar.textContent = 'VB';
+        userName.textContent = user.fullName || 'Verifikator BPJS';
+      } else {
+        userAvatar.textContent = 'RS';
+        userName.textContent = user.facilityName || user.fullName || 'Petugas Faskes';
+      }
+    }
+
+    // Connection Pill
+    const connPill = $('btn-conn-settings');
+    const connText = $('conn-status-text');
+    if (connText && connPill) {
+      if (connState.connected) {
+        if (connState.mode === 'supabase') {
+          connText.textContent = `Cloud: ${connState.room}`;
+          connPill.className = 'conn-pill conn-pill-supabase';
+        } else {
+          connText.textContent = `Lokal: ${connState.room}`;
+          connPill.className = 'conn-pill conn-pill-local';
+        }
+      } else {
+        connText.textContent = `Terputus: ${connState.room}`;
+        connPill.className = 'conn-pill conn-pill-off';
+      }
+    }
+
+    // Tab buttons
     document.querySelectorAll('[data-view]').forEach((btn) => {
       const active = btn.dataset.view === state.view;
       btn.classList.toggle('active', active);
       btn.setAttribute('aria-selected', String(active));
     });
 
+    // Pitch button
     const pitchBtn = $('toggle-pitch');
     if (pitchBtn) {
       pitchBtn.classList.toggle('active', state.pitchOpen);
@@ -170,6 +227,12 @@ function initJejakApp() {
       pitchBtn.textContent = state.pitchOpen
         ? '▾ Tutup Panduan Presentasi'
         : '▶ Panduan Presentasi (4 Menit)';
+    }
+
+    // Hide/show page banner for Faskes view to give clean mobile feel
+    const banner = document.querySelector('.page-banner');
+    if (banner) {
+      banner.style.display = state.view === 'faskes' ? 'none' : 'grid';
     }
   }
 
@@ -226,7 +289,7 @@ function initJejakApp() {
     },
     onClosePitch() {
       state.pitchOpen = false;
-      updateNavState();
+      updateHeaderAndNav();
       renderPitchStepper($('pitch-root'), state, handlers);
     },
     onStepAction(stepDef) {
@@ -250,12 +313,39 @@ function initJejakApp() {
 
   function render() {
     const items = evaluations();
-    updateNavState();
+    updateHeaderAndNav();
     renderPitchStepper($('pitch-root'), state, handlers);
     renderStats(items);
 
     const viewRoot = $('view-root');
-    if (state.view === 'analytics') {
+
+    // Clean up active portal if switching away
+    if (state.view !== 'faskes' && activeFaskesPortal) {
+      activeFaskesPortal.destroy();
+      activeFaskesPortal = null;
+    }
+
+    if (state.view === 'faskes') {
+      viewRoot.innerHTML = '';
+      activeFaskesPortal = createFaskesPortal({
+        dataset: state.dataset,
+        onDatasetUpdated: () => {
+          render();
+        },
+        onOpenConnectionModal: () => {
+          openConnectionModal({
+            onResetRoom: () => resetToBaseline(),
+            onReloadApp: () => render()
+          });
+        },
+        onSwitchToVerifikator: () => {
+          authService.loginAs('verifikator');
+          state.view = 'workspace';
+          render();
+        }
+      });
+      viewRoot.appendChild(activeFaskesPortal.element);
+    } else if (state.view === 'analytics') {
       renderAnalyticsView(viewRoot, state, handlers);
     } else {
       ensureWorkspaceShell(viewRoot, state, handlers);
@@ -319,13 +409,30 @@ function initJejakApp() {
       throw new Error('Episode, hasil, atau catatan tidak valid.');
     }
     const at = new Date().toISOString();
-    ep.review = { outcome, note: clean, actor: 'Verifikator demo', at };
+    const currentUser = authService.getCurrentUser();
+    const actor = currentUser?.fullName || 'Verifikator demo';
+
+    ep.review = { outcome, note: clean, actor, at };
     ep.events.push({
       at,
-      actor: 'Verifikator demo',
+      actor,
       action: 'Tindak lanjut dicatat',
       detail: `${E.outcomeLabels[outcome]}: ${clean}`
     });
+
+    // Broadcast review event across room
+    realtimeDb.publish(
+      'review',
+      {
+        episode_id: id,
+        outcome,
+        note: clean,
+        actor_name: actor,
+        updated_at: at
+      },
+      currentUser
+    );
+
     state.selected = id;
     state.reviewDrafts[id] = { outcome, note: '' };
     render();
@@ -351,7 +458,46 @@ function initJejakApp() {
     render();
   }
 
-  // Wire global subbar buttons
+  function resetToBaseline() {
+    state.dataset = E.makeDataset();
+    state.selected = 'EP-002';
+    state.selectedSessionByEpisode = {};
+    state.reviewDrafts = {};
+    state.filter = 'all';
+    state.facilityFilter = 'all';
+    state.signalFilter = 'all';
+    state.query = '';
+    state.ticketEpisodeId = null;
+    if (state.pitchOpen) {
+      state.pitchIndex = 0;
+      state.view = PITCH_STEPS[0].view;
+    }
+    render();
+    toast('Data ruang direset kembali ke 40 episode awal.');
+  }
+
+  // 2. Wire Header Interactive Buttons
+  const btnConn = $('btn-conn-settings');
+  if (btnConn) {
+    btnConn.addEventListener('click', () => {
+      openConnectionModal({
+        onResetRoom: () => resetToBaseline(),
+        onReloadApp: () => render()
+      });
+    });
+  }
+
+  const btnUser = $('btn-user-switch');
+  if (btnUser) {
+    btnUser.addEventListener('click', () => {
+      openConnectionModal({
+        onResetRoom: () => resetToBaseline(),
+        onReloadApp: () => render()
+      });
+    });
+  }
+
+  // Wire global subbar view tabs
   document.querySelectorAll('[data-view]').forEach((btn) => {
     btn.addEventListener('click', () => {
       state.view = btn.dataset.view;
@@ -369,21 +515,7 @@ function initJejakApp() {
   });
 
   $('reset').addEventListener('click', () => {
-    state.dataset = E.makeDataset();
-    state.selected = 'EP-002';
-    state.selectedSessionByEpisode = {};
-    state.reviewDrafts = {};
-    state.filter = 'all';
-    state.facilityFilter = 'all';
-    state.signalFilter = 'all';
-    state.query = '';
-    state.ticketEpisodeId = null;
-    if (state.pitchOpen) {
-      state.pitchIndex = 0;
-      state.view = PITCH_STEPS[0].view;
-    }
-    render();
-    toast('Demo kembali ke snapshot awal (40 episode).');
+    resetToBaseline();
   });
 
   $('export-csv').addEventListener('click', () => {
@@ -437,6 +569,106 @@ function initJejakApp() {
     }
   });
 
+  // 3. Setup Realtime Ingestion & Replay Past Room Events
+  function replayPastEvents() {
+    const events = realtimeDb.getRoomEvents();
+    events.forEach((evt) => {
+      if (evt.type === 'submission') {
+        applySubmission(state.dataset, evt.payload);
+      } else if (evt.type === 'review') {
+        applyReview(state.dataset, evt.payload);
+      }
+    });
+  }
+
+  realtimeDb.init(initialRoom).then(() => {
+    replayPastEvents();
+    render();
+  });
+
+  realtimeDb.onStatusChange(() => {
+    updateHeaderAndNav();
+  });
+
+  // Handle incoming realtime push events
+  realtimeDb.onEvent((event, isSelf) => {
+    if (event.type === 'submission') {
+      const res = applySubmission(state.dataset, event.payload);
+      if (res.applied) {
+        if (!isSelf) {
+          liveAlert.playChime();
+          const senderName = event.sender?.label || 'Faskes';
+          const epId = event.payload.episode_id;
+          const sText = res.sessions ? `Sesi ${res.sessions.join(', ')}` : 'Catatan';
+
+          liveAlert.show({
+            title: `Catatan Baru Masuk (${senderName})`,
+            message: `${senderName} baru saja mengirimkan ${sText} untuk ${epId}.`,
+            badge: 'Ingesti Live',
+            icon: '🔔',
+            actionLabel: `Periksa ${epId}`,
+            onAction: () => {
+              openEpisode(epId, res.sessions?.[0]);
+            },
+            duration: 8000
+          });
+        }
+        render();
+      }
+    } else if (event.type === 'ticket') {
+      if (!isSelf && authService.isFaskes()) {
+        liveAlert.playChime();
+        liveAlert.show({
+          title: 'Tiket Klarifikasi Masuk!',
+          message: `Verifikator BPJS menerbitkan ${event.payload.ticket_id} untuk ${event.payload.episode_id}.`,
+          badge: 'Tiket Baru',
+          icon: '📬',
+          duration: 7000
+        });
+      }
+      render();
+    } else if (event.type === 'ticket_reply') {
+      if (!isSelf && authService.isVerifikator()) {
+        liveAlert.playChime();
+        liveAlert.show({
+          title: 'Tanggapan Faskes Diterima!',
+          message: `${event.sender?.label || 'Faskes'} menanggapi tiket ${event.payload.ticket_id} (${event.payload.episode_id}).`,
+          badge: 'Tanggapan',
+          icon: '💬',
+          actionLabel: 'Buka Tiket',
+          onAction: () => {
+            handlers.onOpenTicket(event.payload.episode_id);
+          },
+          duration: 8000
+        });
+      }
+      render();
+    } else if (event.type === 'review') {
+      applyReview(state.dataset, event.payload);
+      render();
+    } else if (event.type === 'reset_room') {
+      resetToBaseline();
+      if (!isSelf) {
+        liveAlert.show({
+          title: 'Data Ruang Direset',
+          message: 'Data kiriman demo telah dikembalikan ke baseline 40 episode oleh rekan Anda.',
+          badge: 'Reset',
+          icon: '🔄'
+        });
+      }
+    }
+  });
+
+  authService.onAuthChange((newUser) => {
+    if (newUser.role === 'faskes' && state.view === 'workspace') {
+      state.view = 'faskes';
+    } else if (newUser.role === 'verifikator' && state.view === 'faskes') {
+      state.view = 'workspace';
+    }
+    render();
+  });
+
+  // Initial render
   render();
 
   window.JejakDemo = {
@@ -446,7 +678,7 @@ function initJejakApp() {
     saveReview,
     openTicket: (id) => handlers.onOpenTicket(id),
     setView: (v) => {
-      if (v === 'workspace' || v === 'analytics') {
+      if (v === 'workspace' || v === 'analytics' || v === 'faskes') {
         state.view = v;
         render();
       }
@@ -460,68 +692,10 @@ function initJejakApp() {
       const ep = state.dataset.episodes.find((e) => e.episode_id === id);
       if (!ep) throw new Error('Episode tidak ditemukan.');
       return E.evaluate(ep, state.dataset.episodes);
-    }
+    },
+    auth: authService,
+    realtime: realtimeDb
   };
-
-  if (document.modelContext?.registerTool) {
-    const lifecycle = new AbortController();
-    window.addEventListener('pagehide', () => lifecycle.abort(), { once: true });
-    const registry = [
-      {
-        name: 'open_episode',
-        title: 'Buka episode',
-        description: 'Buka kartu bukti episode sintetis dan tampilkan hasil pemeriksaan.',
-        annotations: { readOnlyHint: false },
-        inputSchema: {
-          type: 'object',
-          properties: { episode_id: { type: 'string' } },
-          required: ['episode_id'],
-          additionalProperties: false
-        },
-        execute: (input) => {
-          if (
-            !input ||
-            typeof input.episode_id !== 'string' ||
-            Object.keys(input).some((k) => k !== 'episode_id')
-          ) {
-            throw new Error('Input tidak valid.');
-          }
-          return openEpisode(input.episode_id);
-        }
-      },
-      {
-        name: 'sync_late_records',
-        title: 'Sinkronkan catatan demo',
-        description: 'Masukkan catatan terlambat sintetis untuk satu episode dan hitung ulang hasil.',
-        annotations: { readOnlyHint: false },
-        inputSchema: {
-          type: 'object',
-          properties: { episode_id: { type: 'string' } },
-          required: ['episode_id'],
-          additionalProperties: false
-        },
-        execute: (input) => {
-          if (
-            !input ||
-            typeof input.episode_id !== 'string' ||
-            Object.keys(input).some((k) => k !== 'episode_id')
-          ) {
-            throw new Error('Input tidak valid.');
-          }
-          return syncEpisode(input.episode_id);
-        }
-      }
-    ];
-    registry.forEach((tool) => {
-      try {
-        Promise.resolve(
-          document.modelContext.registerTool(tool, { signal: lifecycle.signal })
-        ).catch(() => {});
-      } catch {
-        // Ignore unsupported browser environments
-      }
-    });
-  }
 }
 
 initJejakApp();

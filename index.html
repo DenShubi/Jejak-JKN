@@ -28,11 +28,13 @@
 
       <div class="header-right">
         <span class="rule-ver-pill">JEJAK-RULES-0.1.0</span>
-        <span class="demo-label">DATA SINTETIS · 40 EPISODE</span>
-        <div class="user-chip">
-          <span class="avatar" aria-hidden="true">VD</span>
-          <span class="role">Verifikator Demo</span>
-        </div>
+        <button type="button" class="conn-pill" id="btn-conn-settings" title="Pengaturan Ruang Demo &amp; Koneksi Cloud">
+          <span class="conn-dot">●</span> <span id="conn-status-text">HEALTHKATHON-2026</span>
+        </button>
+        <button type="button" class="user-chip-btn" id="btn-user-switch" title="Beralih Akun Demonstrasi">
+          <span class="avatar" id="user-avatar" aria-hidden="true">VD</span>
+          <span class="role" id="user-name">Verifikator BPJS</span>
+        </button>
       </div>
     </div>
   </header>
@@ -45,6 +47,9 @@
         </button>
         <button type="button" role="tab" class="view-tab" data-view="analytics" aria-selected="false">
           Analitik Faskes &amp; Portofolio
+        </button>
+        <button type="button" role="tab" class="view-tab" data-view="faskes" aria-selected="false">
+          🏥 Portal Petugas Faskes
         </button>
       </div>
 

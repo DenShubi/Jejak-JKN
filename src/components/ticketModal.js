@@ -1,5 +1,8 @@
+// @ts-check
 import { buildClarificationTicket, outcomeLabels, VERSION } from '../engine/jejakEngine.js';
 import { safe, formatTimestamp } from '../utils/dom.js';
+import { realtimeDb } from '../services/realtimeDb.js';
+import { authService } from '../services/authService.js';
 
 export function renderTicketModal(container, state, handlers) {
   if (!state.ticketEpisodeId) {
@@ -18,6 +21,19 @@ export function renderTicketModal(container, state, handlers) {
   const ticket = buildClarificationTicket(ep, state.dataset.episodes);
   const { result, sessions } = ticket;
 
+  // Check if this ticket was already published to the room
+  const roomEvents = realtimeDb.getRoomEvents();
+  const isDispatched = roomEvents.some(
+    (e) => e.type === 'ticket' && e.payload?.ticket_id === ticket.ticketNumber
+  );
+
+  // Check incoming replies for this ticket or episode
+  const replies = roomEvents.filter(
+    (e) =>
+      e.type === 'ticket_reply' &&
+      (e.payload?.ticket_id === ticket.ticketNumber || e.payload?.episode_id === ep.episode_id)
+  );
+
   container.hidden = false;
   container.innerHTML = `
     <div class="modal-backdrop" id="ticket-backdrop">
@@ -25,12 +41,15 @@ export function renderTicketModal(container, state, handlers) {
         <div class="modal-toolbar no-print">
           <div class="modal-toolbar-left">
             <span class="badge ${result.status}">${safe(result.label)}</span>
-            <span class="muted">Pratinjau Dokumen Koordinasi Faskes (Simulasi)</span>
+            <span class="muted">Dokumen Koordinasi Faskes (Simulasi Realtime)</span>
           </div>
           <div class="modal-toolbar-actions">
+            <button type="button" class="button ${isDispatched ? 'secondary' : 'primary'} small" id="ticket-dispatch">
+              ${isDispatched ? 'Kirim Ulang ke Faskes 📤' : 'Kirim ke Faskes (Realtime) 📤'}
+            </button>
             <button type="button" class="button secondary small" id="ticket-copy">Salin Teks</button>
             <button type="button" class="button secondary small" id="ticket-json">Unduh JSON</button>
-            <button type="button" class="button primary small" id="ticket-print">Cetak / Simpan PDF</button>
+            <button type="button" class="button secondary small" id="ticket-print">Cetak / PDF</button>
             <button type="button" class="button ghost small" id="ticket-close" aria-label="Tutup jendela tiket">✕</button>
           </div>
         </div>
@@ -40,7 +59,9 @@ export function renderTicketModal(container, state, handlers) {
             <div>
               <p class="ticket-kicker">JEJAK JKN · DUKUNGAN VERIFIKASI KLAIM FISIOTERAPI (DATA SINTETIS)</p>
               <h2 id="ticket-modal-title">${safe(ticket.categoryTitle)}</h2>
-              <p class="ticket-ref">No. Referensi: <strong>${safe(ticket.ticketNumber)}</strong> · Dibuat: ${safe(formatTimestamp(ticket.generatedAt))}</p>
+              <p class="ticket-ref">No. Referensi: <strong>${safe(ticket.ticketNumber)}</strong> · Dibuat: ${safe(
+    formatTimestamp(ticket.generatedAt)
+  )}</p>
             </div>
             <div class="ticket-stamp">
               <span>SIMULASI DEMO</span>
@@ -75,7 +96,13 @@ export function renderTicketModal(container, state, handlers) {
                   (item) => `
                   <div class="ticket-item">
                     <div class="ticket-item-head">
-                      <span class="rule-code ${item.code === 'R0' ? 'code-r0' : item.code === 'OK' || item.code === 'INFO' ? 'code-ok' : ''}">${safe(item.code)}</span>
+                      <span class="rule-code ${
+                        item.code === 'R0'
+                          ? 'code-r0'
+                          : item.code === 'OK' || item.code === 'INFO'
+                          ? 'code-ok'
+                          : ''
+                      }">${safe(item.code)}</span>
                       <strong>${safe(item.heading)}</strong>
                     </div>
                     <p>${safe(item.description)}</p>
@@ -106,7 +133,13 @@ export function renderTicketModal(container, state, handlers) {
                       <td>Sesi ${s.sessionIndex}</td>
                       <td><code>${safe(s.claim.line_id)}</code></td>
                       <td>${safe(s.claim.service_date)}</td>
-                      <td>${s.cancelled ? 'Dikecualikan (v2)' : s.record ? `<code>${safe(s.record.record_id)}</code>` : '<em>Belum tersedia</em>'}</td>
+                      <td>${
+                        s.cancelled
+                          ? 'Dikecualikan (v2)'
+                          : s.record
+                          ? `<code>${safe(s.record.record_id)}</code>`
+                          : '<em>Belum tersedia</em>'
+                      }</td>
                       <td>${safe(s.stateLabel)}</td>
                     </tr>
                   `
@@ -131,6 +164,41 @@ export function renderTicketModal(container, state, handlers) {
             }
           </div>
 
+          <div class="ticket-section">
+            <h3>4. Komunikasi Dua Arah &amp; Tanggapan Petugas Faskes (Realtime)</h3>
+            ${
+              replies.length > 0
+                ? `
+                  <div class="ticket-reply-list">
+                    ${replies
+                      .map(
+                        (r) => `
+                        <div class="ticket-reply-item">
+                          <div class="reply-header">
+                            <strong>${safe(r.sender?.label || 'Petugas Faskes')}</strong>
+                            <span class="muted text-xs">${safe(formatTimestamp(r.timestamp))}</span>
+                          </div>
+                          <p class="reply-text">${safe(r.payload?.reply_text || '')}</p>
+                        </div>
+                      `
+                      )
+                      .join('')}
+                  </div>
+                `
+                : `
+                  <div class="ticket-waiting-box">
+                    <p class="muted">
+                      ${
+                        isDispatched
+                          ? 'Tiket telah dikirimkan ke portal faskes. Menunggu penjelasan atau konfirmasi kehadiran dari faskes...'
+                          : 'Klik tombol <strong>"Kirim ke Faskes (Realtime)"</strong> di toolbar atas untuk meneruskan tiket ini ke layar petugas rumah sakit.'
+                      }
+                    </p>
+                  </div>
+                `
+            }
+          </div>
+
           <div class="ticket-governance">
             <strong>Keterangan Tata Kelola &amp; Pelindungan Data:</strong>
             <ul>
@@ -148,6 +216,34 @@ export function renderTicketModal(container, state, handlers) {
     if (e.target.id === 'ticket-backdrop') close();
   });
 
+  // Realtime Dispatch Button
+  const dispatchBtn = container.querySelector('#ticket-dispatch');
+  if (dispatchBtn) {
+    dispatchBtn.addEventListener('click', async () => {
+      const currentUser = authService.getCurrentUser();
+      const payload = {
+        ticket_id: ticket.ticketNumber,
+        episode_id: ep.episode_id,
+        facility_id: ep.facility_id,
+        facility_name: ep.facility_name,
+        patient_token: ep.patient_token,
+        claim_count: result.claimed,
+        matched_records: result.matched,
+        missing_count: result.missing,
+        category: ticket.categoryTitle,
+        reason: ticket.items.map((i) => `[${i.code}] ${i.heading}: ${i.description}`).join(' | '),
+        recommended_action: ticket.items[0]?.description || 'Mohon kirimkan bukti pendukung catatan pelayanan.',
+        created_at: new Date().toISOString()
+      };
+
+      await realtimeDb.publish('ticket', payload, currentUser);
+      handlers.onToast(
+        `Tiket ${ticket.ticketNumber} berhasil dikirim ke portal ${ep.facility_name} secara real-time!`
+      );
+      renderTicketModal(container, state, handlers);
+    });
+  }
+
   container.querySelector('#ticket-copy').addEventListener('click', async () => {
     try {
       if (navigator.clipboard?.writeText) {
@@ -157,7 +253,11 @@ export function renderTicketModal(container, state, handlers) {
         throw new Error('Clipboard API unavailable');
       }
     } catch {
-      handlers.onDownload(`${ep.episode_id}-tiket-klarifikasi.txt`, ticket.plainText, 'text/plain;charset=utf-8');
+      handlers.onDownload(
+        `${ep.episode_id}-tiket-klarifikasi.txt`,
+        ticket.plainText,
+        'text/plain;charset=utf-8'
+      );
     }
   });
 

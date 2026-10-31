@@ -2852,7 +2852,8 @@ footer {
   .subbar,
   main,
   .no-print,
-  .toast {
+  .toast,
+  .live-alert-container {
     display: none !important;
   }
   #ticket-modal-root {
@@ -2874,4 +2875,680 @@ footer {
   .ticket-sheet {
     padding: 0;
   }
+}
+
+/* ========================================================
+   Multi-User Live Ingestion & Faskes Portal Styles
+   ======================================================== */
+
+/* Header Connection Pill & Interactive User Chip */
+.conn-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.conn-pill:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.conn-pill .conn-dot {
+  font-size: 11px;
+}
+.conn-pill-supabase .conn-dot {
+  color: #34d399;
+}
+.conn-pill-local .conn-dot {
+  color: #fbbf24;
+}
+.conn-pill-off .conn-dot {
+  color: #94a3b8;
+}
+
+.user-chip-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 20px;
+  padding: 3px 10px 3px 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.user-chip-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+.user-chip-btn .avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #006d79;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.user-chip-btn .role {
+  font-weight: 600;
+}
+
+/* Floating Realtime Live Alert Container */
+.live-alert-container {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 1200;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 420px;
+  width: calc(100vw - 36px);
+  pointer-events: none;
+}
+
+.live-alert-toast {
+  pointer-events: auto;
+  background: #ffffff;
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 12px 36px rgba(8, 40, 69, 0.16), 0 2px 8px rgba(8, 40, 69, 0.08);
+  border-radius: 12px;
+  padding: 14px 16px;
+  border-left: 5px solid var(--teal);
+  animation: alertSlideIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.live-alert-toast.dismissing {
+  opacity: 0;
+  transform: translateX(40px);
+}
+
+@keyframes alertSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.live-alert-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.live-alert-icon {
+  font-size: 18px;
+}
+.live-alert-badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: var(--teal-soft);
+  color: var(--teal);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+.live-alert-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink);
+  flex: 1;
+}
+.live-alert-close {
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+.live-alert-close:hover {
+  color: var(--ink);
+}
+.live-alert-body {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+.live-alert-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+.live-alert-action-btn {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Petugas Faskes Portal Layout */
+.faskes-portal {
+  max-width: 1020px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 40px;
+}
+
+.faskes-topbar {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.faskes-hospital-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.faskes-hospital-badge .badge-icon {
+  font-size: 26px;
+}
+.faskes-name-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  display: block;
+}
+.faskes-meta-text {
+  font-size: 12px;
+  color: var(--muted);
+}
+.faskes-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.faskes-conn-btn {
+  border: 0;
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.faskes-select-switch {
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line-strong);
+  background: #fff;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.faskes-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  box-shadow: var(--shadow-sm);
+}
+
+.card-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+.card-header-flex.cursor-pointer {
+  cursor: pointer;
+  user-select: none;
+}
+.card-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.card-subtitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Preset Scenario Cards */
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+.preset-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--bg-subtle);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.preset-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.preset-card.is-disabled {
+  opacity: 0.55;
+  pointer-events: none;
+}
+.preset-card.preset-ok {
+  border-color: var(--ok-border);
+  background: #f5fcf8;
+}
+.preset-card.preset-info {
+  border-color: var(--info-border);
+  background: #f2f8fe;
+}
+.preset-card.preset-warn {
+  border-color: var(--warn-border);
+  background: #fef9f4;
+}
+.preset-card.preset-neutral {
+  border-color: var(--line-strong);
+  background: #f8fafc;
+}
+.preset-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.preset-title {
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.35;
+}
+.preset-desc {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.4;
+  margin: 0;
+}
+.preset-target-meta {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--teal);
+  background: rgba(0, 109, 121, 0.08);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.preset-expectation {
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.35;
+}
+.preset-btn {
+  width: 100%;
+  justify-content: center;
+  font-weight: 600;
+  padding: 8px 12px;
+}
+
+/* Clarification Tickets Inbox */
+.ticket-inbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.ticket-inbox-card {
+  border: 1px solid var(--warn-border);
+  background: #fffcf8;
+  border-radius: var(--radius-md);
+  padding: 16px;
+}
+.ticket-inbox-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.ticket-inbox-num {
+  font-size: 15px;
+  color: var(--navy);
+}
+.ticket-stat-grid {
+  display: flex;
+  gap: 12px;
+  margin: 10px 0;
+  flex-wrap: wrap;
+}
+.stat-mini {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px 14px;
+  text-align: center;
+}
+.stat-mini small {
+  display: block;
+  font-size: 11px;
+}
+.stat-mini strong {
+  display: block;
+  font-size: 15px;
+  color: var(--ink);
+}
+.ticket-reason-box {
+  background: rgba(217, 119, 6, 0.08);
+  border-left: 3px solid var(--warn-solid);
+  padding: 10px 14px;
+  font-size: 13px;
+  border-radius: 0 4px 4px 0;
+  margin: 10px 0;
+  color: var(--warn-ink);
+}
+.ticket-reply-thread {
+  margin-top: 12px;
+  border-top: 1px dashed var(--line);
+  padding-top: 10px;
+}
+.thread-title {
+  font-size: 12px;
+  color: var(--ink-soft);
+  display: block;
+  margin-bottom: 6px;
+}
+.reply-bubble {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-top: 6px;
+}
+.reply-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+.reply-text {
+  font-size: 13px;
+  color: var(--ink);
+  margin: 0;
+}
+.ticket-reply-form {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ticket-reply-input {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 13px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line-strong);
+}
+.reply-btn-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Manual Clinical Form */
+.manual-form-body {
+  margin-top: 16px;
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.form-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+.col-span-2 {
+  grid-column: span 2;
+}
+
+/* Facility Episodes Grid */
+.faskes-ep-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 14px;
+}
+.faskes-ep-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.faskes-ep-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.faskes-ep-id {
+  font-size: 14px;
+  color: var(--navy);
+}
+.faskes-session-row {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.faskes-s-pill {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  user-select: none;
+}
+.faskes-s-pill.s-sent {
+  background: var(--ok-bg);
+  color: var(--ok-solid);
+  border: 1px solid var(--ok-border);
+}
+.faskes-s-pill.s-outbox {
+  background: var(--warn-bg);
+  color: var(--warn-solid);
+  border: 1px solid var(--warn-border);
+}
+.faskes-s-pill.s-cancelled {
+  background: #f1f5f9;
+  color: #94a3b8;
+  text-decoration: line-through;
+  border: 1px solid #cbd5e1;
+}
+.faskes-s-pill.s-missing {
+  background: #f8fafc;
+  color: #94a3b8;
+  border: 1px dashed #cbd5e1;
+}
+
+/* History table */
+.faskes-hist-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.faskes-hist-table th,
+.faskes-hist-table td {
+  padding: 8px 12px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+/* Connection Modal */
+.connection-modal {
+  max-width: 580px;
+  width: 100%;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: 0 20px 45px rgba(8, 40, 69, 0.2);
+}
+.conn-section {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+.conn-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 6px 0;
+}
+.conn-section-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.room-code-input {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  font-family: monospace;
+  text-transform: uppercase;
+}
+.input-row {
+  display: flex;
+  gap: 8px;
+}
+.input-row .input {
+  flex: 1;
+}
+.account-switcher-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 8px;
+}
+.account-card-btn {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.account-card-btn:hover {
+  border-color: var(--teal);
+  background: var(--teal-soft);
+}
+.account-card-btn.is-active {
+  border: 2px solid var(--teal);
+  background: var(--teal-soft);
+}
+.account-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.account-active-tick {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--teal);
+}
+.account-name {
+  font-size: 13.5px;
+  color: var(--ink);
+}
+.account-hint {
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.3;
+}
+.cloud-config-body {
+  margin-top: 10px;
+  padding: 12px;
+  background: var(--bg-subtle);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+}
+.danger-zone {
+  border-bottom: 0;
+  padding-top: 16px;
+}
+.btn-warn {
+  color: #b91c1c;
+  border-color: #fca5a5;
+}
+.btn-warn:hover {
+  background: #fef2f2;
+}
+
+/* Two-way Ticket Replies in Ticket Modal */
+.ticket-reply-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+.ticket-reply-item {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.ticket-reply-item .reply-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.ticket-reply-item .reply-text {
+  font-size: 13.5px;
+  color: var(--ink);
+  margin: 0;
+  white-space: pre-wrap;
+}
+.ticket-waiting-box {
+  background: #f8fafc;
+  border: 1px dashed var(--line-strong);
+  border-radius: 8px;
+  padding: 14px;
+  text-align: center;
+  font-size: 13px;
+}
+.ticket-waiting-box .muted {
+  margin: 0;
 }

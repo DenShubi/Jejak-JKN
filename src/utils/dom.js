@@ -9,6 +9,31 @@ export const safe = (value) =>
     })[c]
   );
 
+export function el(tag, attrs = {}, children = []) {
+  const node = document.createElement(tag);
+  for (const [key, val] of Object.entries(attrs || {})) {
+    if (val === undefined || val === null) continue;
+    if (key === 'class' || key === 'className') {
+      node.className = String(val);
+    } else if (key.startsWith('on') && typeof val === 'function') {
+      node.addEventListener(key.slice(2).toLowerCase(), val);
+    } else if (typeof val === 'boolean') {
+      if (val) node.setAttribute(key, '');
+    } else {
+      node.setAttribute(key, String(val));
+    }
+  }
+  for (const child of children || []) {
+    if (child === null || child === undefined) continue;
+    if (typeof child === 'string' || typeof child === 'number') {
+      node.appendChild(document.createTextNode(String(child)));
+    } else if (child instanceof Node) {
+      node.appendChild(child);
+    }
+  }
+  return node;
+}
+
 const MONTHS_ID = [
   'Jan',
   'Feb',

@@ -10,9 +10,12 @@
     "build:web": "vite build",
     "build:offline": "node scripts/build-offline.mjs",
     "preview": "vite preview",
-    "test": "node --test tests/engine.test.mjs"
+    "test": "node --test tests/engine.test.mjs tests/ingest.test.mjs tests/realtime.test.mjs"
   },
   "devDependencies": {
     "vite": "^6.2.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.118.0"
   }
 }
