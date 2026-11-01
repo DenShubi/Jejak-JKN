@@ -116,34 +116,34 @@ function initJejakApp() {
       {
         key: 'all',
         cls: '',
-        title: 'Episode diperiksa',
+        title: 'Total Episode',
         value: total,
         pct: `${reviewedCount}/${total} ditinjau`,
-        sub: 'Klik untuk tampilkan seluruh episode'
+        sub: 'Seluruh antrean klaim'
       },
       {
         key: 'review',
         cls: 'review',
-        title: 'Perlu klarifikasi',
+        title: 'Perlu Klarifikasi',
         value: count('review'),
         pct: `${Math.round((count('review') / total) * 100)}%`,
-        sub: 'Sumber lengkap, ada selisih R1 / sinyal R2'
+        sub: 'Selisih sesi atau sinyal teks R2'
       },
       {
         key: 'incomplete',
         cls: 'incomplete',
-        title: 'Lengkapi data',
+        title: 'Menunggu Data',
         value: count('incomplete'),
         pct: pendingLateCount ? `${pendingLateCount} siap sinkron` : '0 tunda',
-        sub: 'Gerbang R0: selisih masih sementara'
+        sub: 'Batch pengiriman RME belum lengkap'
       },
       {
         key: 'consistent',
         cls: 'consistent',
-        title: 'Bukti konsisten',
+        title: 'Bukti Konsisten',
         value: count('consistent'),
         pct: `${Math.round((count('consistent') / total) * 100)}%`,
-        sub: 'Tagihan aktif & catatan saling cocok'
+        sub: 'Tagihan aktif & catatan RME cocok'
       }
     ];
 
@@ -260,8 +260,8 @@ function initJejakApp() {
         pitchBtn.classList.toggle('active', state.pitchOpen);
         pitchBtn.setAttribute('aria-pressed', String(state.pitchOpen));
         pitchBtn.textContent = state.pitchOpen
-          ? '▾ Tutup Panduan Presentasi'
-          : '▶ Panduan Presentasi (4 Menit)';
+          ? 'Tutup Panduan'
+          : 'Panduan Presentasi';
       }
     }
   }
@@ -660,8 +660,8 @@ function initJejakApp() {
           liveAlert.show({
             title: `Catatan Baru Masuk (${senderName})`,
             message: `${senderName} baru saja mengirimkan ${sText} untuk ${epId}.`,
-            badge: 'Ingesti Live',
-            icon: '🔔',
+            badge: 'Ingesti Real-time',
+            icon: '•',
             actionLabel: `Periksa ${epId}`,
             onAction: () => {
               if (authService.isVerifikator()) {
@@ -677,10 +677,10 @@ function initJejakApp() {
       if (!isSelf && authService.isFaskes()) {
         liveAlert.playChime();
         liveAlert.show({
-          title: 'Tiket Klarifikasi Masuk!',
+          title: 'Tiket Klarifikasi Masuk',
           message: `Verifikator BPJS menerbitkan ${event.payload.ticket_id} untuk ${event.payload.episode_id}.`,
           badge: 'Tiket Baru',
-          icon: '📬',
+          icon: '•',
           duration: 7000
         });
       }
@@ -689,10 +689,10 @@ function initJejakApp() {
       if (!isSelf && authService.isVerifikator()) {
         liveAlert.playChime();
         liveAlert.show({
-          title: 'Tanggapan Faskes Diterima!',
+          title: 'Tanggapan Faskes Diterima',
           message: `${event.sender?.label || 'Faskes'} menanggapi tiket ${event.payload.ticket_id} (${event.payload.episode_id}).`,
           badge: 'Tanggapan',
-          icon: '💬',
+          icon: '•',
           actionLabel: 'Buka Tiket',
           onAction: () => {
             handlers.onOpenTicket(event.payload.episode_id);
@@ -711,7 +711,7 @@ function initJejakApp() {
           title: 'Data Ruang Direset',
           message: 'Data kiriman demo telah dikembalikan ke baseline 40 episode oleh rekan Anda.',
           badge: 'Reset',
-          icon: '🔄'
+          icon: '•'
         });
       }
     }

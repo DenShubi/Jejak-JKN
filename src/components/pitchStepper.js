@@ -26,7 +26,7 @@ export function renderPitchStepper(container, state, handlers) {
     <div class="pitch-bar" role="region" aria-label="Panduan alur presentasi 4 menit">
       <div class="pitch-top">
         <div class="pitch-title-group">
-          <span class="pitch-pill">MODE PRESENTASI JURI · ${safe(current.timeRange)}</span>
+          <span class="pitch-pill">Panduan Presentasi · ${safe(current.timeRange)}</span>
           <strong class="pitch-step-title">Langkah ${current.step}/7 — ${safe(current.title)}</strong>
         </div>
         <div class="pitch-dots" role="tablist" aria-label="Pilih langkah presentasi">

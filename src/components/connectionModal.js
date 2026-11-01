@@ -23,7 +23,7 @@ export function openConnectionModal({ onResetRoom, onReloadApp }) {
 
   const header = el('div', { class: 'modal-header' }, [
     el('div', {}, [
-      el('h3', { class: 'modal-title' }, ['🌐 Pengaturan Koneksi & Multi-User Realtime']),
+      el('h3', { class: 'modal-title' }, ['Pengaturan Koneksi & Real-time']),
       el('p', { class: 'modal-subtitle' }, [
         'Hubungkan laptop verifikator dan perangkat faskes secara langsung.'
       ])
@@ -72,14 +72,14 @@ export function openConnectionModal({ onResetRoom, onReloadApp }) {
           await navigator.clipboard.writeText(shareLinkInput.value);
           copyBtn.textContent = 'Tersalin! ✓';
           setTimeout(() => {
-            copyBtn.textContent = 'Salin Tautan 📋';
+            copyBtn.textContent = 'Salin Tautan';
           }, 2000);
         } catch {
           shareLinkInput.select();
         }
       }
     },
-    ['Salin Tautan 📋']
+    ['Salin Tautan']
   );
 
   const applyRoomBtn = el(
@@ -148,8 +148,8 @@ export function openConnectionModal({ onResetRoom, onReloadApp }) {
     el('h4', { class: 'conn-section-title' }, ['3. Sambungan Cloud Supabase Realtime (Opsional)']),
     el('small', { class: 'text-muted' }, [
       connState.mode === 'supabase' && connState.connected
-        ? '🟢 Terhubung ke Server Cloud Realtime'
-        : '🟡 Mode Sinkronisasi Lokal Aktif'
+        ? '● Terhubung ke Server Cloud Real-time'
+        : '● Mode Sinkronisasi Lokal Aktif'
     ])
   ]);
 

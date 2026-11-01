@@ -45,7 +45,7 @@ export function renderTicketModal(container, state, handlers) {
           </div>
           <div class="modal-toolbar-actions">
             <button type="button" class="button ${isDispatched ? 'secondary' : 'primary'} small" id="ticket-dispatch">
-              ${isDispatched ? 'Kirim Ulang ke Faskes 📤' : 'Kirim ke Faskes (Realtime) 📤'}
+              ${isDispatched ? 'Kirim Ulang ke Faskes' : 'Kirim ke Faskes (Real-time)'}
             </button>
             <button type="button" class="button secondary small" id="ticket-copy">Salin Teks</button>
             <button type="button" class="button secondary small" id="ticket-json">Unduh JSON</button>

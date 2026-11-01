@@ -33,9 +33,17 @@ export function createLoginView({ onLoginSuccess }) {
           }
         },
         [
-          el('span', { class: 'tab-icon' }, ['🩺']),
+          el(
+            'span',
+            { class: 'tab-icon', 'aria-hidden': 'true' },
+            [
+              createSvgIcon(
+                '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>'
+              )
+            ]
+          ),
           el('span', {}, [
-            el('strong', {}, ['Admin / Verifikator BPJS']),
+            el('strong', {}, ['Verifikator BPJS']),
             el('small', { class: 'muted' }, ['Pemeriksaan Klaim Pusat'])
           ])
         ]
@@ -51,9 +59,17 @@ export function createLoginView({ onLoginSuccess }) {
           }
         },
         [
-          el('span', { class: 'tab-icon' }, ['🏥']),
+          el(
+            'span',
+            { class: 'tab-icon', 'aria-hidden': 'true' },
+            [
+              createSvgIcon(
+                '<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/>'
+              )
+            ]
+          ),
           el('span', {}, [
-            el('strong', {}, ['Petugas Faskes / RS']),
+            el('strong', {}, ['Petugas Faskes']),
             el('small', { class: 'muted' }, ['Penyerahan Catatan RME'])
           ])
         ]
@@ -71,15 +87,21 @@ export function createLoginView({ onLoginSuccess }) {
     container.appendChild(card);
   }
 
+  function createSvgIcon(pathContent) {
+    const span = document.createElement('span');
+    span.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-login-icon">${pathContent}</svg>`;
+    return span.firstElementChild;
+  }
+
   function renderAdminSchema(currentRoom) {
     const section = el('div', { class: 'login-schema-body' });
 
     // Header
     const header = el('div', { class: 'login-header' }, [
-      el('div', { class: 'login-badge-pill admin-pill' }, ['PORTAL VERIFIKATOR BPJS KESEHATAN']),
+      el('span', { class: 'login-badge-pill admin-pill' }, ['PORTAL VERIFIKATOR BPJS']),
       el('h2', { class: 'login-title' }, ['Ruang Kerja Verifikasi Klaim']),
       el('p', { class: 'login-subtitle' }, [
-        'Masuk sebagai verifikator berwenang untuk memeriksa bukti pelayanan, memantau sinyal aturan JEJAK-RULES-0.1.0, dan menerbitkan tiket klarifikasi.'
+        'Pemeriksaan rekonsiliasi kesesuaian klaim fisioterapi program JKN berbasis bukti deterministik.'
       ])
     ]);
 
@@ -119,7 +141,7 @@ export function createLoginView({ onLoginSuccess }) {
           onLoginSuccess('verifikator');
         }
       },
-      ['Masuk ke Ruang Kerja Verifikator ➔']
+      ['Masuk ke Ruang Kerja']
     );
 
     const quickDemoBtn = el(
@@ -132,7 +154,7 @@ export function createLoginView({ onLoginSuccess }) {
           onLoginSuccess('verifikator');
         }
       },
-      ['⚡ Masuk Cepat Demo: Verifikator Pusat']
+      ['Akses Cepat Demo: Verifikator BPJS']
     );
 
     const form = el('div', { class: 'login-form' }, [
@@ -145,9 +167,7 @@ export function createLoginView({ onLoginSuccess }) {
         passInput
       ]),
       el('div', { class: 'form-group' }, [
-        el('label', { class: 'form-label' }, [
-          'Kode Ruang Sesi Realtime (Sama dengan Perangkat Teman)'
-        ]),
+        el('label', { class: 'form-label' }, ['Kode Ruang Sesi Real-time']),
         roomInput
       ]),
       submitBtn,
@@ -155,9 +175,9 @@ export function createLoginView({ onLoginSuccess }) {
     ]);
 
     const notice = el('div', { class: 'login-security-notice' }, [
-      el('span', { class: 'notice-icon' }, ['🔒']),
+      el('span', { class: 'notice-indicator', 'aria-hidden': 'true' }, ['●']),
       el('p', { class: 'text-xs text-muted' }, [
-        'Akses internal terlindungi. Evaluasi berbasis aturan JEJAK-RULES-0.1.0 secara deterministik tanpa campur tangan probabilitas kecurangan otomatis.'
+        'Akses internal terlindungi. Evaluasi berbasis aturan JEJAK-RULES-0.1.0 secara deterministik sesuai tata kelola Permenkes No. 16 Tahun 2019.'
       ])
     ]);
 
@@ -172,10 +192,10 @@ export function createLoginView({ onLoginSuccess }) {
 
     // Header
     const header = el('div', { class: 'login-header' }, [
-      el('div', { class: 'login-badge-pill faskes-pill' }, ['PORTAL PELAYANAN FASKES / SIMRS']),
-      el('h2', { class: 'login-title' }, ['Portal Petugas Fasilitas Kesehatan']),
+      el('span', { class: 'login-badge-pill faskes-pill' }, ['PORTAL FASILITAS KESEHATAN']),
+      el('h2', { class: 'login-title' }, ['Portal Fasilitas Kesehatan (RME)']),
       el('p', { class: 'login-subtitle' }, [
-        'Masuk sebagai petugas rumah sakit atau fisioterapis untuk menyerahkan catatan tindakan klinis dan merespons tiket klarifikasi secara langsung.'
+        'Penyerahan catatan pelayanan klinis dan konfirmasi tiket klarifikasi klaim secara real-time.'
       ])
     ]);
 
@@ -230,7 +250,7 @@ export function createLoginView({ onLoginSuccess }) {
           onLoginSuccess('faskes');
         }
       },
-      ['Masuk ke Portal Faskes ➔']
+      ['Masuk ke Portal Faskes']
     );
 
     // Quick Hospital Demo Pickers
@@ -245,7 +265,7 @@ export function createLoginView({ onLoginSuccess }) {
             onLoginSuccess('faskes');
           }
         },
-        ['🏥 RS Aruna (F-DEMO-1)']
+        ['RS Aruna (F-DEMO-1)']
       ),
       el(
         'button',
@@ -257,7 +277,7 @@ export function createLoginView({ onLoginSuccess }) {
             onLoginSuccess('faskes');
           }
         },
-        ['🏥 RS Bima (Target EP-001)']
+        ['RS Bima (Target EP-001)']
       ),
       el(
         'button',
@@ -269,7 +289,7 @@ export function createLoginView({ onLoginSuccess }) {
             onLoginSuccess('faskes');
           }
         },
-        ['🏥 RS Cakra (Target EP-002)']
+        ['RS Cakra (Target EP-002)']
       )
     ]);
 
@@ -287,9 +307,7 @@ export function createLoginView({ onLoginSuccess }) {
         passInput
       ]),
       el('div', { class: 'form-group' }, [
-        el('label', { class: 'form-label' }, [
-          'Kode Ruang Sesi Realtime (Sama dengan Laptop Verifikator)'
-        ]),
+        el('label', { class: 'form-label' }, ['Kode Ruang Sesi Real-time']),
         roomInput
       ]),
       submitBtn,
@@ -300,9 +318,9 @@ export function createLoginView({ onLoginSuccess }) {
     ]);
 
     const notice = el('div', { class: 'login-security-notice' }, [
-      el('span', { class: 'notice-icon' }, ['🌐']),
+      el('span', { class: 'notice-indicator', 'aria-hidden': 'true' }, ['●']),
       el('p', { class: 'text-xs text-muted' }, [
-        'Terhubung via Supabase Cloud Realtime. Setiap pengiriman catatan tindakan fisioterapi langsung diterima oleh Verifikator BPJS dengan notifikasi audio dan evaluasi otomatis.'
+        'Terhubung via cloud real-time. Setiap pengiriman catatan tindakan fisioterapi langsung diterima oleh Verifikator BPJS dengan evaluasi deterministik.'
       ])
     ]);
 

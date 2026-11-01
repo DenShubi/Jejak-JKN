@@ -13,8 +13,7 @@ export function ensureWorkspaceShell(container, state, handlers) {
       <aside class="queue-panel" aria-label="Antrean episode">
         <div class="panel-heading">
           <div>
-            <h2>Antrean Pemeriksaan</h2>
-            <span class="sub-caption">Urutan prioritas klarifikasi &amp; kelengkapan</span>
+            <h2>Antrean Episode</h2>
           </div>
           <span id="queue-count" class="count-pill"></span>
         </div>
@@ -23,7 +22,7 @@ export function ensureWorkspaceShell(container, state, handlers) {
           <label class="search-label">
             <span class="sr-only">Cari episode, klaim, peserta, atau fasilitas</span>
             <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 5 5"></path></svg>
-            <input id="search" type="search" placeholder="Cari EP-002, peserta, faskes…" value="${safe(state.query)}">
+            <input id="search" type="search" placeholder="Cari episode, klaim, atau faskes…" value="${safe(state.query)}">
           </label>
 
           <div class="filters" id="filters" role="group" aria-label="Filter status pemeriksaan"></div>
@@ -55,7 +54,7 @@ export function ensureWorkspaceShell(container, state, handlers) {
         </div>
 
         <div class="queue-list" id="queue-list" role="list"></div>
-        <p class="queue-foot">40 episode sintetis · Kategori dihitung deterministik oleh ${safe(VERSION)}.</p>
+        <p class="queue-foot">40 episode · Periode simulasi September 2026</p>
       </aside>
 
       <article class="detail-panel" id="detail" aria-label="Detail penelusuran bukti episode"></article>
@@ -111,7 +110,7 @@ export function renderQueuePanel(container, evaluations, state, handlers) {
   const filterDefs = [
     ['all', 'Semua', statusCounts.all],
     ['review', 'Klarifikasi', statusCounts.review],
-    ['incomplete', 'Data', statusCounts.incomplete],
+    ['incomplete', 'Menunggu Data', statusCounts.incomplete],
     ['consistent', 'Konsisten', statusCounts.consistent]
   ];
   filtersEl.innerHTML = filterDefs
@@ -241,8 +240,8 @@ function renderSelectedSessionInspector(ep, inspection, selectedSessionIndex) {
     <div class="inspector-card" id="session-inspector">
       <div class="inspector-header">
         <div class="inspector-title">
-          <span class="inspector-kicker">INSPEKSI BUKTI SESI TERPILIH</span>
-          <h4>Sesi ${session.sessionIndex} dari ${totalSessions} · ${safe(formatShortDate(claim.service_date))}</h4>
+          <span class="inspector-badge">Sesi ${session.sessionIndex} dari ${totalSessions}</span>
+          <h4>Rekonsiliasi Sesi · ${safe(formatShortDate(claim.service_date))}</h4>
         </div>
         <div class="inspector-nav">
           <span class="session-state-pill pill-${session.state}">${safe(session.stateLabel)}</span>
@@ -254,7 +253,7 @@ function renderSelectedSessionInspector(ep, inspection, selectedSessionIndex) {
       <div class="inspector-grid">
         <div class="source-pane claim-pane">
           <div class="pane-head">
-            <span class="pane-tag">TAGIHAN KLAIM · ChargeItem / Claim</span>
+            <span class="pane-tag">Tagihan Klaim (Claim)</span>
             <span class="rev-chip">Revisi v${claim.revision}</span>
           </div>
           <dl class="kv-grid">
@@ -272,7 +271,7 @@ function renderSelectedSessionInspector(ep, inspection, selectedSessionIndex) {
 
         <div class="source-pane rme-pane">
           <div class="pane-head">
-            <span class="pane-tag">CATATAN LAYANAN · RME / Procedure</span>
+            <span class="pane-tag">Catatan Layanan (RME Procedure)</span>
             ${record ? `<span class="rev-chip">Versi v${record.version}</span>` : `<span class="rev-chip missing-chip">0 Catatan Cocok</span>`}
           </div>
           ${
@@ -291,14 +290,14 @@ function renderSelectedSessionInspector(ep, inspection, selectedSessionIndex) {
                 <div class="clinical-notes-split">
                   <div class="note-block template-block">
                     <div class="note-block-head">
-                      <strong>template_text (Formulir Standar)</strong>
+                      <strong>Formulir Standar (template_text)</strong>
                       <span class="note-rule-chip excluded">Dikecualikan R2</span>
                     </div>
                     <p>${safe(record.template_text)}</p>
                   </div>
                   <div class="note-block personal-block ${reusedPairs.length ? 'reused-highlight' : ''}">
                     <div class="note-block-head">
-                      <strong>patient_specific_text (Isi Individual)</strong>
+                      <strong>Asesmen Individual (patient_specific_text)</strong>
                       <span class="note-rule-chip ${reusedPairs.length ? 'flagged' : 'checked'}">
                         ${normalizedPersonalLength} kar. · ${reusedPairs.length ? 'Identik lintas episode (R2)' : 'Diperiksa R2 (≥60 kar.)'}
                       </span>
@@ -360,7 +359,7 @@ export function renderEpisodeDetail(container, state, handlers) {
             <span class="badge ${r.status}">${safe(r.label)}</span>
             ${
               ep.review
-                ? `<span class="human-pill outcome-${safe(ep.review.outcome)}">Keputusan manusia: ${safe(outcomeLabels[ep.review.outcome])}</span>`
+                ? `<span class="human-pill outcome-${safe(ep.review.outcome)}">Tindak Lanjut: ${safe(outcomeLabels[ep.review.outcome])}</span>`
                 : ''
             }
           </div>
@@ -372,18 +371,18 @@ export function renderEpisodeDetail(container, state, handlers) {
         <div class="detail-actions">
           ${
             ep.late_records.length
-              ? `<button type="button" id="sync" class="button accent">↻ Sinkronkan ${ep.late_records.length} catatan terlambat</button>`
+              ? `<button type="button" id="sync" class="button accent">Sinkronkan ${ep.late_records.length} Catatan Terlambat</button>`
               : ''
           }
-          <button type="button" id="open-ticket" class="button secondary">Tiket Klarifikasi Faskes</button>
-          <button type="button" id="export-case" class="button secondary">Ekspor Kartu Bukti</button>
+          <button type="button" id="open-ticket" class="button secondary">Tiket Klarifikasi</button>
+          <button type="button" id="export-case" class="button secondary">Ekspor JSON</button>
         </div>
       </div>
 
       <div class="detail-snapshot">
         <span>Mesin Aturan: <b>${safe(VERSION)}</b></span>
         <span>Revisi Klaim: <b>v${ep.claim_version}</b></span>
-        <span>Cakupan Sumber: <b>${r.complete ? 'Batch lengkap' : 'Batch belum lengkap'}</b></span>
+        <span>Cakupan Sumber: <b>${r.complete ? 'Lengkap' : 'Menunggu Data'}</b></span>
         <span>Snapshot Diterima: <b>${safe(formatTimestamp(ep.source_received_at))}</b></span>
       </div>
     </div>
@@ -424,7 +423,7 @@ export function renderEpisodeDetail(container, state, handlers) {
         r.status === 'consistent'
           ? `<div class="consistent-note">
                <strong>Bukti sesi yang diterima saling bersesuaian.</strong>
-               <span>Seluruh tagihan sesi aktif memiliki catatan tindakan selesai tanpa duplikasi isi personal lintas episode. Hasil ini menunjukkan konsistensi data, bukan pembuktian mutlak pelaksanaan klinis di lapangan.</span>
+               <span>Seluruh tagihan sesi aktif memiliki catatan tindakan selesai tanpa duplikasi isi personal lintas episode.</span>
              </div>`
           : ''
       }
@@ -433,12 +432,12 @@ export function renderEpisodeDetail(container, state, handlers) {
         <div class="mini-metric">
           <span>Sesi tagihan aktif</span>
           <strong>${r.claimed}</strong>
-          <small>${r.cancelled ? `${r.cancelled} sesi dibatalkan dikecualikan` : 'Unit pemeriksaan internal'}</small>
+          <small>${r.cancelled ? `${r.cancelled} sesi dibatalkan dikecualikan` : 'Unit pemeriksaan'}</small>
         </div>
         <div class="mini-metric metric-ok">
           <span>Catatan sesi cocok</span>
           <strong>${r.matched}</strong>
-          <small>${r.claimed ? Math.round((r.matched / r.claimed) * 100) : 100}% sesi aktif memiliki rujukan RME</small>
+          <small>${r.claimed ? Math.round((r.matched / r.claimed) * 100) : 100}% sesi aktif berpasangan RME</small>
         </div>
         <div class="mini-metric ${r.missing ? (r.complete ? 'metric-warn' : 'metric-info') : ''}">
           <span>${r.complete ? 'Belum cocok (klarifikasi)' : 'Belum cocok sementara'}</span>
@@ -449,14 +448,13 @@ export function renderEpisodeDetail(container, state, handlers) {
 
       <div class="section-heading">
         <div>
-          <h3>Jejak Setiap Sesi Layanan</h3>
-          <span class="sub-caption">Klik kotak sesi untuk membandingkan baris tagihan klaim dan catatan RME secara berdampingan</span>
+          <h3>Jejak Sesi Layanan</h3>
         </div>
         <div class="legend">
           <span class="leg-has">Cocok</span>
           <span class="leg-missing">Klarifikasi</span>
-          <span class="leg-waiting">Menunggu data</span>
-          <span class="leg-reused">Isi sama (R2)</span>
+          <span class="leg-waiting">Menunggu Data</span>
+          <span class="leg-reused">Teks Identik (R2)</span>
           <span class="leg-cancelled">Dibatalkan</span>
         </div>
       </div>
@@ -490,8 +488,7 @@ export function renderEpisodeDetail(container, state, handlers) {
           ? `
             <div class="section-heading">
               <div>
-                <h3>Perbandingan Keterkaitan Isi Personal Lintas Episode (Sinyal R2)</h3>
-                <span class="sub-caption">Kesamaan isi setelah normalisasi spasi &amp; huruf kecil merupakan petunjuk klarifikasi, bukan vonis kecurangan</span>
+                <h3>Keterkaitan Teks Personal Lintas Episode (Sinyal R2)</h3>
               </div>
             </div>
             <div class="r2-diff-list">
@@ -505,7 +502,7 @@ export function renderEpisodeDetail(container, state, handlers) {
                         <strong>${safe(ep.episode_id)} · ${safe(ep.patient_token)}</strong>
                         <small>${safe(ep.facility_name)} · Catatan <code>${safe(pair.record_id)}</code> (Sesi ${pair.session_index || 2})</small>
                       </div>
-                      <div class="r2-connector" aria-hidden="true">⇄ Identik 100%</div>
+                      <div class="r2-connector" aria-hidden="true"><span class="r2-badge">Teks Identik (R2)</span></div>
                       <div class="r2-col linked">
                         <span class="r2-col-label">Episode Pasangan Berbeda</span>
                         <strong>${safe(pair.other_episode_id)} · ${safe(pair.other_patient_token)}</strong>
@@ -514,7 +511,7 @@ export function renderEpisodeDetail(container, state, handlers) {
                       </div>
                     </div>
                     <div class="r2-shared-text">
-                      <span>Teks personal identik yang terdeteksi (formulir standar tidak ikut dibandingkan):</span>
+                      <span>Teks personal identik yang terdeteksi:</span>
                       <blockquote>“${safe(pair.text)}”</blockquote>
                     </div>
                   </div>
@@ -528,8 +525,7 @@ export function renderEpisodeDetail(container, state, handlers) {
 
       <details class="table-accordion" open>
         <summary>
-          <span>Daftar Bukti Lengkap Seluruh Sesi (${sessions.length} baris)</span>
-          <small>Klik baris tabel untuk memilih sesi pada panel inspeksi</small>
+          <span>Daftar Bukti Seluruh Sesi (${sessions.length} baris)</span>
         </summary>
         <div class="table-scroll">
           <table>
@@ -569,10 +565,8 @@ export function renderEpisodeDetail(container, state, handlers) {
       <div class="review-box" id="review-section">
         <div class="review-box-head">
           <div>
-            <h3>Tindak Lanjut Verifikator (Human-in-the-Loop)</h3>
-            <p>Catat hasil penelusuran beserta rujukan ID bukti. Menyimpan keputusan tidak menghapus sinyal aturan mesin agar riwayat audit tetap utuh.</p>
+            <h3>Tindak Lanjut Verifikator</h3>
           </div>
-          <span class="governance-badge">Tata Kelola Bab 8.4</span>
         </div>
 
         ${
@@ -590,7 +584,7 @@ export function renderEpisodeDetail(container, state, handlers) {
         }
 
         <div class="quick-templates">
-          <span class="template-caption">Isi cepat contoh catatan:</span>
+          <span class="template-caption">Template Catatan:</span>
           ${REVIEW_TEMPLATES.map(
             (tpl) => `
               <button type="button" class="chip-btn" data-tpl="${safe(tpl.id)}">${safe(tpl.label)}</button>
@@ -601,7 +595,7 @@ export function renderEpisodeDetail(container, state, handlers) {
         <form id="review-form">
           <div class="review-controls">
             <label>
-              Hasil pemeriksaan manusia
+              Hasil verifikasi
               <select id="outcome">
                 <option value="pending" ${draft.outcome === 'pending' ? 'selected' : ''}>Perlu bukti tambahan</option>
                 <option value="legitimate" ${draft.outcome === 'legitimate' ? 'selected' : ''}>Penjelasan sah diterima</option>
@@ -609,7 +603,7 @@ export function renderEpisodeDetail(container, state, handlers) {
               </select>
             </label>
             <label>
-              Catatan verifikator &amp; rujukan ID bukti (tanpa data identitas pasien asli)
+              Catatan verifikator &amp; rujukan ID bukti
               <textarea
                 id="review-note"
                 required
@@ -619,16 +613,14 @@ export function renderEpisodeDetail(container, state, handlers) {
             </label>
           </div>
           <div class="review-form-actions">
-            <button type="submit" class="button primary">Simpan Tindak Lanjut</button>
-            <span class="source-note">Nominal pembiayaan tidak dihitung otomatis dari selisih sesi; dampak finansial mengikuti keputusan ajudikasi resmi.</span>
+            <button type="submit" class="button primary">Simpan Keputusan</button>
           </div>
         </form>
       </div>
 
       <div class="section-heading">
         <div>
-          <h3>Riwayat Pemeriksaan Sesi Demo</h3>
-          <span class="sub-caption">Tersimpan di memori browser selama halaman dibuka</span>
+          <h3>Riwayat Pemeriksaan</h3>
         </div>
       </div>
       <ul class="audit">
