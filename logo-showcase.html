@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>JEJAK JKN — Identitas Brand & Panduan Logo Resmi</title>
+  <link rel="icon" type="image/svg+xml" href="brand/jejak-jkn-favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy-950: #061d33;
+      --navy-900: #0b1f35;
+      --navy-800: #0f2942;
+      --royal-blue: #0052b4;
+      --bpjs-green: #00a859;
+      --vibrant-green: #00e676;
+      --paper: #ffffff;
+      --bg-slate: #f8fafc;
+      --border: #e2e8f0;
+      --ink: #0f172a;
+      --ink-muted: #64748b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg-slate);
+      color: var(--ink);
+      line-height: 1.6;
+      padding-bottom: 80px;
+    }
+
+    .top-nav {
+      background: var(--navy-950);
+      color: #fff;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .top-nav a {
+      color: #93c5fd;
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .top-nav a:hover { color: #fff; }
+
+    .hero {
+      background: linear-gradient(135deg, var(--navy-950) 0%, #0a2540 60%, #061d33 100%);
+      color: #fff;
+      padding: 60px 24px 50px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(0, 230, 118, 0.2);
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(0, 230, 118, 0.15) 0%, rgba(0, 82, 180, 0.1) 50%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 230, 118, 0.15);
+      border: 1px solid rgba(0, 230, 118, 0.35);
+      color: #00e676;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+    .hero h1 {
+      font-size: 38px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .hero h1 span {
+      background: linear-gradient(90deg, #38bdf8, #00e676);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 16px;
+      color: #94a3b8;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .container {
+      max-width: 1160px;
+      margin: 40px auto 0;
+      padding: 0 24px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--navy-950);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-desc {
+      color: var(--ink-muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+    }
+    .card-dark {
+      background: var(--navy-950);
+      border-color: #1e3a5f;
+      color: #fff;
+    }
+
+    .logo-preview-box {
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      padding: 32px 20px;
+      min-height: 220px;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .preview-dark {
+      background: var(--navy-950);
+      border: 1px solid #1e3a5f;
+    }
+    .preview-light {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+    }
+    .preview-slate {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+    }
+
+    .card h3 {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .card p {
+      font-size: 13px;
+      color: var(--ink-muted);
+      margin-bottom: 16px;
+      flex-grow: 1;
+    }
+    .card-dark p {
+      color: #94a3b8;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      margin-top: auto;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 8px 14px;
+      font-size: 12.5px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      border: 1px solid transparent;
+    }
+    .btn-primary {
+      background: #00a859;
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: #008746;
+    }
+    .btn-secondary {
+      background: #f1f5f9;
+      color: var(--ink);
+      border-color: #cbd5e1;
+    }
+    .btn-secondary:hover {
+      background: #e2e8f0;
+    }
+    .btn-dark {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      border-color: rgba(255,255,255,0.2);
+    }
+    .btn-dark:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .symbol-pill {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .symbol-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      background: rgba(0, 82, 180, 0.08);
+      display: grid;
+      place-items: center;
+      color: var(--royal-blue);
+      font-weight: 800;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .symbol-content h4 {
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 2px;
+    }
+    .symbol-content p {
+      font-size: 13px;
+      color: var(--ink-muted);
+      margin: 0;
+    }
+
+    .swatch {
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+    .swatch-color {
+      height: 70px;
+    }
+    .swatch-info {
+      padding: 12px;
+    }
+    .swatch-name {
+      font-weight: 800;
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+    .swatch-hex {
+      font-family: monospace;
+      font-size: 12px;
+      color: var(--ink-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="top-nav">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="brand/jejak-jkn-mark.png" alt="Mark" style="width:32px;height:32px;object-fit:contain;">
+      <span style="font-weight:800;letter-spacing:0.5px;">JEJAK JKN <span style="font-size:12px;color:#94a3b8;font-weight:500;">/ Identitas Logo Resmi</span></span>
+    </div>
+    <a href="index.html">← Kembali ke Dashboard Verifikator</a>
+  </header>
+
+  <section class="hero">
+    <div class="hero-badge">BPJS Kesehatan Healthkathon 2026 • Tim TranspemGo</div>
+    <h1>Identitas Logo Resmi <span>JEJAK JKN</span></h1>
+    <p>Aset visual resmi platform penelusuran bukti layanan dan deteksi dini klaim fiktif JKN. Dipilih dan disesuaikan untuk kebutuhan web, cetak, dan presentasi.</p>
+  </section>
+
+  <main class="container">
+
+    <!-- Section 1: Concept & Symbolism -->
+    <section style="margin-bottom: 48px;">
+      <h2 class="section-title">Anatomi &amp; Makna Simbol Logo</h2>
+      <p class="section-desc">Kombinasi visual yang menggambarkan lokasi fasilitas kesehatan, keabsahan medis, jalur penelusuran klaim, dan identitas JKN.</p>
+
+      <div class="grid-2">
+        <div>
+          <div class="symbol-pill">
+            <div class="symbol-icon">📍</div>
+            <div class="symbol-content">
+              <h4>Pin Lokasi Faskes &amp; Palang Medis</h4>
+              <p>Pin biru dengan palang medis putih di pusatnya melambangkan penandaan titik layanan di fasilitas kesehatan (FKTP/FKRTL) dan validitas klinis tindakan medis yang diberikan kepada peserta.</p>
+            </div>
+          </div>
+
+          <div class="symbol-pill">
+            <div class="symbol-icon">🛣️</div>
+            <div class="symbol-content">
+              <h4>Jalur Penelusuran Berkelok (Jejak / Trail)</h4>
+              <p>Pita jalan meliuk berwarna hijau zamrud ke hijau terang melambangkan riwayat sesi layanan fisioterapi yang terlacak jelas dari Sesi 1 hingga Sesi 12 tanpa celah data fiktif.</p>
+            </div>
+          </div>
+
+          <div class="symbol-pill">
+            <div class="symbol-icon">✦</div>
+            <div class="symbol-content">
+              <h4>Tipografi Tebal &amp; Dinamis: JEJAK JKN</h4>
+              <p>Huruf "JEJAK" tegas berwarna biru royal dipadu dengan akronim "JKN" bergradasi hijau mencerminkan kecepatan eksekusi aturan deterministik dan semangat keterbukaan.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="justify-content: center; align-items: center; text-align: center; background: #ffffff;">
+          <img src="brand/jejak-jkn-logo.png" alt="Logo JEJAK JKN Resmi" style="max-width: 90%; max-height: 200px; object-fit: contain; margin-bottom: 16px;">
+          <h3 style="color:var(--navy-950); font-size:18px;">Logo Utama (Full Lockup)</h3>
+          <p style="color:var(--ink-muted); max-width: 380px; font-size:13px;">Format resolusi tinggi dengan latar belakang transparan murni, siap digunakan pada semua media.</p>
+          <div class="btn-group">
+            <a href="brand/jejak-jkn-logo.png" download="jejak-jkn-logo.png" class="btn btn-primary">Unduh PNG Asli</a>
+            <a href="brand/jejak-jkn-logo.svg" download="jejak-jkn-logo.svg" class="btn btn-secondary">Unduh SVG</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Variations -->
+    <section style="margin-bottom: 48px;">
+      <h2 class="section-title">Varian Berkas Logo Resmi</h2>
+      <p class="section-desc">Gunakan varian sesuai kebutuhan aplikasi, media presentasi, maupun dokumen audit.</p>
+
+      <div class="grid-2">
+        <!-- Light Mode -->
+        <div class="card">
+          <div class="logo-preview-box preview-light">
+            <img src="brand/jejak-jkn-logo.png" alt="Logo Light" style="max-width: 85%; max-height: 140px; object-fit: contain;">
+          </div>
+          <h3>Lockup Primer — Latar Terang (Light Mode)</h3>
+          <p>Ideal untuk tiket klarifikasi faskes, ekspor dokumen PDF, kop surat, dan presentasi juri bertema cerah.</p>
+          <div class="btn-group">
+            <a href="brand/jejak-jkn-logo.png" download="jejak-jkn-logo.png" class="btn btn-primary">Unduh PNG</a>
+            <a href="brand/jejak-jkn-logo-horizontal-light.svg" download="jejak-jkn-logo-horizontal-light.svg" class="btn btn-secondary">Unduh SVG</a>
+          </div>
+        </div>
+
+        <!-- Dark Mode -->
+        <div class="card card-dark">
+          <div class="logo-preview-box preview-dark">
+            <img src="brand/jejak-jkn-logo-dark.png" alt="Logo Dark" style="max-width: 85%; max-height: 140px; object-fit: contain;">
+          </div>
+          <h3>Lockup Kontras — Latar Gelap (Dark Mode)</h3>
+          <p>Dioptimasi khusus untuk navbar dashboard, backdrop gelap, dan materi video presentasi dengan teks kontras tinggi.</p>
+          <div class="btn-group">
+            <a href="brand/jejak-jkn-logo-dark.png" download="jejak-jkn-logo-dark.png" class="btn btn-primary">Unduh PNG</a>
+            <a href="brand/jejak-jkn-logo-horizontal-dark.svg" download="jejak-jkn-logo-horizontal-dark.svg" class="btn btn-dark">Unduh SVG</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <!-- Standalone Mark -->
+        <div class="card">
+          <div class="logo-preview-box preview-slate" style="min-height: 150px;">
+            <img src="brand/jejak-jkn-mark.png" alt="Emblem Mark" style="width: 80px; height: 80px; object-fit: contain;">
+          </div>
+          <h3>Simbol Mark Mandiri (Pin &amp; Road)</h3>
+          <p>Ikon pin medis dan jalur jejak tanpa teks, digunakan untuk logo header dan avatar pengguna.</p>
+          <div class="btn-group">
+            <a href="brand/jejak-jkn-mark.png" download="jejak-jkn-mark.png" class="btn btn-secondary">Unduh Mark PNG</a>
+            <a href="brand/jejak-jkn-mark.svg" download="jejak-jkn-mark.svg" class="btn btn-secondary">Unduh SVG</a>
+          </div>
+        </div>
+
+        <!-- Favicon / App Icon -->
+        <div class="card">
+          <div class="logo-preview-box preview-light" style="min-height: 150px;">
+            <img src="brand/jejak-jkn-mark.png" alt="Favicon" style="width: 48px; height: 48px; object-fit: contain;">
+          </div>
+          <h3>Favicon &amp; App Icon (1:1)</h3>
+          <p>Format ukuran persegi untuk favicon peramban, shortcut layar ponsel, dan bookmark.</p>
+          <div class="btn-group">
+            <a href="brand/favicon-32x32.png" download="favicon-32x32.png" class="btn btn-secondary">32x32 PNG</a>
+            <a href="brand/favicon.ico" download="favicon.ico" class="btn btn-secondary">Unduh .ICO</a>
+          </div>
+        </div>
+
+        <!-- High-res 512 Icon -->
+        <div class="card">
+          <div class="logo-preview-box preview-light" style="min-height: 150px;">
+            <img src="brand/jejak-jkn-icon-512.png" alt="512 Icon" style="width: 80px; height: 80px; object-fit: contain;">
+          </div>
+          <h3>High-Res Master Icon (512x512)</h3>
+          <p>Ikon aplikasi resolusi tinggi siap pakai untuk submission berkas dan materi grafis promosi.</p>
+          <div class="btn-group">
+            <a href="brand/jejak-jkn-icon-512.png" download="jejak-jkn-icon-512.png" class="btn btn-secondary">Unduh 512px</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Color Palette -->
+    <section>
+      <h2 class="section-title">Palet Warna Resmi Logo</h2>
+      <p class="section-desc">Warna resmi yang diambil langsung dari elemen grafis logo pilihan tim.</p>
+
+      <div class="grid-3">
+        <div class="swatch">
+          <div class="swatch-color" style="background:#0052b4;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Royal Blue (Pin &amp; JEJAK)</div>
+            <div class="swatch-hex">#0052B4 • RGB(0, 82, 180)</div>
+          </div>
+        </div>
+
+        <div class="swatch">
+          <div class="swatch-color" style="background:#00a859;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">BPJS Emerald (Jalur Jejak &amp; JKN)</div>
+            <div class="swatch-hex">#00A859 • RGB(0, 168, 89)</div>
+          </div>
+        </div>
+
+        <div class="swatch">
+          <div class="swatch-color" style="background:#00e676;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Vibrant Green (Gradasi Ujung)</div>
+            <div class="swatch-hex">#00E676 • RGB(0, 230, 118)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>

@@ -6,17 +6,14 @@
   <meta name="description" content="JEJAK JKN — Sistem Audit Bukti Layanan Fisioterapi untuk Deteksi Dini Klaim Fiktif Program JKN (BPJS Kesehatan Healthkathon 2026 oleh TranspemGo).">
   <meta name="color-scheme" content="light">
   <title>JEJAK JKN — Audit Bukti Layanan Fisioterapi</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b2545'/%3E%3Cpath d='M9 8h13v16H9z' fill='none' stroke='%23059669' stroke-width='2'/%3E%3Cpath d='m12 16 3 3 6-7' fill='none' stroke='white' stroke-width='2.2'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="brand/jejak-jkn-favicon.svg">
 </head>
 <body>
   <header class="app-header">
     <div class="header-inner">
       <div class="brand">
         <span class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            <path d="m9 12 2 2 4-4"/>
-          </svg>
+          <img src="brand/jejak-jkn-mark.svg" alt="Logo JEJAK JKN" width="36" height="36">
         </span>
         <div class="brand-text">
           <div class="brand-title"><strong>JEJAK JKN</strong> <span class="team-badge">TranspemGo</span></div>
@@ -56,6 +53,9 @@
         <button type="button" class="button pitch-toggle small" id="toggle-pitch" aria-pressed="false">
           Panduan Presentasi
         </button>
+        <a href="logo-showcase.html" class="button ghost small" target="_blank" title="Buka Panduan Logo &amp; Identitas Brand JEJAK JKN">
+          Identitas Logo
+        </a>
         <button type="button" class="button secondary small" id="export-csv">
           Ekspor CSV
         </button>
@@ -69,23 +69,22 @@
   <main>
     <div id="pitch-root" hidden></div>
 
-    <div class="page-banner">
-      <div class="banner-title-area">
-        <div class="banner-meta-row">
-          <span class="banner-badge">Audit Klaim Fisioterapi</span>
-          <span class="banner-meta">Periode: September 2026</span>
-          <span class="banner-meta">JEJAK-RULES-0.1.0</span>
-        </div>
-        <h1>Rekonsiliasi Bukti Sesi Layanan</h1>
-        <p class="intro">Pemeriksaan deterministik kesesuaian tagihan sesi klaim terhadap catatan rekam medis elektronik (RME).</p>
+    <div class="workspace-context-bar page-banner">
+      <div class="context-breadcrumb">
+        <span class="context-system">JEJAK JKN</span>
+        <span class="context-sep">/</span>
+        <span class="context-scope">Audit Klaim Fisioterapi</span>
+        <span class="context-sep">/</span>
+        <span class="context-period">Periode September 2026</span>
       </div>
-      <div class="banner-guardrail">
-        <span class="guardrail-badge">Tata Kelola Regulasi</span>
-        <p>Evaluasi deterministik berbasis bukti. Keputusan final pada verifikator berwenang (Permenkes No. 16/2019).</p>
+      <div class="context-meta">
+        <span class="context-token">ATURAN: JEJAK-RULES-0.1.0</span>
+        <span class="context-sep">·</span>
+        <span class="context-token">TATA KELOLA: HUMAN-IN-THE-LOOP</span>
       </div>
     </div>
 
-    <div class="stats" id="stats" aria-live="polite"></div>
+    <div class="audit-metric-strip stats" id="stats" aria-live="polite"></div>
 
     <div id="view-root"></div>
 

@@ -154,8 +154,10 @@ function initJejakApp() {
           type="button"
           class="stat ${c.cls} ${state.view === 'workspace' && state.filter === c.key ? 'active-kpi' : ''}"
           data-kpi-filter="${c.key}"
+          aria-pressed="${state.view === 'workspace' && state.filter === c.key}"
         >
           <div class="stat-top">
+            <span class="stat-indicator" aria-hidden="true"></span>
             <span class="stat-label">${safe(c.title)}</span>
             <span class="stat-pct">${safe(c.pct)}</span>
           </div>

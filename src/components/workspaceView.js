@@ -202,18 +202,19 @@ export function renderQueuePanel(container, evaluations, state, handlers) {
         >
           <span class="queue-item-top">
             <span class="queue-id-wrap">
-              <strong>${safe(ep.episode_id)}</strong>
-              ${ep.review ? '<span class="reviewed-dot" title="Sudah ditindaklanjuti verifikator">✓ Ditinjau</span>' : ''}
+              <span class="queue-status-dot dot-${r.status}" aria-hidden="true"></span>
+              <strong class="queue-id">${safe(ep.episode_id)}</strong>
+              ${ep.review ? '<span class="reviewed-dot" title="Tindak lanjut verifikator tercatat">✓</span>' : ''}
             </span>
             <span class="badge ${r.status}">${safe(r.label)}</span>
           </span>
-          <span class="queue-facility">${safe(ep.facility_name)} · ${safe(ep.patient_token)}</span>
+          <span class="queue-facility">${safe(ep.facility_name)} · <code>${safe(ep.patient_token)}</code></span>
           <span class="queue-progress-row">
             <span class="mini-bar"><i class="fill-${r.status}" style="width:${pct}%"></i></span>
             <span class="queue-ratio"><b>${r.matched}/${r.claimed}</b> sesi</span>
           </span>
           <span class="queue-tags">
-            ${ruleCodes.map((c) => `<span class="q-tag tag-${c.toLowerCase()}">${c}</span>`).join('')}
+            ${ruleCodes.map((c) => `<span class="q-tag tag-${c.toLowerCase()}">[${c}]</span>`).join('')}
             ${r.cancelled ? `<span class="q-tag tag-neutral">${r.cancelled} batal</span>` : ''}
             ${ep.late_records.length ? `<span class="q-tag tag-sync">+${ep.late_records.length} tunda</span>` : ''}
           </span>
