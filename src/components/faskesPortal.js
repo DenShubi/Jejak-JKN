@@ -92,16 +92,16 @@ export function createFaskesPortal({
             el('option', { value: f.id, selected: f.id === facilityId }, [f.name])
           )
         ),
-        // Switch to Verifikator
+        // Logout from Portal
         el(
           'button',
           {
             class: 'btn btn-sm btn-outline',
             type: 'button',
             onclick: onSwitchToVerifikator,
-            title: 'Beralih ke tampilan Verifikator BPJS'
+            title: 'Keluar dari Portal Faskes dan kembali ke halaman masuk'
           },
-          ['👁 Layar Verifikator BPJS']
+          ['🚪 Keluar Portal']
         )
       ])
     ]);

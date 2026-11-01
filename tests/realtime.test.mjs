@@ -97,3 +97,43 @@ test('R4. End-to-end two-way clarification flow between Verifikator and Faskes',
   assert.equal(reviewOk, true);
   assert.equal(ep1.review?.outcome, 'legitimate');
 });
+
+test('R5. Separated login schemas: Admin login produces verifikator role, Faskes login produces faskes role with facilityId', async () => {
+  const { authService } = await import('../src/services/authService.js');
+
+  // Test Admin Login Schema
+  const adminRes = authService.loginAdmin({
+    email: 'admin.klaim@bpjs.go.id',
+    password: 'demo',
+    roomCode: 'HEALTHKATHON-BPJS'
+  });
+  assert.equal(adminRes.success, true);
+  assert.equal(authService.isAuthenticated(), true);
+  assert.equal(authService.isVerifikator(), true);
+  assert.equal(authService.isFaskes(), false);
+  assert.equal(authService.getCurrentUser()?.role, 'verifikator');
+  assert.equal(authService.getCurrentRoom(), 'HEALTHKATHON-BPJS');
+
+  // Test Logout
+  authService.logout();
+  assert.equal(authService.isAuthenticated(), false);
+  assert.equal(authService.getCurrentUser(), null);
+
+  // Test Faskes Login Schema
+  const faskesRes = authService.loginFaskes({
+    facilityId: 'F-DEMO-2',
+    officerName: 'drg. Bima Perkasa',
+    password: 'demo',
+    roomCode: 'HEALTHKATHON-BIMA'
+  });
+  assert.equal(faskesRes.success, true);
+  assert.equal(authService.isAuthenticated(), true);
+  assert.equal(authService.isFaskes(), true);
+  assert.equal(authService.isVerifikator(), false);
+  assert.equal(authService.getCurrentUser()?.facilityId, 'F-DEMO-2');
+  assert.equal(authService.getCurrentUser()?.facilityName, 'RS Simulasi Bima');
+  assert.equal(authService.getCurrentRoom(), 'HEALTHKATHON-BIMA');
+
+  authService.logout();
+  assert.equal(authService.isAuthenticated(), false);
+});

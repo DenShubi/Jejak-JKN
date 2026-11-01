@@ -11,6 +11,7 @@ import {
 } from './components/workspaceView.js';
 import { renderAnalyticsView } from './components/analyticsView.js';
 import { createFaskesPortal } from './components/faskesPortal.js';
+import { createLoginView } from './components/loginView.js';
 import { openConnectionModal } from './components/connectionModal.js';
 import { liveAlert } from './components/liveAlert.js';
 import { authService } from './services/authService.js';
@@ -27,7 +28,7 @@ function initJejakApp() {
 
   const state = {
     dataset: E.makeDataset(),
-    view: initialUser.role === 'faskes' ? 'faskes' : 'workspace',
+    view: initialUser ? (initialUser.role === 'faskes' ? 'faskes' : 'workspace') : 'login',
     selected: 'EP-002',
     selectedSessionByEpisode: {},
     reviewDrafts: {},
@@ -100,7 +101,7 @@ function initJejakApp() {
     const statsContainer = $('stats');
     if (!statsContainer) return;
 
-    if (state.view === 'faskes') {
+    if (!authService.isAuthenticated() || state.view === 'faskes') {
       statsContainer.style.display = 'none';
       return;
     }
@@ -181,20 +182,13 @@ function initJejakApp() {
     const user = authService.getCurrentUser();
     const connState = realtimeDb.getConnectionState();
 
-    // User Profile Chip
-    const userAvatar = $('user-avatar');
-    const userName = $('user-name');
-    if (userAvatar && userName) {
-      if (user.role === 'verifikator') {
-        userAvatar.textContent = 'VB';
-        userName.textContent = user.fullName || 'Verifikator BPJS';
-      } else {
-        userAvatar.textContent = 'RS';
-        userName.textContent = user.facilityName || user.fullName || 'Petugas Faskes';
-      }
-    }
+    const authArea = $('user-auth-area');
+    const subbar = $('subbar');
+    const banner = document.querySelector('.page-banner');
+    const methodology = document.querySelector('.methodology');
+    const statsContainer = $('stats');
 
-    // Connection Pill
+    // Connection Pill in Header
     const connPill = $('btn-conn-settings');
     const connText = $('conn-status-text');
     if (connText && connPill) {
@@ -215,27 +209,60 @@ function initJejakApp() {
       }
     }
 
-    // Tab buttons
-    document.querySelectorAll('[data-view]').forEach((btn) => {
-      const active = btn.dataset.view === state.view;
-      btn.classList.toggle('active', active);
-      btn.setAttribute('aria-selected', String(active));
-    });
-
-    // Pitch button
-    const pitchBtn = $('toggle-pitch');
-    if (pitchBtn) {
-      pitchBtn.classList.toggle('active', state.pitchOpen);
-      pitchBtn.setAttribute('aria-pressed', String(state.pitchOpen));
-      pitchBtn.textContent = state.pitchOpen
-        ? '▾ Tutup Panduan Presentasi'
-        : '▶ Panduan Presentasi (4 Menit)';
+    if (!user) {
+      // NOT Logged In: Show only Login Gateway
+      if (authArea) authArea.style.display = 'none';
+      if (subbar) subbar.style.display = 'none';
+      if (banner) banner.style.display = 'none';
+      if (methodology) methodology.style.display = 'none';
+      if (statsContainer) statsContainer.style.display = 'none';
+      return;
     }
 
-    // Hide/show page banner for Faskes view to give clean mobile feel
-    const banner = document.querySelector('.page-banner');
-    if (banner) {
-      banner.style.display = state.view === 'faskes' ? 'none' : 'grid';
+    // Logged In: Show user chip & logout
+    if (authArea) authArea.style.display = 'flex';
+
+    const userAvatar = $('user-avatar');
+    const userName = $('user-name');
+    if (userAvatar && userName) {
+      if (user.role === 'verifikator') {
+        userAvatar.textContent = 'VB';
+        userName.textContent = user.fullName || 'Verifikator BPJS';
+      } else {
+        userAvatar.textContent = 'RS';
+        userName.textContent = user.facilityName || user.fullName || 'Petugas Faskes';
+      }
+    }
+
+    if (user.role === 'faskes') {
+      // Faskes Mode: strictly hide BPJS internal controls
+      if (subbar) subbar.style.display = 'none';
+      if (banner) banner.style.display = 'none';
+      if (methodology) methodology.style.display = 'none';
+      if (statsContainer) statsContainer.style.display = 'none';
+    } else {
+      // Admin/Verifikator BPJS Mode: show BPJS workspace controls
+      if (subbar) subbar.style.display = 'block';
+      if (banner) banner.style.display = 'grid';
+      if (methodology) methodology.style.display = 'block';
+      if (statsContainer) statsContainer.style.display = 'grid';
+
+      // Tab buttons
+      document.querySelectorAll('[data-view]').forEach((btn) => {
+        const active = btn.dataset.view === state.view;
+        btn.classList.toggle('active', active);
+        btn.setAttribute('aria-selected', String(active));
+      });
+
+      // Pitch button
+      const pitchBtn = $('toggle-pitch');
+      if (pitchBtn) {
+        pitchBtn.classList.toggle('active', state.pitchOpen);
+        pitchBtn.setAttribute('aria-pressed', String(state.pitchOpen));
+        pitchBtn.textContent = state.pitchOpen
+          ? '▾ Tutup Panduan Presentasi'
+          : '▶ Panduan Presentasi (4 Menit)';
+      }
     }
   }
 
@@ -315,10 +342,7 @@ function initJejakApp() {
   };
 
   function render() {
-    const items = evaluations();
     updateHeaderAndNav();
-    renderPitchStepper($('pitch-root'), state, handlers);
-    renderStats(items);
 
     const viewRoot = $('view-root');
 
@@ -327,6 +351,24 @@ function initJejakApp() {
       activeFaskesPortal.destroy();
       activeFaskesPortal = null;
     }
+
+    // 1. GATE: Not authenticated -> Render Separated Login View
+    if (!authService.isAuthenticated()) {
+      viewRoot.innerHTML = '';
+      const loginView = createLoginView({
+        onLoginSuccess: (role) => {
+          state.view = role === 'faskes' ? 'faskes' : 'workspace';
+          render();
+        }
+      });
+      viewRoot.appendChild(loginView.element);
+      return;
+    }
+
+    // 2. Authenticated: Render role-specific view
+    const items = evaluations();
+    renderPitchStepper($('pitch-root'), state, handlers);
+    renderStats(items);
 
     if (state.view === 'faskes') {
       viewRoot.innerHTML = '';
@@ -342,8 +384,8 @@ function initJejakApp() {
           });
         },
         onSwitchToVerifikator: () => {
-          authService.loginAs('verifikator');
-          state.view = 'workspace';
+          authService.logout();
+          state.view = 'login';
           render();
         }
       });
@@ -413,7 +455,7 @@ function initJejakApp() {
     }
     const at = new Date().toISOString();
     const currentUser = authService.getCurrentUser();
-    const actor = currentUser?.fullName || 'Verifikator demo';
+    const actor = currentUser?.fullName || 'Verifikator BPJS';
 
     ep.review = { outcome, note: clean, actor, at };
     ep.events.push({
@@ -497,6 +539,17 @@ function initJejakApp() {
         onResetRoom: () => resetToBaseline(),
         onReloadApp: () => render()
       });
+    });
+  }
+
+  // Wire Logout Button
+  const btnLogout = $('btn-logout');
+  if (btnLogout) {
+    btnLogout.addEventListener('click', () => {
+      authService.logout();
+      state.view = 'login';
+      render();
+      toast('Anda telah keluar dari sesi.');
     });
   }
 
@@ -611,7 +664,9 @@ function initJejakApp() {
             icon: '🔔',
             actionLabel: `Periksa ${epId}`,
             onAction: () => {
-              openEpisode(epId, res.sessions?.[0]);
+              if (authService.isVerifikator()) {
+                openEpisode(epId, res.sessions?.[0]);
+              }
             },
             duration: 8000
           });
@@ -663,9 +718,11 @@ function initJejakApp() {
   });
 
   authService.onAuthChange((newUser) => {
-    if (newUser.role === 'faskes' && state.view === 'workspace') {
+    if (!newUser) {
+      state.view = 'login';
+    } else if (newUser.role === 'faskes') {
       state.view = 'faskes';
-    } else if (newUser.role === 'verifikator' && state.view === 'faskes') {
+    } else if (newUser.role === 'verifikator') {
       state.view = 'workspace';
     }
     render();
@@ -681,7 +738,7 @@ function initJejakApp() {
     saveReview,
     openTicket: (id) => handlers.onOpenTicket(id),
     setView: (v) => {
-      if (v === 'workspace' || v === 'analytics' || v === 'faskes') {
+      if (v === 'workspace' || v === 'analytics' || v === 'faskes' || v === 'login') {
         state.view = v;
         render();
       }

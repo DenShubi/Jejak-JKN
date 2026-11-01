@@ -31,15 +31,20 @@
         <button type="button" class="conn-pill" id="btn-conn-settings" title="Pengaturan Ruang Demo &amp; Koneksi Cloud">
           <span class="conn-dot">●</span> <span id="conn-status-text">HEALTHKATHON-2026</span>
         </button>
-        <button type="button" class="user-chip-btn" id="btn-user-switch" title="Beralih Akun Demonstrasi">
-          <span class="avatar" id="user-avatar" aria-hidden="true">VD</span>
-          <span class="role" id="user-name">Verifikator BPJS</span>
-        </button>
+        <div class="user-auth-area" id="user-auth-area">
+          <button type="button" class="user-chip-btn" id="btn-user-switch" title="Informasi Akun">
+            <span class="avatar" id="user-avatar" aria-hidden="true">VD</span>
+            <span class="role" id="user-name">Verifikator BPJS</span>
+          </button>
+          <button type="button" class="btn-logout" id="btn-logout" title="Keluar dari akun">
+            Keluar 🚪
+          </button>
+        </div>
       </div>
     </div>
   </header>
 
-  <nav class="subbar" aria-label="Navigasi ruang kerja dan aksi utama">
+  <nav class="subbar" id="subbar" aria-label="Navigasi ruang kerja dan aksi utama">
     <div class="subbar-inner">
       <div class="view-tabs" role="tablist" aria-label="Pilih tampilan">
         <button type="button" role="tab" class="view-tab active" data-view="workspace" aria-selected="true">
@@ -47,9 +52,6 @@
         </button>
         <button type="button" role="tab" class="view-tab" data-view="analytics" aria-selected="false">
           Analitik Faskes &amp; Portofolio
-        </button>
-        <button type="button" role="tab" class="view-tab" data-view="faskes" aria-selected="false">
-          🏥 Portal Petugas Faskes
         </button>
       </div>
 
