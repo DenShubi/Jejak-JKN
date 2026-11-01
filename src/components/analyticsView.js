@@ -48,18 +48,18 @@ export function renderAnalyticsView(container, state, handlers) {
   const pctCancelled = totalAllClaimLines ? (totals.cancelledSessions / totalAllClaimLines) * 100 : 0;
 
   container.innerHTML = `
-    <section class="analytics-view" aria-label="Analitik fasilitas kesehatan dan portofolio">
+    <section class="analytics-view" aria-label="Healthcare provider and portfolio analytics">
       <div class="analytics-grid-top">
         <div class="card portfolio-card">
           <div class="card-head">
             <div>
-              <span class="eyebrow-sm">DISTRIBUSI PORTOFOLIO EPISODE &amp; SESI</span>
-              <h2>Ringkasan Kesiapan Bukti Layanan Fisioterapi</h2>
+              <span class="eyebrow-sm">PORTFOLIO DISTRIBUTION</span>
+              <h2>Claim Evidence Readiness Summary</h2>
             </div>
             ${
               totals.pendingSyncEpisodes > 0
-                ? `<button type="button" class="button accent small" id="sync-all-btn">↻ Sinkronkan Semua Batch Terlambat (${totals.pendingSyncEpisodes} Episode)</button>`
-                : `<span class="synced-all-badge">✓ Seluruh batch terlambat telah disinkronkan</span>`
+                ? `<button type="button" class="button accent small" id="sync-all-btn">Sync Delayed Records (${totals.pendingSyncEpisodes} Claims)</button>`
+                : `<span class="synced-all-badge">All Records Synced</span>`
             }
           </div>
 
@@ -67,77 +67,77 @@ export function renderAnalyticsView(container, state, handlers) {
             <div class="donut-wrap">
               ${buildDonutSvg(totals.consistent, totals.review, totals.incomplete)}
               <div class="donut-legend">
-                <div><i class="dot-consistent"></i><span>Bukti konsisten</span><b>${totals.consistent} ep (${Math.round((totals.consistent / totals.episodes) * 100)}%)</b></div>
-                <div><i class="dot-review"></i><span>Perlu klarifikasi</span><b>${totals.review} ep (${Math.round((totals.review / totals.episodes) * 100)}%)</b></div>
-                <div><i class="dot-incomplete"></i><span>Lengkapi data</span><b>${totals.incomplete} ep (${Math.round((totals.incomplete / totals.episodes) * 100)}%)</b></div>
+                <div><i class="dot-consistent"></i><span>Verified valid</span><b>${totals.consistent} claims (${Math.round((totals.consistent / totals.episodes) * 100)}%)</b></div>
+                <div><i class="dot-review"></i><span>Needs review</span><b>${totals.review} claims (${Math.round((totals.review / totals.episodes) * 100)}%)</b></div>
+                <div><i class="dot-incomplete"></i><span>Missing records</span><b>${totals.incomplete} claims (${Math.round((totals.incomplete / totals.episodes) * 100)}%)</b></div>
               </div>
             </div>
 
             <div class="session-coverage-box">
               <div class="coverage-top">
                 <div>
-                  <span class="muted">Cakupan Bukti Tingkat Sesi Aktif</span>
-                  <strong class="coverage-big">${totals.matchedSessions} / ${totals.claimedSessions} <span>sesi cocok (${totals.matchRate}%)</span></strong>
+                  <span class="muted">Active Session Coverage</span>
+                  <strong class="coverage-big">${totals.matchedSessions} / ${totals.claimedSessions} <span>matched (${totals.matchRate}%)</span></strong>
                 </div>
-                <span class="muted">${totalAllClaimLines} total baris klaim (${totals.cancelledSessions} batal resmi)</span>
+                <span class="muted">${totalAllClaimLines} total claim lines (${totals.cancelledSessions} cancelled)</span>
               </div>
 
-              <div class="stacked-bar" role="img" aria-label="Proporsi pencocokan seluruh sesi">
-                <span class="seg-matched" style="width:${pctMatched}%" title="Catatan cocok: ${totals.matchedSessions}"></span>
-                <span class="seg-clarify" style="width:${pctClarify}%" title="Perlu klarifikasi: ${totals.missingClarificationSessions}"></span>
-                <span class="seg-waiting" style="width:${pctWaiting}%" title="Menunggu data R0: ${totals.waitingDataSessions}"></span>
-                <span class="seg-cancelled" style="width:${pctCancelled}%" title="Dibatalkan resmi: ${totals.cancelledSessions}"></span>
+              <div class="stacked-bar" role="img" aria-label="Session match distribution">
+                <span class="seg-matched" style="width:${pctMatched}%" title="Matched: ${totals.matchedSessions}"></span>
+                <span class="seg-clarify" style="width:${pctClarify}%" title="Needs review: ${totals.missingClarificationSessions}"></span>
+                <span class="seg-waiting" style="width:${pctWaiting}%" title="Pending records (R0): ${totals.waitingDataSessions}"></span>
+                <span class="seg-cancelled" style="width:${pctCancelled}%" title="Cancelled (v2): ${totals.cancelledSessions}"></span>
               </div>
 
               <div class="session-stat-chips">
-                <div class="s-chip ok"><b>${totals.matchedSessions}</b><span>Sesi aktif cocok</span></div>
-                <div class="s-chip warn"><b>${totals.missingClarificationSessions}</b><span>Selisih sesi (R1)</span></div>
-                <div class="s-chip info"><b>${totals.waitingDataSessions}</b><span>Menunggu batch (R0)</span></div>
-                <div class="s-chip neutral"><b>${totals.cancelledSessions}</b><span>Dibatalkan resmi (v2)</span></div>
+                <div class="s-chip ok"><b>${totals.matchedSessions}</b><span>Matched active sessions</span></div>
+                <div class="s-chip warn"><b>${totals.missingClarificationSessions}</b><span>Discrepant sessions (R1)</span></div>
+                <div class="s-chip info"><b>${totals.waitingDataSessions}</b><span>Pending records (R0)</span></div>
+                <div class="s-chip neutral"><b>${totals.cancelledSessions}</b><span>Cancelled (v2)</span></div>
               </div>
             </div>
           </div>
         </div>
 
         <div class="card governance-card">
-          <span class="eyebrow-sm">TATA KELOLA MANUSIA (BAB 8.4)</span>
-          <h2>Progres Tindak Lanjut Verifikator</h2>
-          <p class="muted">Keputusan pemeriksa dicatat terpisah dari status aturan ${safe(VERSION)}.</p>
+          <span class="eyebrow-sm">AUDITOR REVIEW PROGRESS</span>
+          <h2>Review Decisions</h2>
+          <p class="muted">Human adjudication decisions stored separately from rule engine status.</p>
 
           <div class="gov-progress-num">
             <strong>${totals.reviewedCount}<span>/${totals.episodes}</span></strong>
-            <small>episode telah diberi catatan tindak lanjut pada sesi ini</small>
+            <small>claims reviewed in current session</small>
           </div>
 
           <div class="gov-list">
             <div class="gov-row">
-              <span>Perlu bukti tambahan</span>
+              <span>Request additional evidence</span>
               <b>${reviewOutcomes.pending}</b>
             </div>
             <div class="gov-row">
-              <span>Penjelasan sah diterima</span>
+              <span>Accept provider explanation</span>
               <b>${reviewOutcomes.legitimate}</b>
             </div>
             <div class="gov-row">
-              <span>Ketidaksesuaian terkonfirmasi</span>
+              <span>Confirm discrepancy</span>
               <b>${reviewOutcomes.confirmed}</b>
             </div>
             <div class="gov-row muted-row">
-              <span>Belum ditindaklanjuti</span>
+              <span>Pending review</span>
               <b>${reviewOutcomes.unreviewed}</b>
             </div>
           </div>
 
           <button type="button" class="button secondary full-btn" id="open-priority-queue">
-            Buka Antrean Prioritas Klarifikasi (${totals.review}) →
+            Open Clarification Queue (${totals.review}) →
           </button>
         </div>
       </div>
 
       <div class="section-heading">
         <div>
-          <h2>Perbandingan Antar Fasilitas Kesehatan Simulasi</h2>
-          <span class="sub-caption">Klik fasilitas untuk memfilter antrean ruang kerja verifikator</span>
+          <h2>Healthcare Provider Performance</h2>
+          <span class="sub-caption">Click a facility to filter claims in the verification queue</span>
         </div>
       </div>
 
@@ -154,29 +154,29 @@ export function renderAnalyticsView(container, state, handlers) {
                     <span class="fac-code">${safe(f.facility_id)}</span>
                     <h3>${safe(f.facility_name)}</h3>
                   </div>
-                  <span class="fac-rate">${f.matchRate}% <span>sesi cocok</span></span>
+                  <span class="fac-rate">${f.matchRate}% <span>matched</span></span>
                 </div>
 
-                <div class="stacked-bar compact-bar" title="Konsisten ${f.consistent}, Klarifikasi ${f.review}, Data ${f.incomplete}">
+                <div class="stacked-bar compact-bar" title="Consistent ${f.consistent}, Review ${f.review}, Data ${f.incomplete}">
                   <span class="seg-matched" style="width:${pCons}%"></span>
                   <span class="seg-clarify" style="width:${pRev}%"></span>
                   <span class="seg-waiting" style="width:${pInc}%"></span>
                 </div>
 
                 <div class="fac-metrics">
-                  <div><span>Total Episode</span><strong>${f.episodes}</strong></div>
-                  <div><span>Klarifikasi</span><strong class="text-warn">${f.review}</strong></div>
-                  <div><span>Lengkapi Data</span><strong class="text-info">${f.incomplete}</strong></div>
-                  <div><span>Konsisten</span><strong class="text-green">${f.consistent}</strong></div>
+                  <div><span>Total Claims</span><strong>${f.episodes}</strong></div>
+                  <div><span>Needs Review</span><strong class="text-warn">${f.review}</strong></div>
+                  <div><span>Missing Data</span><strong class="text-info">${f.incomplete}</strong></div>
+                  <div><span>Verified</span><strong class="text-green">${f.consistent}</strong></div>
                 </div>
 
                 <div class="fac-foot-meta">
-                  <span>Sesi aktif cocok: <b>${f.matchedSessions}/${f.claimedSessions}</b></span>
-                  <span>${f.pendingSyncEpisodes ? `${f.pendingSyncEpisodes} batch tunda` : 'Batch lengkap'}</span>
+                  <span>Active matched sessions: <b>${f.matchedSessions}/${f.claimedSessions}</b></span>
+                  <span>${f.pendingSyncEpisodes ? `${f.pendingSyncEpisodes} pending batches` : 'Complete batches'}</span>
                 </div>
 
                 <button type="button" class="button secondary small full-btn" data-open-facility="${safe(f.facility_name)}">
-                  Buka Antrean ${safe(f.facility_name)} →
+                  View ${safe(f.facility_name)} Queue →
                 </button>
               </div>
             `;
@@ -186,8 +186,8 @@ export function renderAnalyticsView(container, state, handlers) {
 
       <div class="section-heading">
         <div>
-          <h2>Peta Sinyal Aturan yang Dapat Dijelaskan (${safe(VERSION)})</h2>
-          <span class="sub-caption">Klik chip episode untuk langsung membuka rincian bukti sesi terkait</span>
+          <h2>Rule Engine Evaluation Signals (${safe(VERSION)})</h2>
+          <span class="sub-caption">Click any claim chip to inspect session evidence</span>
         </div>
       </div>
 
@@ -195,17 +195,17 @@ export function renderAnalyticsView(container, state, handlers) {
         <div class="card rule-stat-card border-r0">
           <div class="rule-stat-top">
             <span class="rule-code code-r0">R0</span>
-            <strong>Gerbang Kelengkapan Sumber</strong>
-            <span class="rule-count-pill">${rules.r0Episodes.length} episode</span>
+            <strong>Source Records Integrity</strong>
+            <span class="rule-count-pill">${rules.r0Episodes.length} claims</span>
           </div>
-          <p>Menahan penarikan kesimpulan selisih sesi apabila batch pengiriman RME belum lengkap atau terdapat salah pemetaan identitas.</p>
+          <p>Flags delayed transmission batches or identity token errors before final session discrepancy evaluation.</p>
           <div class="ep-chip-list">
             ${
               rules.r0Episodes.length
                 ? rules.r0Episodes
                     .map((id) => `<button type="button" class="ep-chip" data-jump-episode="${safe(id)}">${safe(id)}</button>`)
                     .join('')
-                : '<span class="muted">Seluruh episode telah melewati gerbang R0.</span>'
+                : '<span class="muted">All claims passed source integrity checkpoint.</span>'
             }
           </div>
         </div>
@@ -213,10 +213,10 @@ export function renderAnalyticsView(container, state, handlers) {
         <div class="card rule-stat-card border-r1">
           <div class="rule-stat-top">
             <span class="rule-code">R1</span>
-            <strong>Selisih Pencocokan Sesi Aktif</strong>
-            <span class="rule-count-pill">${rules.r1Episodes.length} episode</span>
+            <strong>Session Matching Discrepancies</strong>
+            <span class="rule-count-pill">${rules.r1Episodes.length} claims</span>
           </div>
-          <p>Mencocokkan setiap sesi tagihan aktif dengan catatan RME berstatus selesai pada tanggal &amp; identitas yang sama setelah sumber lengkap.</p>
+          <p>Matches active billed sessions against completed EMR procedure records on matching service dates.</p>
           <div class="ep-chip-list">
             ${rules.r1Episodes
               .map((id) => `<button type="button" class="ep-chip" data-jump-episode="${safe(id)}">${safe(id)}</button>`)
@@ -227,10 +227,10 @@ export function renderAnalyticsView(container, state, handlers) {
         <div class="card rule-stat-card border-r2">
           <div class="rule-stat-top">
             <span class="rule-code">R2</span>
-            <strong>Kesamaan Isi Personal Lintas Episode</strong>
-            <span class="rule-count-pill">${rules.r2Episodes.length} episode (${rules.r2Pairs.length} pasang)</span>
+            <strong>Cross-Episode Duplicate Progress Notes</strong>
+            <span class="rule-count-pill">${rules.r2Episodes.length} claims (${rules.r2Pairs.length} pairs)</span>
           </div>
-          <p>Mendeteksi teks progres individual identik (≥60 karakter ternormalisasi) antar peserta berbeda walaupun jumlah sesi cocok penuh.</p>
+          <p>Detects identical individual clinical progress text (≥60 normalized chars) across disparate patients.</p>
           <div class="ep-chip-list">
             ${rules.r2Pairs
               .map(
@@ -244,15 +244,15 @@ export function renderAnalyticsView(container, state, handlers) {
         <div class="card rule-stat-card border-ok">
           <div class="rule-stat-top">
             <span class="rule-code code-ok">v2</span>
-            <strong>Koreksi Pembatalan &amp; Versi Catatan</strong>
-            <span class="rule-count-pill">${rules.cancelledEpisodes.length} episode</span>
+            <strong>Official Cancellations &amp; Versions</strong>
+            <span class="rule-count-pill">${rules.cancelledEpisodes.length} claims</span>
           </div>
-          <p>Mengecualikan sesi tagihan yang dibatalkan resmi serta mengacu pada versi catatan terbaru sehingga tidak salah ditandai sebagai selisih.</p>
+          <p>Correctly excludes officially cancelled sessions and references latest record revisions.</p>
           <div class="ep-chip-list">
             ${rules.cancelledEpisodes
               .map(
                 (id) =>
-                  `<button type="button" class="ep-chip ok-chip" data-jump-episode="${safe(id)}" data-jump-session="5">${safe(id)} (2 batal dikecualikan)</button>`
+                  `<button type="button" class="ep-chip ok-chip" data-jump-episode="${safe(id)}" data-jump-session="5">${safe(id)} (2 cancelled excluded)</button>`
               )
               .join('')}
           </div>
@@ -262,42 +262,42 @@ export function renderAnalyticsView(container, state, handlers) {
       <div class="card arch-card">
         <div class="card-head">
           <div>
-            <span class="eyebrow-sm">ARSITEKTUR TARGET &amp; PEMETAAN INTEROPERABILITAS (BAB 4.2 – 4.3)</span>
-            <h2>Alur Pemrosesan JEJAK JKN &amp; Rujukan Standar SATUSEHAT FHIR</h2>
+            <span class="eyebrow-sm">TARGET ARCHITECTURE &amp; INTEROPERABILITY</span>
+            <h2>JEJAK JKN Processing Pipeline &amp; SATUSEHAT FHIR Standards</h2>
           </div>
-          <span class="arch-note-pill">Prototipe memproses data sintetis di browser · Konektor pilot direncanakan</span>
+          <span class="arch-note-pill">Interactive In-Browser Simulation · Pilot EMR Connector</span>
         </div>
 
-        <div class="arch-flow-diagram" role="img" aria-label="Diagram alur pemrosesan dari sumber data ke gerbang R0, aturan R1 dan R2, hingga kartu bukti verifikator">
+        <div class="arch-flow-diagram" role="img" aria-label="Processing pipeline diagram">
           <div class="arch-stage">
-            <span class="stage-num">1. Sumber Data Berizin</span>
-            <strong>Tagihan, Kunjungan &amp; Catatan Tindakan</strong>
-            <small>Termasuk koreksi pembatalan &amp; penanda waktu terima</small>
+            <span class="stage-num">1. Authorized Data Sources</span>
+            <strong>Claims, Encounters &amp; Procedures</strong>
+            <small>Includes cancellations &amp; ingestion timestamps</small>
             <div class="fhir-pills"><span>Encounter</span><span>Procedure</span><span>ChargeItem</span><span>Claim</span></div>
           </div>
           <div class="arch-arrow" aria-hidden="true">→</div>
           <div class="arch-stage">
-            <span class="stage-num">2. Pemetaan &amp; Tokenisasi</span>
-            <strong>Episode &amp; Identitas Bertoken</strong>
-            <small>Tanpa menampilkan NIK/nama asli di ruang analitik umum (UU PDP)</small>
+            <span class="stage-num">2. Tokenization &amp; Privacy</span>
+            <strong>Tokenized Patient Identifiers</strong>
+            <small>Complies with data privacy regulations (UU PDP)</small>
           </div>
           <div class="arch-arrow" aria-hidden="true">→</div>
           <div class="arch-stage highlight-r0">
-            <span class="stage-num">3. Gerbang R0</span>
-            <strong>Pemeriksaan Kelengkapan Sumber</strong>
-            <small>Belum lengkap → <em>Lengkapi data</em> &amp; hitung ulang saat sinkron</small>
+            <span class="stage-num">3. Source Integrity (R0)</span>
+            <strong>Source Completeness Check</strong>
+            <small>Pending batches hold discrepancy evaluation</small>
           </div>
           <div class="arch-arrow" aria-hidden="true">→</div>
           <div class="arch-stage highlight-r12">
-            <span class="stage-num">4. Mesin Aturan R1 &amp; R2</span>
-            <strong>Pencocokan Sesi &amp; Isi Personal</strong>
-            <small>Mengecualikan sesi batal &amp; teks formulir standar</small>
+            <span class="stage-num">4. Rule Evaluation (R1 &amp; R2)</span>
+            <strong>Session Match &amp; Duplicate Check</strong>
+            <small>Excludes cancelled sessions &amp; standard templates</small>
           </div>
           <div class="arch-arrow" aria-hidden="true">→</div>
           <div class="arch-stage highlight-gov">
-            <span class="stage-num">5. Ruang Kerja &amp; Tata Kelola</span>
-            <strong>Kartu Bukti, Tiket Faskes &amp; Verifikator</strong>
-            <small>Keputusan pembayaran mengikuti proses ajudikasi resmi</small>
+            <span class="stage-num">5. Auditor Workbench</span>
+            <strong>Reconciliation Ledger &amp; Review</strong>
+            <small>Adjudication decisions recorded with full audit trail</small>
             <div class="fhir-pills"><span>ClaimResponse</span></div>
           </div>
         </div>

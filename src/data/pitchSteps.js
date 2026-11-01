@@ -92,26 +92,26 @@ export const PITCH_STEPS = [
 export const REVIEW_TEMPLATES = [
   {
     id: 'demo-ep002',
-    label: 'Contoh Presentasi (EP-002)',
+    label: 'Request Evidence (EP-002)',
     outcome: 'pending',
-    note: 'Meminta konfirmasi petugas RME mengenai sesi 9 sampai 12 dan bukti registrasi kunjungan. Referensi demo: CLM-002-S9 sampai CLM-002-S12.'
+    note: 'Request EMR officer confirmation regarding Sessions 9-12 and clinical encounter logs. Ref: CLM-002-S9 to CLM-002-S12.'
   },
   {
     id: 'r0-sync',
-    label: 'Minta Sinkronisasi Batch RME (R0)',
+    label: 'Request Batch Sync (R0)',
     outcome: 'pending',
-    note: 'Menghubungi pengelola data faskes untuk melengkapi pengiriman batch RME periode berjalan sebelum evaluasi selisih sesi dilakukan.'
+    note: 'Contact healthcare facility data manager to complete pending EMR batch transmission before final discrepancy evaluation.'
   },
   {
     id: 'r2-clinical',
-    label: 'Klarifikasi Catatan Serupa (R2)',
+    label: 'Clarify Duplicate Text (R2)',
     outcome: 'pending',
-    note: 'Meminta konfirmasi fisioterapis pelaksana terkait kesamaan redaksi catatan progres individual pada Sesi 2 lintas peserta.'
+    note: 'Request attending physiotherapist confirmation regarding identical clinical progress notes across different patients.'
   },
   {
     id: 'legitimate-doc',
-    label: 'Penjelasan Sah Diterima',
+    label: 'Accept Provider Explanation',
     outcome: 'legitimate',
-    note: 'Bukti kunjungan dan asesmen fisioterapi terverifikasi sah melalui dokumen pendukung faskes; perbedaan pencatatan bersifat administratif.'
+    note: 'Encounter and physiotherapy evaluation verified through provider clinical records. Administrative variance resolved.'
   }
 ];

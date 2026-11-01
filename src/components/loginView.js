@@ -4,7 +4,7 @@ import { authService } from '../services/authService.js';
 import { FACILITIES, DEFAULT_ROOM } from '../config.js';
 
 /**
- * Separated Login View for Admin/Verifikator BPJS and Petugas Faskes
+ * Separated Login View for Admin/BPJS Auditor and Healthcare Providers
  */
 export function createLoginView({ onLoginSuccess }) {
   const container = el('div', { class: 'login-gateway-container fade-in' });
@@ -16,6 +16,15 @@ export function createLoginView({ onLoginSuccess }) {
     container.innerHTML = '';
 
     const currentRoom = authService.getCurrentRoom() || DEFAULT_ROOM;
+
+    // Brand Logo Header (rectangular, uncropped)
+    const brandHeader = el('div', { class: 'login-brand-header' }, [
+      el('img', {
+        src: 'brand/jejak-jkn-logo-horizontal-dark.svg',
+        alt: 'JEJAK JKN',
+        class: 'login-logo-rect'
+      })
+    ]);
 
     // Card Wrapper
     const card = el('div', { class: 'login-card' });
@@ -43,8 +52,8 @@ export function createLoginView({ onLoginSuccess }) {
             ]
           ),
           el('span', {}, [
-            el('strong', {}, ['Verifikator BPJS']),
-            el('small', { class: 'muted' }, ['Pemeriksaan Klaim Pusat'])
+            el('strong', {}, ['BPJS Auditor']),
+            el('small', { class: 'muted' }, ['Claims Verification'])
           ])
         ]
       ),
@@ -69,8 +78,8 @@ export function createLoginView({ onLoginSuccess }) {
             ]
           ),
           el('span', {}, [
-            el('strong', {}, ['Petugas Faskes']),
-            el('small', { class: 'muted' }, ['Penyerahan Catatan RME'])
+            el('strong', {}, ['Healthcare Provider']),
+            el('small', { class: 'muted' }, ['Hospital EMR Submissions'])
           ])
         ]
       )
@@ -84,6 +93,7 @@ export function createLoginView({ onLoginSuccess }) {
       card.appendChild(renderFaskesSchema(currentRoom));
     }
 
+    container.appendChild(brandHeader);
     container.appendChild(card);
   }
 
@@ -98,10 +108,10 @@ export function createLoginView({ onLoginSuccess }) {
 
     // Header
     const header = el('div', { class: 'login-header' }, [
-      el('span', { class: 'login-badge-pill admin-pill' }, ['PORTAL VERIFIKATOR BPJS']),
-      el('h2', { class: 'login-title' }, ['Ruang Kerja Verifikasi Klaim']),
+      el('span', { class: 'login-badge-pill admin-pill' }, ['BPJS AUDITOR PORTAL']),
+      el('h2', { class: 'login-title' }, ['Claims Verification Sign In']),
       el('p', { class: 'login-subtitle' }, [
-        'Pemeriksaan rekonsiliasi kesesuaian klaim fisioterapi program JKN berbasis bukti deterministik.'
+        'Deterministic reconciliation of health insurance claim records.'
       ])
     ]);
 
@@ -109,8 +119,8 @@ export function createLoginView({ onLoginSuccess }) {
     const emailInput = el('input', {
       type: 'email',
       class: 'input',
-      value: 'verifikator@bpjs.go.id',
-      placeholder: 'nama@bpjs.go.id'
+      value: 'auditor@bpjs.go.id',
+      placeholder: 'name@bpjs.go.id'
     });
 
     const passInput = el('input', {
@@ -141,7 +151,7 @@ export function createLoginView({ onLoginSuccess }) {
           onLoginSuccess('verifikator');
         }
       },
-      ['Masuk ke Ruang Kerja']
+      ['Sign In to Workbench']
     );
 
     const quickDemoBtn = el(
@@ -154,20 +164,20 @@ export function createLoginView({ onLoginSuccess }) {
           onLoginSuccess('verifikator');
         }
       },
-      ['Akses Cepat Demo: Verifikator BPJS']
+      ['Quick Access: BPJS Auditor Demo']
     );
 
     const form = el('div', { class: 'login-form' }, [
       el('div', { class: 'form-group' }, [
-        el('label', { class: 'form-label' }, ['Email Kedinasan BPJS Kesehatan']),
+        el('label', { class: 'form-label' }, ['Official Email Address']),
         emailInput
       ]),
       el('div', { class: 'form-group' }, [
-        el('label', { class: 'form-label' }, ['Kata Sandi']),
+        el('label', { class: 'form-label' }, ['Password']),
         passInput
       ]),
       el('div', { class: 'form-group' }, [
-        el('label', { class: 'form-label' }, ['Kode Ruang Sesi Real-time']),
+        el('label', { class: 'form-label' }, ['Real-time Session Code']),
         roomInput
       ]),
       submitBtn,
@@ -177,7 +187,7 @@ export function createLoginView({ onLoginSuccess }) {
     const notice = el('div', { class: 'login-security-notice' }, [
       el('span', { class: 'notice-indicator', 'aria-hidden': 'true' }, ['●']),
       el('p', { class: 'text-xs text-muted' }, [
-        'Akses internal terlindungi. Evaluasi berbasis aturan JEJAK-RULES-0.1.0 secara deterministik sesuai tata kelola Permenkes No. 16 Tahun 2019.'
+        'Secure session channel. Real-time deterministic rule evaluation.'
       ])
     ]);
 
@@ -192,10 +202,10 @@ export function createLoginView({ onLoginSuccess }) {
 
     // Header
     const header = el('div', { class: 'login-header' }, [
-      el('span', { class: 'login-badge-pill faskes-pill' }, ['PORTAL FASILITAS KESEHATAN']),
-      el('h2', { class: 'login-title' }, ['Portal Fasilitas Kesehatan (RME)']),
+      el('span', { class: 'login-badge-pill faskes-pill' }, ['HEALTHCARE PROVIDER PORTAL']),
+      el('h2', { class: 'login-title' }, ['Provider EMR Gateway']),
       el('p', { class: 'login-subtitle' }, [
-        'Penyerahan catatan pelayanan klinis dan konfirmasi tiket klarifikasi klaim secara real-time.'
+        'Submit clinical encounter records and resolve claim clarification tickets in real time.'
       ])
     ]);
 
@@ -211,13 +221,13 @@ export function createLoginView({ onLoginSuccess }) {
     const officerInput = el('input', {
       type: 'text',
       class: 'input',
-      value: 'Petugas RME RS Aruna'
+      value: 'EMR Officer RS Aruna'
     });
 
     facSelect.onchange = (e) => {
       const selected = FACILITIES.find((f) => f.id === e.target.value);
       if (selected) {
-        officerInput.value = `Petugas RME ${selected.name}`;
+        officerInput.value = `EMR Officer ${selected.name}`;
       }
     };
 
@@ -250,7 +260,7 @@ export function createLoginView({ onLoginSuccess }) {
           onLoginSuccess('faskes');
         }
       },
-      ['Masuk ke Portal Faskes']
+      ['Sign In to Provider Portal']
     );
 
     // Quick Hospital Demo Pickers
@@ -295,24 +305,24 @@ export function createLoginView({ onLoginSuccess }) {
 
     const form = el('div', { class: 'login-form' }, [
       el('div', { class: 'form-group' }, [
-        el('label', { class: 'form-label' }, ['Pilih Fasilitas Kesehatan (Rumah Sakit)']),
+        el('label', { class: 'form-label' }, ['Select Healthcare Facility']),
         facSelect
       ]),
       el('div', { class: 'form-group' }, [
-        el('label', { class: 'form-label' }, ['Nama Petugas / Terapis']),
+        el('label', { class: 'form-label' }, ['Staff / Therapist Name']),
         officerInput
       ]),
       el('div', { class: 'form-group' }, [
-        el('label', { class: 'form-label' }, ['PIN Akses Portal']),
+        el('label', { class: 'form-label' }, ['Portal Access PIN']),
         passInput
       ]),
       el('div', { class: 'form-group' }, [
-        el('label', { class: 'form-label' }, ['Kode Ruang Sesi Real-time']),
+        el('label', { class: 'form-label' }, ['Real-time Session Code']),
         roomInput
       ]),
       submitBtn,
       el('div', { class: 'text-xs text-muted mt-2 text-center' }, [
-        'Akses 1-Klik Akun Simulasi Rumah Sakit:'
+        '1-Click Simulation Hospital Accounts:'
       ]),
       quickPickers
     ]);
@@ -320,7 +330,7 @@ export function createLoginView({ onLoginSuccess }) {
     const notice = el('div', { class: 'login-security-notice' }, [
       el('span', { class: 'notice-indicator', 'aria-hidden': 'true' }, ['●']),
       el('p', { class: 'text-xs text-muted' }, [
-        'Terhubung via cloud real-time. Setiap pengiriman catatan tindakan fisioterapi langsung diterima oleh Verifikator BPJS dengan evaluasi deterministik.'
+        'Connected via secure real-time channel. Immediate record reconciliation.'
       ])
     ]);
 

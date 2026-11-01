@@ -23,9 +23,9 @@ export function openConnectionModal({ onResetRoom, onReloadApp }) {
 
   const header = el('div', { class: 'modal-header' }, [
     el('div', {}, [
-      el('h3', { class: 'modal-title' }, ['Pengaturan Koneksi & Real-time']),
+      el('h3', { class: 'modal-title' }, ['Real-time & Connection Settings']),
       el('p', { class: 'modal-subtitle' }, [
-        'Hubungkan laptop verifikator dan perangkat faskes secara langsung.'
+        'Connect auditor and healthcare provider devices in real time.'
       ])
     ]),
     el(
@@ -70,16 +70,16 @@ export function openConnectionModal({ onResetRoom, onReloadApp }) {
       onclick: async () => {
         try {
           await navigator.clipboard.writeText(shareLinkInput.value);
-          copyBtn.textContent = 'Tersalin! ✓';
+          copyBtn.textContent = 'Copied! ✓';
           setTimeout(() => {
-            copyBtn.textContent = 'Salin Tautan';
+            copyBtn.textContent = 'Copy Link';
           }, 2000);
         } catch {
           shareLinkInput.select();
         }
       }
     },
-    ['Salin Tautan']
+    ['Copy Link']
   );
 
   const applyRoomBtn = el(
@@ -95,24 +95,24 @@ export function openConnectionModal({ onResetRoom, onReloadApp }) {
         if (onReloadApp) onReloadApp();
       }
     },
-    ['Terapkan Ruang']
+    ['Apply Room']
   );
 
   const roomSection = el('div', { class: 'conn-section' }, [
-    el('h4', { class: 'conn-section-title' }, ['1. Kode Ruang Sesi (Demo Room)']),
+    el('h4', { class: 'conn-section-title' }, ['1. Session Room Code']),
     el('p', { class: 'text-sm text-muted mb-2' }, [
-      'Gunakan kode ruang yang sama antara laptop Anda dan perangkat teman agar saling terhubung.'
+      'Use the same room code across devices to synchronize claims and tickets in real time.'
     ]),
     el('div', { class: 'input-row mb-3' }, [roomInput, applyRoomBtn]),
     el('label', { class: 'form-label text-xs' }, [
-      'Tautan Langsung untuk Teman (Petugas RS Aruna di HP/Laptop lain):'
+      'Direct Link for Partner (Provider on another device):'
     ]),
     el('div', { class: 'input-row' }, [shareLinkInput, copyBtn])
   ]);
 
   // Section 2: Quick Account Switcher
   const accountSection = el('div', { class: 'conn-section' }, [
-    el('h4', { class: 'conn-section-title' }, ['2. Beralih Akun Demonstrasi']),
+    el('h4', { class: 'conn-section-title' }, ['2. Switch Demo Account']),
     el('div', { class: 'account-switcher-grid' }, [
       ...DEMO_ACCOUNTS.map((acc) => {
         const isActive = currentUser?.key === acc.key;
@@ -132,7 +132,7 @@ export function openConnectionModal({ onResetRoom, onReloadApp }) {
               el('span', { class: `badge ${acc.role === 'verifikator' ? 'badge-ok' : 'badge-info'}` }, [
                 acc.role === 'verifikator' ? 'Verifikator' : 'Faskes'
               ]),
-              isActive ? el('span', { class: 'account-active-tick' }, ['✓ Aktif']) : null
+              isActive ? el('span', { class: 'account-active-tick' }, ['✓ Active']) : null
             ]),
             el('strong', { class: 'account-name' }, [acc.label]),
             el('small', { class: 'account-hint muted' }, [acc.hint])
@@ -145,11 +145,11 @@ export function openConnectionModal({ onResetRoom, onReloadApp }) {
   // Section 3: Supabase Cloud Credentials (Optional)
   let cloudOpen = Boolean(cloudConfig);
   const cloudToggle = el('div', { class: 'conn-section-toggle cursor-pointer' }, [
-    el('h4', { class: 'conn-section-title' }, ['3. Sambungan Cloud Supabase Realtime (Opsional)']),
+    el('h4', { class: 'conn-section-title' }, ['3. Supabase Cloud Connection (Optional)']),
     el('small', { class: 'text-muted' }, [
       connState.mode === 'supabase' && connState.connected
-        ? '● Terhubung ke Server Cloud Real-time'
-        : '● Mode Sinkronisasi Lokal Aktif'
+        ? '● Connected to Cloud Real-time Server'
+        : '● Local BroadcastChannel Sync Active'
     ])
   ]);
 
@@ -193,7 +193,7 @@ export function openConnectionModal({ onResetRoom, onReloadApp }) {
         if (onReloadApp) onReloadApp();
       }
     },
-    ['Simpan & Sambungkan Cloud']
+    ['Save & Connect Cloud']
   );
 
   const clearCloudBtn = el(
@@ -210,12 +210,12 @@ export function openConnectionModal({ onResetRoom, onReloadApp }) {
         if (onReloadApp) onReloadApp();
       }
     },
-    ['Gunakan Sinkronisasi Lokal']
+    ['Use Local Sync']
   );
 
   cloudBody.appendChild(
     el('p', { class: 'text-xs text-muted mb-2' }, [
-      'Jika demonstrasi dilakukan antar-perangkat lewat internet tanpa Wi-Fi lokal yang sama, masukkan kredensial Supabase gratis Anda di sini. Tanpa kredensial, aplikasi otomatis memakai BroadcastChannel / localStorage sync lokal.'
+      'Enter your Supabase project credentials for cross-network synchronization over the public internet. Without credentials, local browser sync is used.'
     ])
   );
   cloudBody.appendChild(el('label', { class: 'form-label text-xs' }, ['Supabase Project URL']));
@@ -230,9 +230,9 @@ export function openConnectionModal({ onResetRoom, onReloadApp }) {
   const resetSection = el('div', { class: 'conn-section danger-zone' }, [
     el('div', { class: 'card-header-flex' }, [
       el('div', {}, [
-        el('strong', { class: 'text-warn' }, ['Reset Data Ruang']),
+        el('strong', { class: 'text-warn' }, ['Reset Room Data']),
         el('p', { class: 'text-xs text-muted' }, [
-          'Hapus seluruh kiriman sesi demo baru di ruang ini dan kembalikan ke baseline 40 episode awal.'
+          'Clear all session demo submissions in this room and restore the 40 baseline claims.'
         ])
       ]),
       el(
@@ -243,7 +243,7 @@ export function openConnectionModal({ onResetRoom, onReloadApp }) {
           onclick: async () => {
             if (
               confirm(
-                `Apakah Anda yakin ingin mereset seluruh data kiriman demo pada ruang "${currentRoom}"?`
+                `Are you sure you want to reset all demo submissions in room "${currentRoom}"?`
               )
             ) {
               await realtimeDb.clearRoomEvents(currentUser);
@@ -252,7 +252,7 @@ export function openConnectionModal({ onResetRoom, onReloadApp }) {
             }
           }
         },
-        ['Reset ke Baseline']
+        ['Reset to Baseline']
       )
     ])
   ]);

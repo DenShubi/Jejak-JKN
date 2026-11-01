@@ -2,15 +2,15 @@ export const VERSION = 'JEJAK-RULES-0.1.0';
 export const ASOF = '2026-10-04T04:00:00Z';
 
 export const labels = {
-  consistent: 'Bukti konsisten',
-  review: 'Perlu klarifikasi',
-  incomplete: 'Lengkapi data'
+  consistent: 'Verified Valid',
+  review: 'Needs Review',
+  incomplete: 'Missing Data'
 };
 
 export const outcomeLabels = {
-  pending: 'Perlu bukti tambahan',
-  legitimate: 'Penjelasan sah diterima',
-  confirmed: 'Ketidaksesuaian terkonfirmasi'
+  pending: 'Request Evidence',
+  legitimate: 'Accepted Explanation',
+  confirmed: 'Confirmed Discrepancy'
 };
 
 export const clone = (value) => JSON.parse(JSON.stringify(value));
@@ -211,24 +211,24 @@ export function evaluate(ep, all) {
   if (!complete) {
     reasons.push({
       code: 'R0',
-      title: 'Kelengkapan sumber belum memadai',
+      title: 'Incomplete source records',
       detail: identityErrors.length
-        ? `${identityErrors.length} catatan memiliki identitas yang tidak cocok.`
-        : 'Batch sumber belum dinyatakan lengkap. Selisih bersifat sementara.'
+        ? `${identityErrors.length} records have mismatched patient/facility identity (identitas).`
+        : 'Source transmission batch pending. Evaluation is deferred.'
     });
   }
   if (complete && (missing.length || unclaimed.length || multiple.length)) {
     reasons.push({
       code: 'R1',
-      title: 'Pencocokan sesi perlu klarifikasi',
-      detail: `${missing.length} sesi ditagihkan belum memiliki catatan yang cocok; ${unclaimed.length} catatan di luar sesi aktif; ${multiple.length} sesi dengan lebih dari satu catatan.`
+      title: 'Session discrepancy',
+      detail: `${missing.length} billed sessions have no matching completed clinical records.`
     });
   }
   if (reused.length) {
     reasons.push({
       code: 'R2',
-      title: 'Isi personal sama pada episode lain',
-      detail: `${reused.length} pasangan catatan memiliki isi personal yang identik. Teks formulir standar dikecualikan.`
+      title: 'Duplicate clinical notes',
+      detail: `${reused.length} record pairs share identical clinical progress notes across different patients.`
     });
   }
 
@@ -342,29 +342,29 @@ export function inspectEpisode(ep, all) {
 
     const stateLabel =
       state === 'cancelled'
-        ? 'Dibatalkan resmi'
+        ? 'Cancelled'
         : state === 'reused'
-          ? 'Cocok · Isi sama (R2)'
+          ? 'Matched · Duplicate Text (R2)'
           : state === 'multiple'
-            ? 'Catatan ganda (R1)'
+            ? 'Multiple Records (R1)'
             : state === 'has'
-              ? 'Catatan cocok'
+              ? 'Matched Record'
               : state === 'missing'
-                ? 'Perlu klarifikasi (R1)'
-                : 'Menunggu data (R0)';
+                ? 'Needs Clarification (R1)'
+                : 'Missing Data (R0)';
 
     const shortStatus =
       state === 'cancelled'
-        ? 'Dibatalkan'
+        ? 'Cancelled'
         : state === 'reused'
-          ? 'Isi sama'
+          ? 'Duplicate'
           : state === 'multiple'
-            ? 'Ganda'
+            ? 'Multiple'
             : state === 'has'
-              ? 'Catatan cocok'
+              ? 'Matched'
               : state === 'missing'
-                ? 'Belum cocok'
-                : 'Menunggu data';
+                ? 'Missing'
+                : 'Waiting';
 
     const latency = primaryRecord
       ? formatLatency(primaryRecord.created_at, primaryRecord.received_at)
@@ -404,38 +404,38 @@ export function inspectEpisode(ep, all) {
   const gates = [
     {
       code: 'R0',
-      name: 'Gerbang Kelengkapan Sumber',
+      name: 'Source Records',
       status: result.complete ? 'pass' : 'hold',
-      badge: result.complete ? 'Memadai' : 'Belum lengkap',
+      badge: result.complete ? 'Complete' : 'Incomplete',
       summary: result.complete
-        ? `Batch sumber lengkap (${latest.length} catatan unik).`
+        ? `All source records received (${latest.length} records).`
         : identityErrors.length
-          ? `${identityErrors.length} catatan salah identitas peserta/episode.`
-          : `Batch sumber belum lengkap (${ep.late_records.length} catatan di antrean tunda).`
+          ? `${identityErrors.length} participant identity errors.`
+          : `Source batch incomplete (${ep.late_records.length} records pending).`
     },
     {
       code: 'R1',
-      name: 'Pencocokan Sesi Aktif',
+      name: 'Session Match',
       status: !result.complete ? 'muted' : hasR1Issue ? 'warn' : 'pass',
       badge: !result.complete
-        ? 'Menunggu R0'
+        ? 'Pending Source'
         : hasR1Issue
-          ? `${result.missing} selisih sesi`
-          : `${result.matched}/${result.claimed} cocok`,
+          ? `${result.missing} Discrepant`
+          : `${result.matched}/${result.claimed} Matched`,
       summary: !result.complete
-        ? 'Evaluasi selisih akhir ditunda hingga batch sumber dinyatakan lengkap.'
+        ? 'Matching deferred until all source records are received.'
         : hasR1Issue
-          ? `${result.matched} dari ${result.claimed} sesi aktif cocok; ${result.missing} sesi perlu klarifikasi.`
-          : `Seluruh ${result.claimed} sesi tagihan aktif memiliki catatan tindakan selesai${result.cancelled ? ` (${result.cancelled} batal dikecualikan)` : ''}.`
+          ? `${result.matched} of ${result.claimed} sessions matched; ${result.missing} require review.`
+          : `All ${result.claimed} active sessions match completed records${result.cancelled ? ` (${result.cancelled} cancelled excluded)` : ''}.`
     },
     {
       code: 'R2',
-      name: 'Kesamaan Isi Personal',
+      name: 'Duplicate Check',
       status: result.reused.length ? 'warn' : 'pass',
-      badge: result.reused.length ? `${result.reused.length} kemiripan` : 'Unik / normal',
+      badge: result.reused.length ? `${result.reused.length} Duplicated` : 'Clean',
       summary: result.reused.length
-        ? `Ditemukan isi personal identik (≥60 karakter) dengan ${result.reused.map((x) => x.other_episode_id).join(', ')}.`
-        : 'Tidak ada duplikasi isi personal lintas episode (teks formulir standar dikecualikan).'
+        ? `Identical progress notes found across episodes (${result.reused.map((x) => x.other_episode_id).join(', ')}).`
+        : 'No cross-episode duplicate progress notes detected.'
     }
   ];
 

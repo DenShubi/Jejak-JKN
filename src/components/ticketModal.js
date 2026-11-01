@@ -41,15 +41,15 @@ export function renderTicketModal(container, state, handlers) {
         <div class="modal-toolbar no-print">
           <div class="modal-toolbar-left">
             <span class="badge ${result.status}">${safe(result.label)}</span>
-            <span class="muted">Dokumen Koordinasi Faskes (Simulasi Realtime)</span>
+            <span class="muted">Provider Coordination Document (Real-time)</span>
           </div>
           <div class="modal-toolbar-actions">
             <button type="button" class="button ${isDispatched ? 'secondary' : 'primary'} small" id="ticket-dispatch">
-              ${isDispatched ? 'Kirim Ulang ke Faskes' : 'Kirim ke Faskes (Real-time)'}
+              ${isDispatched ? 'Resend to Provider' : 'Dispatch to Provider (Real-time)'}
             </button>
-            <button type="button" class="button secondary small" id="ticket-copy">Salin Teks</button>
-            <button type="button" class="button secondary small" id="ticket-json">Unduh JSON</button>
-            <button type="button" class="button secondary small" id="ticket-print">Cetak / PDF</button>
+            <button type="button" class="button secondary small" id="ticket-copy">Copy Text</button>
+            <button type="button" class="button secondary small" id="ticket-json">Export JSON</button>
+            <button type="button" class="button secondary small" id="ticket-print">Print / PDF</button>
             <button type="button" class="button ghost small" id="ticket-close" aria-label="Tutup jendela tiket">✕</button>
           </div>
         </div>
@@ -57,21 +57,21 @@ export function renderTicketModal(container, state, handlers) {
         <div class="ticket-sheet" id="printable-ticket">
           <div class="ticket-sheet-header">
             <div>
-              <p class="ticket-kicker">JEJAK JKN · DUKUNGAN VERIFIKASI KLAIM FISIOTERAPI (DATA SINTETIS)</p>
+              <p class="ticket-kicker">JEJAK JKN · CLAIM VERIFICATION AUDIT EVIDENCE</p>
               <h2 id="ticket-modal-title">${safe(ticket.categoryTitle)}</h2>
-              <p class="ticket-ref">No. Referensi: <strong>${safe(ticket.ticketNumber)}</strong> · Dibuat: ${safe(
+              <p class="ticket-ref">Reference No: <strong>${safe(ticket.ticketNumber)}</strong> · Generated: ${safe(
     formatTimestamp(ticket.generatedAt)
   )}</p>
             </div>
             <div class="ticket-stamp">
-              <span>SIMULASI DEMO</span>
+              <span>DEMO WORKBENCH</span>
               <small>${safe(VERSION)}</small>
             </div>
           </div>
 
           <div class="ticket-meta-grid">
             <div>
-              <span>Fasilitas Tujuan</span>
+              <span>Target Facility</span>
               <strong>${safe(ep.facility_name)} (${safe(ep.facility_id)})</strong>
             </div>
             <div>
@@ -79,17 +79,17 @@ export function renderTicketModal(container, state, handlers) {
               <strong>${safe(ep.episode_id)} / ${safe(ep.claim_id)} (Rev. v${ep.claim_version})</strong>
             </div>
             <div>
-              <span>Token Peserta</span>
+              <span>Patient Token</span>
               <strong>${safe(ep.patient_token)}</strong>
             </div>
             <div>
               <span>Periode &amp; Cakupan Sumber</span>
-              <strong>${safe(ep.period)} · ${result.complete ? 'Batch Lengkap' : 'Batch Belum Lengkap'}</strong>
+              <strong>${safe(ep.period)} · ${result.complete ? 'Complete Batch' : 'Incomplete Batch'}</strong>
             </div>
           </div>
 
           <div class="ticket-section">
-            <h3>1. Rincian Poin Permintaan Data / Klarifikasi</h3>
+            <h3>1. Clarification & Ingestion Inquiry Items</h3>
             <div class="ticket-items">
               ${ticket.items
                 .map(
@@ -114,15 +114,15 @@ export function renderTicketModal(container, state, handlers) {
           </div>
 
           <div class="ticket-section">
-            <h3>2. Matriks Rujukan Sesi &amp; Bukti Sumber (${result.matched}/${result.claimed} Sesi Aktif Cocok)</h3>
+            <h3>2. Matriks Rujukan Sesi &amp; Bukti Sumber (${result.matched}/${result.claimed} Active Sessions Matched)</h3>
             <table class="ticket-table">
               <thead>
                 <tr>
                   <th>Sesi</th>
                   <th>ID Baris Klaim</th>
-                  <th>Tgl Layanan</th>
-                  <th>ID Catatan RME</th>
-                  <th>Status Pencocokan</th>
+                  <th>Service Date</th>
+                  <th>EMR Record ID</th>
+                  <th>Match Result</th>
                 </tr>
               </thead>
               <tbody>
@@ -135,10 +135,10 @@ export function renderTicketModal(container, state, handlers) {
                       <td>${safe(s.claim.service_date)}</td>
                       <td>${
                         s.cancelled
-                          ? 'Dikecualikan (v2)'
+                          ? 'Excluded (v2)'
                           : s.record
                           ? `<code>${safe(s.record.record_id)}</code>`
-                          : '<em>Belum tersedia</em>'
+                          : '<em>Missing</em>'
                       }</td>
                       <td>${safe(s.stateLabel)}</td>
                     </tr>
@@ -150,17 +150,17 @@ export function renderTicketModal(container, state, handlers) {
           </div>
 
           <div class="ticket-section">
-            <h3>3. Catatan Tindak Lanjut Verifikator</h3>
+            <h3>3. Auditor Review Decision Notes</h3>
             ${
               ep.review
                 ? `
                   <div class="ticket-review-box">
-                    <strong>Keputusan Pemeriksaan: ${safe(outcomeLabels[ep.review.outcome])}</strong>
+                    <strong>Review Outcome: ${safe(outcomeLabels[ep.review.outcome])}</strong>
                     <p>${safe(ep.review.note)}</p>
-                    <small>Dicatat oleh ${safe(ep.review.actor)} pada ${safe(formatTimestamp(ep.review.at))}</small>
+                    <small>Recorded by ${safe(ep.review.actor)} on ${safe(formatTimestamp(ep.review.at))}</small>
                   </div>
                 `
-                : `<p class="muted">Belum ada catatan tindak lanjut manual yang disimpan verifikator pada sesi demo ini.</p>`
+                : `<p class="muted">Belum ada catatan tindak lanjut manual yang disimpan verifikator on sesi demo ini.</p>`
             }
           </div>
 
@@ -190,8 +190,8 @@ export function renderTicketModal(container, state, handlers) {
                     <p class="muted">
                       ${
                         isDispatched
-                          ? 'Tiket telah dikirimkan ke portal faskes. Menunggu penjelasan atau konfirmasi kehadiran dari faskes...'
-                          : 'Klik tombol <strong>"Kirim ke Faskes (Realtime)"</strong> di toolbar atas untuk meneruskan tiket ini ke layar petugas rumah sakit.'
+                          ? 'Ticket dispatched to provider portal. Awaiting hospital explanation or submission...'
+                          : 'Click <strong>"Dispatch to Provider (Real-time)"</strong> in toolbar to send ticket to hospital staff.'
                       }
                     </p>
                   </div>
@@ -238,7 +238,7 @@ export function renderTicketModal(container, state, handlers) {
 
       await realtimeDb.publish('ticket', payload, currentUser);
       handlers.onToast(
-        `Tiket ${ticket.ticketNumber} berhasil dikirim ke portal ${ep.facility_name} secara real-time!`
+        `Ticket ${ticket.ticketNumber} dispatched to ${ep.facility_name} in real-time!`
       );
       renderTicketModal(container, state, handlers);
     });
@@ -248,7 +248,7 @@ export function renderTicketModal(container, state, handlers) {
     try {
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(ticket.plainText);
-        handlers.onToast('Teks tiket klarifikasi disalin ke papan klip.');
+        handlers.onToast('Clarification ticket text copied to clipboard.');
       } else {
         throw new Error('Clipboard API unavailable');
       }

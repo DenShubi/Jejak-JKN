@@ -49,7 +49,7 @@ export function createFaskesPortal({
           el('div', {}, [
             el('strong', { class: 'faskes-name-text' }, [facilityName]),
             el('div', { class: 'faskes-meta-text' }, [
-              `ID: ${facilityId} · Pengguna: ${currentUser?.fullName || 'Petugas RME'}`
+              `ID: ${facilityId} · User: ${currentUser?.fullName || 'EMR Officer'}`
             ])
           ])
         ])
@@ -98,9 +98,9 @@ export function createFaskesPortal({
             class: 'btn btn-sm btn-outline',
             type: 'button',
             onclick: onSwitchToVerifikator,
-            title: 'Keluar dari Portal Faskes dan kembali ke halaman masuk'
+            title: 'Sign out of Provider Portal and return to sign in page'
           },
-          ['Keluar Portal']
+          ['Sign Out Portal']
         )
       ])
     ]);
@@ -109,12 +109,12 @@ export function createFaskesPortal({
     const presetSection = el('section', { class: 'card faskes-card' }, [
       el('div', { class: 'card-header-flex' }, [
         el('div', {}, [
-          el('h3', { class: 'card-title' }, ['Simulasi Pengiriman Catatan Layanan']),
+          el('h3', { class: 'card-title' }, ['Simulated Record Submission Presets']),
           el('p', { class: 'card-subtitle' }, [
-            'Kirimkan catatan klinis dari RME rumah sakit ke verifikator BPJS Kesehatan secara real-time.'
+            'Submit hospital clinical records to BPJS claims auditor in real time.'
           ])
         ]),
-        el('span', { class: 'badge badge-ok' }, ['Siap Uji'])
+        el('span', { class: 'badge badge-ok' }, ['Ready'])
       ]),
       el(
         'div',
@@ -138,7 +138,7 @@ export function createFaskesPortal({
                   : 'Skenario sudah diterapkan atau tidak ada sesi kosong'
               ]),
               el('div', { class: 'preset-expectation' }, [
-                el('small', { class: 'muted' }, [`Hasil Verifikator: ${preset.expectation}`])
+                el('small', { class: 'muted' }, [`Auditor Result: ${preset.expectation}`])
               ]),
               el(
                 'button',
@@ -148,7 +148,7 @@ export function createFaskesPortal({
                   disabled: !isAvailable,
                   onclick: () => handlePresetSubmit(preset.id)
                 },
-                [isAvailable ? 'Kirim Catatan' : 'Terkirim']
+                [isAvailable ? 'Submit Record' : 'Submitted']
               )
             ]
           );
@@ -165,7 +165,7 @@ export function createFaskesPortal({
     // 5. Facility Episodes & Status Overview
     const episodesSection = renderEpisodesSection(episodes);
 
-    // 6. Riwayat Pengiriman Sesi Ini
+    // 6. In-Session Submission History
     const historySection = renderHistorySection();
 
     container.appendChild(topBar);
@@ -205,14 +205,14 @@ export function createFaskesPortal({
       time: new Date().toLocaleTimeString('id-ID'),
       type: submission.kind === 'claim_cancel' ? 'Koreksi Pembatalan' : 'Catatan Klinis',
       target: `${submission.episode_id} (${payload.payload.records?.length || 1} sesi)`,
-      status: result.applied ? 'Terkirim' : 'Gagal'
+      status: result.applied ? 'Submitted' : 'Gagal'
     });
 
     // 4. Play local chime & alert
     liveAlert.playChime();
     liveAlert.show({
-      title: 'Catatan Terkirim',
-      message: `Terkirim ke Verifikator BPJS untuk ${submission.episode_id}.`,
+      title: 'Catatan Submitted',
+      message: `Submitted ke Verifikator BPJS untuk ${submission.episode_id}.`,
       badge: 'Portal Faskes',
       icon: '•',
       duration: 4000
@@ -235,13 +235,13 @@ export function createFaskesPortal({
     const section = el('section', { class: 'card faskes-card' });
     const header = el('div', { class: 'card-header-flex' }, [
       el('div', {}, [
-        el('h3', { class: 'card-title' }, ['Permintaan Klarifikasi Masuk']),
+        el('h3', { class: 'card-title' }, ['Incoming Clarification Tickets']),
         el('p', { class: 'card-subtitle' }, [
-          'Daftar tiket klarifikasi yang diterbitkan oleh Verifikator BPJS.'
+          'Clarification tickets dispatched by BPJS claims auditor.'
         ])
       ]),
       el('span', { class: `badge ${tickets.length ? 'badge-warn' : 'badge-ok'}` }, [
-        `${tickets.length} Tiket`
+        `${tickets.length} Tickets`
       ])
     ]);
 
@@ -252,7 +252,7 @@ export function createFaskesPortal({
         el('div', { class: 'empty-box' }, [
           el('span', { class: 'empty-icon' }, ['✓']),
           el('p', {}, [
-            'Belum ada tiket klarifikasi untuk rumah sakit ini. Tiket yang dikirim Verifikator BPJS akan muncul di sini secara langsung.'
+            'Belum ada tiket klarifikasi untuk rumah sakit ini. Tickets yang dikirim Verifikator BPJS akan muncul di sini secara langsung.'
           ])
         ])
       );
@@ -280,20 +280,20 @@ export function createFaskesPortal({
         el('div', { class: 'ticket-inbox-body' }, [
           el('div', { class: 'ticket-stat-grid' }, [
             el('div', { class: 'stat-mini' }, [
-              el('small', { class: 'muted' }, ['Sesi Ditagih']),
+              el('small', { class: 'muted' }, ['Billed Sessions']),
               el('strong', {}, [String(t.claim_count || 0)])
             ]),
             el('div', { class: 'stat-mini' }, [
-              el('small', { class: 'muted' }, ['Catatan Cocok']),
+              el('small', { class: 'muted' }, ['Matched Records']),
               el('strong', {}, [String(t.matched_records || 0)])
             ]),
             el('div', { class: 'stat-mini' }, [
-              el('small', { class: 'muted' }, ['Sesi Selisih']),
+              el('small', { class: 'muted' }, ['Discrepant Sessions']),
               el('strong', { class: 'text-warn' }, [String(t.missing_count || 0)])
             ])
           ]),
           el('p', { class: 'ticket-reason-box' }, [
-            el('strong', {}, ['Fokus Penjelasan: ']),
+            el('strong', {}, ['Clarification Focus: ']),
             t.recommended_action || t.reason || 'Klarifikasi bukti pelayanan dan catatan asesmen fisioterapi.'
           ])
         ])
@@ -302,7 +302,7 @@ export function createFaskesPortal({
       // Reply Thread
       if (replies.length > 0) {
         const thread = el('div', { class: 'ticket-reply-thread' }, [
-          el('strong', { class: 'thread-title' }, ['Tanggapan Faskes Terkirim:'])
+          el('strong', { class: 'thread-title' }, ['Tanggapan Faskes Submitted:'])
         ]);
         replies.forEach((rep) => {
           thread.appendChild(
@@ -325,7 +325,7 @@ export function createFaskesPortal({
       const textarea = el('textarea', {
         class: 'input ticket-reply-input',
         rows: 2,
-        placeholder: 'Ketik tanggapan faskes (misal: "Catatan tindakan manual buku log sudah terkonfirmasi...")'
+        placeholder: 'Type provider reply (e.g. "Physical encounter confirmed in logbook...")'
       });
       const submitReplyBtn = el(
         'button',
@@ -335,7 +335,7 @@ export function createFaskesPortal({
           onclick: () => {
             const text = textarea.value.trim();
             if (!text) {
-              alert('Harap ketik tanggapan terlebih dahulu.');
+              alert('Please enter a reply first.');
               return;
             }
             const currentUser = authService.getCurrentUser();
@@ -351,8 +351,8 @@ export function createFaskesPortal({
             );
             textarea.value = '';
             liveAlert.show({
-              title: 'Tanggapan Terkirim',
-              message: `Tanggapan untuk ${t.ticket_id} telah dikirim ke Verifikator BPJS.`,
+              title: 'Tanggapan Submitted',
+              message: `Reply for ${t.ticket_id} sent to BPJS Auditor.`,
               badge: 'Klarifikasi',
               icon: '•',
               duration: 3500
@@ -360,7 +360,7 @@ export function createFaskesPortal({
             render();
           }
         },
-        ['Kirim Tanggapan ke BPJS']
+        ['Send Reply to Auditor']
       );
 
       replyBox.appendChild(textarea);
@@ -379,12 +379,12 @@ export function createFaskesPortal({
     const section = el('section', { class: 'card faskes-card' });
     const toggleHeader = el('div', { class: 'card-header-flex cursor-pointer' }, [
       el('div', {}, [
-        el('h3', { class: 'card-title' }, ['Formulir Input Catatan Klinis Mandiri']),
+        el('h3', { class: 'card-title' }, ['Manual Clinical Record Submission']),
         el('p', { class: 'card-subtitle' }, [
-          'Kirimkan catatan sesi pelayanan spesifik secara manual ke Verifikator BPJS.'
+          'Submit a specific clinical session record to BPJS auditor.'
         ])
       ]),
-      el('button', { class: 'btn btn-sm btn-outline', type: 'button' }, ['Buka Formulir ▾'])
+      el('button', { class: 'btn btn-sm btn-outline', type: 'button' }, ['Open Form ▾'])
     ]);
 
     const formBody = el('div', { class: 'manual-form-body' });
@@ -393,7 +393,7 @@ export function createFaskesPortal({
     toggleHeader.onclick = () => {
       isOpen = !isOpen;
       formBody.style.display = isOpen ? 'block' : 'none';
-      toggleHeader.querySelector('button').textContent = isOpen ? 'Tutup Formulir ▴' : 'Buka Formulir ▾';
+      toggleHeader.querySelector('button').textContent = isOpen ? 'Close Form ▴' : 'Open Form ▾';
     };
 
     if (episodes.length === 0) {
@@ -534,12 +534,12 @@ export function createFaskesPortal({
             time: new Date().toLocaleTimeString('id-ID'),
             type: `Catatan Sesi ${sIndex}`,
             target: `${ep.episode_id}`,
-            status: res.applied ? 'Terkirim ✓' : 'Gagal'
+            status: res.applied ? 'Submitted ✓' : 'Gagal'
           });
 
           liveAlert.playChime();
           liveAlert.show({
-            title: 'Catatan Manual Terkirim',
+            title: 'Catatan Manual Submitted',
             message: `Catatan Sesi ${sIndex} untuk ${ep.episode_id} berhasil dikirim ke Verifikator.`,
             badge: 'Portal Faskes',
             icon: '•',
@@ -550,7 +550,7 @@ export function createFaskesPortal({
           render();
         }
       },
-      ['Kirim Catatan Klinis ke BPJS']
+      ['Submit Record Klinis ke BPJS']
     );
 
     const grid = el('div', { class: 'form-grid' }, [
@@ -626,7 +626,7 @@ export function createFaskesPortal({
             el('span', { class: 'badge badge-neutral ml-2' }, [ep.patient_token])
           ]),
           el('span', { class: `badge ${isComplete ? 'badge-ok' : 'badge-warn'}` }, [
-            `${view.sent}/${view.billed} Sesi Terkirim`
+            `${view.sent}/${view.billed} Sesi Submitted`
           ])
         ]),
         // Mini Session Indicator

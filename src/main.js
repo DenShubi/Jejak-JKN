@@ -116,34 +116,34 @@ function initJejakApp() {
       {
         key: 'all',
         cls: '',
-        title: 'Total Episode',
+        title: 'Total Claims',
         value: total,
-        pct: `${reviewedCount}/${total} ditinjau`,
-        sub: 'Seluruh antrean klaim'
+        pct: `${reviewedCount}/${total} reviewed`,
+        sub: 'Active claims queue'
       },
       {
         key: 'review',
         cls: 'review',
-        title: 'Perlu Klarifikasi',
+        title: 'Needs Review',
         value: count('review'),
         pct: `${Math.round((count('review') / total) * 100)}%`,
-        sub: 'Selisih sesi atau sinyal teks R2'
+        sub: 'Discrepancies & duplicate signals'
       },
       {
         key: 'incomplete',
         cls: 'incomplete',
-        title: 'Menunggu Data',
+        title: 'Missing Records',
         value: count('incomplete'),
-        pct: pendingLateCount ? `${pendingLateCount} siap sinkron` : '0 tunda',
-        sub: 'Batch pengiriman RME belum lengkap'
+        pct: pendingLateCount ? `${pendingLateCount} ready to sync` : '0 pending',
+        sub: 'Pending source records'
       },
       {
         key: 'consistent',
         cls: 'consistent',
-        title: 'Bukti Konsisten',
+        title: 'Verified Valid',
         value: count('consistent'),
         pct: `${Math.round((count('consistent') / total) * 100)}%`,
-        sub: 'Tagihan aktif & catatan RME cocok'
+        sub: 'Billed sessions match EMR'
       }
     ];
 
@@ -184,13 +184,11 @@ function initJejakApp() {
     const user = authService.getCurrentUser();
     const connState = realtimeDb.getConnectionState();
 
-    const authArea = $('user-auth-area');
-    const subbar = $('subbar');
-    const banner = document.querySelector('.page-banner');
-    const methodology = document.querySelector('.methodology');
+    const appSidebar = $('app-sidebar');
+    const mainTopbar = $('main-topbar');
     const statsContainer = $('stats');
 
-    // Connection Pill in Header
+    // Connection Pill in Header / Sidebar
     const connPill = $('btn-conn-settings');
     const connText = $('conn-status-text');
     if (connText && connPill) {
@@ -199,71 +197,62 @@ function initJejakApp() {
           connText.textContent = `Cloud: ${connState.room}`;
           connPill.className = 'conn-pill conn-pill-supabase';
         } else {
-          connText.textContent = `Lokal: ${connState.room}`;
+          connText.textContent = `Local: ${connState.room}`;
           connPill.className = 'conn-pill conn-pill-local';
         }
       } else if (connState.connecting) {
-        connText.textContent = `Cloud: ${connState.room}...`;
+        connText.textContent = `Connecting: ${connState.room}...`;
         connPill.className = 'conn-pill conn-pill-local';
       } else {
-        connText.textContent = `Lokal: ${connState.room}`;
+        connText.textContent = `Local: ${connState.room}`;
         connPill.className = 'conn-pill conn-pill-local';
       }
     }
 
     if (!user) {
       // NOT Logged In: Show only Login Gateway
-      if (authArea) authArea.style.display = 'none';
-      if (subbar) subbar.style.display = 'none';
-      if (banner) banner.style.display = 'none';
-      if (methodology) methodology.style.display = 'none';
+      if (appSidebar) appSidebar.style.display = 'none';
+      if (mainTopbar) mainTopbar.style.display = 'none';
       if (statsContainer) statsContainer.style.display = 'none';
       return;
     }
-
-    // Logged In: Show user chip & logout
-    if (authArea) authArea.style.display = 'flex';
 
     const userAvatar = $('user-avatar');
     const userName = $('user-name');
     if (userAvatar && userName) {
       if (user.role === 'verifikator') {
         userAvatar.textContent = 'VB';
-        userName.textContent = user.fullName || 'Verifikator BPJS';
+        userName.textContent = user.fullName || 'BPJS Auditor';
       } else {
-        userAvatar.textContent = 'RS';
-        userName.textContent = user.facilityName || user.fullName || 'Petugas Faskes';
+        userAvatar.textContent = 'HP';
+        userName.textContent = user.facilityName || user.fullName || 'Healthcare Provider';
       }
     }
 
     if (user.role === 'faskes') {
       // Faskes Mode: strictly hide BPJS internal controls
-      if (subbar) subbar.style.display = 'none';
-      if (banner) banner.style.display = 'none';
-      if (methodology) methodology.style.display = 'none';
+      if (appSidebar) appSidebar.style.display = 'none';
+      if (mainTopbar) mainTopbar.style.display = 'none';
       if (statsContainer) statsContainer.style.display = 'none';
     } else {
-      // Admin/Verifikator BPJS Mode: show BPJS workspace controls
-      if (subbar) subbar.style.display = 'block';
-      if (banner) banner.style.display = 'grid';
-      if (methodology) methodology.style.display = 'block';
+      // Admin/Verifikator BPJS Mode: show sidebar and workbench controls
+      if (appSidebar) appSidebar.style.display = 'flex';
+      if (mainTopbar) mainTopbar.style.display = 'flex';
       if (statsContainer) statsContainer.style.display = 'grid';
 
-      // Tab buttons
+      // Tab buttons in sidebar
       document.querySelectorAll('[data-view]').forEach((btn) => {
         const active = btn.dataset.view === state.view;
         btn.classList.toggle('active', active);
         btn.setAttribute('aria-selected', String(active));
       });
 
-      // Pitch button
-      const pitchBtn = $('toggle-pitch');
-      if (pitchBtn) {
-        pitchBtn.classList.toggle('active', state.pitchOpen);
-        pitchBtn.setAttribute('aria-pressed', String(state.pitchOpen));
-        pitchBtn.textContent = state.pitchOpen
-          ? 'Tutup Panduan'
-          : 'Panduan Presentasi';
+      const pageTitle = $('topbar-title');
+      if (pageTitle) {
+        pageTitle.textContent =
+          state.view === 'analytics'
+            ? 'Portfolio Analytics'
+            : 'Claims Verification Workbench';
       }
     }
   }
@@ -425,7 +414,7 @@ function initJejakApp() {
     state.selected = id;
     delete state.selectedSessionByEpisode[id];
     render();
-    toast(`Catatan terlambat ${id} disinkronkan. Hasil aturan telah dihitung ulang.`);
+    toast(`Delayed records for ${id} synced.`);
     return {
       episode_id: id,
       result: E.evaluate(ep, state.dataset.episodes)
@@ -443,8 +432,8 @@ function initJejakApp() {
     render();
     toast(
       syncedEpisodes
-        ? `${syncedEpisodes} episode terlambat disinkronkan. Portofolio telah dihitung ulang.`
-        : 'Seluruh batch terlambat sudah disinkronkan sebelumnya.'
+        ? `${syncedEpisodes} claims synced.`
+        : 'All records synced.'
     );
     return syncedEpisodes;
   }
@@ -457,13 +446,13 @@ function initJejakApp() {
     }
     const at = new Date().toISOString();
     const currentUser = authService.getCurrentUser();
-    const actor = currentUser?.fullName || 'Verifikator BPJS';
+    const actor = currentUser?.fullName || 'BPJS Auditor';
 
     ep.review = { outcome, note: clean, actor, at };
     ep.events.push({
       at,
       actor,
-      action: 'Tindak lanjut dicatat',
+      action: 'Review decision recorded',
       detail: `${E.outcomeLabels[outcome]}: ${clean}`
     });
 
@@ -483,7 +472,7 @@ function initJejakApp() {
     state.selected = id;
     state.reviewDrafts[id] = { outcome, note: '' };
     render();
-    toast(`Tindak lanjut ${id} dicatat pada sesi demo ini.`);
+    toast(`Review decision for ${id} recorded.`);
     return { episode_id: id, review: ep.review };
   }
 
@@ -520,7 +509,7 @@ function initJejakApp() {
       state.view = PITCH_STEPS[0].view;
     }
     render();
-    toast('Data ruang direset kembali ke 40 episode awal.');
+    toast('Data reset to baseline 40 claims.');
   }
 
   // 2. Wire Header Interactive Buttons
@@ -551,11 +540,11 @@ function initJejakApp() {
       authService.logout();
       state.view = 'login';
       render();
-      toast('Anda telah keluar dari sesi.');
+      toast('Signed out successfully.');
     });
   }
 
-  // Wire global subbar view tabs
+  // Wire navigation items
   document.querySelectorAll('[data-view]').forEach((btn) => {
     btn.addEventListener('click', () => {
       state.view = btn.dataset.view;
@@ -563,14 +552,39 @@ function initJejakApp() {
     });
   });
 
-  $('toggle-pitch').addEventListener('click', () => {
-    state.pitchOpen = !state.pitchOpen;
-    if (state.pitchOpen) {
-      goToPitchStep(state.pitchIndex);
-    } else {
-      render();
-    }
-  });
+  const sidebarSyncBtn = $('sidebar-sync-btn');
+  if (sidebarSyncBtn) {
+    sidebarSyncBtn.addEventListener('click', () => {
+      syncAllLate();
+    });
+  }
+
+  const sidebarExportBtn = $('sidebar-export-btn');
+  if (sidebarExportBtn) {
+    sidebarExportBtn.addEventListener('click', () => {
+      const exportBtn = $('export-csv');
+      if (exportBtn) exportBtn.click();
+    });
+  }
+
+  const sidebarResetBtn = $('sidebar-reset-btn');
+  if (sidebarResetBtn) {
+    sidebarResetBtn.addEventListener('click', () => {
+      resetToBaseline();
+    });
+  }
+
+  const togglePitch = $('toggle-pitch');
+  if (togglePitch) {
+    togglePitch.addEventListener('click', () => {
+      state.pitchOpen = !state.pitchOpen;
+      if (state.pitchOpen) {
+        goToPitchStep(state.pitchIndex);
+      } else {
+        render();
+      }
+    });
+  }
 
   $('reset').addEventListener('click', () => {
     resetToBaseline();

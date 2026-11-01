@@ -1,119 +1,91 @@
 <!doctype html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="JEJAK JKN — Sistem Audit Bukti Layanan Fisioterapi untuk Deteksi Dini Klaim Fiktif Program JKN (BPJS Kesehatan Healthkathon 2026 oleh TranspemGo).">
+  <meta name="description" content="JEJAK JKN — Health Insurance Claims Reconciliation &amp; Verification Platform">
   <meta name="color-scheme" content="light">
-  <title>JEJAK JKN — Audit Bukti Layanan Fisioterapi</title>
+  <title>JEJAK JKN — Claims Verification Platform</title>
   <link rel="icon" type="image/svg+xml" href="brand/jejak-jkn-favicon.svg">
 </head>
 <body>
-  <header class="app-header">
-    <div class="header-inner">
-      <div class="brand">
-        <span class="brand-mark" aria-hidden="true">
-          <img src="brand/jejak-jkn-mark.svg" alt="Logo JEJAK JKN" width="36" height="36">
-        </span>
-        <div class="brand-text">
-          <div class="brand-title"><strong>JEJAK JKN</strong> <span class="team-badge">TranspemGo</span></div>
-          <small class="brand-sub">Sistem Audit Bukti Layanan Fisioterapi</small>
-        </div>
-      </div>
-
-      <div class="header-right">
-        <button type="button" class="conn-pill" id="btn-conn-settings" title="Pengaturan Ruang Real-time &amp; Koneksi Cloud" aria-label="Pengaturan koneksi">
-          <span class="conn-dot" aria-hidden="true">●</span> <span id="conn-status-text">HEALTHKATHON-2026</span>
-        </button>
-        <div class="user-auth-area" id="user-auth-area">
-          <button type="button" class="user-chip-btn" id="btn-user-switch" title="Informasi Akun" aria-label="Informasi akun pengguna">
-            <span class="avatar" id="user-avatar" aria-hidden="true">VB</span>
-            <span class="role" id="user-name">Verifikator BPJS</span>
-          </button>
-          <button type="button" class="btn-logout" id="btn-logout" title="Keluar dari sesi" aria-label="Keluar dari sesi">
-            Keluar
-          </button>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <nav class="subbar" id="subbar" aria-label="Navigasi ruang kerja dan aksi utama">
-    <div class="subbar-inner">
-      <div class="view-tabs" role="tablist" aria-label="Pilih tampilan">
-        <button type="button" role="tab" class="view-tab active" data-view="workspace" aria-selected="true">
-          Ruang Kerja Verifikator <span class="tab-badge" id="tab-queue-badge">40</span>
-        </button>
-        <button type="button" role="tab" class="view-tab" data-view="analytics" aria-selected="false">
-          Analitik Portofolio
-        </button>
-      </div>
-
-      <div class="top-actions">
-        <button type="button" class="button pitch-toggle small" id="toggle-pitch" aria-pressed="false">
-          Panduan Presentasi
-        </button>
-        <a href="logo-showcase.html" class="button ghost small" target="_blank" title="Buka Panduan Logo &amp; Identitas Brand JEJAK JKN">
-          Identitas Logo
+  <div class="app-layout" id="app-layout">
+    <!-- Left Navigation Sidebar -->
+    <aside class="app-sidebar" id="app-sidebar">
+      <div class="sidebar-brand">
+        <a href="#" class="sidebar-brand-link" id="sidebar-brand-link" title="JEJAK JKN">
+          <img src="brand/jejak-jkn-logo-horizontal-dark.svg" alt="JEJAK JKN" class="brand-logo-img">
         </a>
-        <button type="button" class="button secondary small" id="export-csv">
-          Ekspor CSV
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Main Navigation">
+        <button type="button" class="nav-item active" data-view="workspace" id="nav-workspace">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg>
+          <span class="nav-label">Claims Queue</span>
+          <span class="nav-badge" id="tab-queue-badge">40</span>
         </button>
-        <button type="button" class="button secondary small" id="reset">
-          Reset Demo
+
+        <button type="button" class="nav-item" data-view="analytics" id="nav-analytics">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+          <span class="nav-label">Analytics</span>
         </button>
-      </div>
-    </div>
-  </nav>
 
-  <main>
-    <div id="pitch-root" hidden></div>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-title">Quick Actions</div>
 
-    <div class="workspace-context-bar page-banner">
-      <div class="context-breadcrumb">
-        <span class="context-system">JEJAK JKN</span>
-        <span class="context-sep">/</span>
-        <span class="context-scope">Audit Klaim Fisioterapi</span>
-        <span class="context-sep">/</span>
-        <span class="context-period">Periode September 2026</span>
-      </div>
-      <div class="context-meta">
-        <span class="context-token">ATURAN: JEJAK-RULES-0.1.0</span>
-        <span class="context-sep">·</span>
-        <span class="context-token">TATA KELOLA: HUMAN-IN-THE-LOOP</span>
-      </div>
-    </div>
+        <button type="button" class="nav-item nav-action" id="sidebar-sync-btn">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          <span class="nav-label">Sync Records</span>
+        </button>
 
-    <div class="audit-metric-strip stats" id="stats" aria-live="polite"></div>
+        <button type="button" class="nav-item nav-action" id="sidebar-export-btn">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          <span class="nav-label">Export CSV</span>
+        </button>
 
-    <div id="view-root"></div>
+        <button type="button" class="nav-item nav-action" id="sidebar-reset-btn">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          <span class="nav-label">Reset Demo</span>
+        </button>
+      </nav>
 
-    <details class="methodology">
-      <summary>
-        <span>Dasar Pemeriksaan &amp; Rujukan Regulasi</span>
-        <small class="methodology-sub">Permenkes No. 16/2019 &amp; UU PDP No. 27/2022</small>
-      </summary>
-      <div class="method-body">
-        <div>
-          <h3>Aturan Deterministik (JEJAK-RULES-0.1.0)</h3>
-          <p><b>R0 — Kelengkapan Sumber:</b> Memastikan integritas transmisi batch dan konsistensi identitas sebelum menghitung selisih sesi.</p>
-          <p><b>R1 — Pencocokan Sesi Aktif:</b> Menghubungkan setiap sesi aktif dengan catatan tindakan berstatus selesai pada tanggal dan fasilitas yang sesuai.</p>
-          <p><b>R2 — Kesamaan Isi Personal:</b> Mendeteksi duplikasi teks asesmen individual (&ge;60 karakter setelah normalisasi) lintas episode berbeda.</p>
-        </div>
-        <div>
-          <h3>Batasan &amp; Prinsip Tata Kelola</h3>
-          <p><b>Konsistensi Bukti:</b> Hasil "Bukti Konsisten" menyatakan kesesuaian data yang diterima, bukan putusan mutlak pelaksanaan tindakan klinis di fasilitas.</p>
-          <p><b>Data Sintetis:</b> Simulasi memproses 40 episode buatan di peramban tanpa terhubung ke server produksi BPJS Kesehatan atau SIMRS rumah sakit.</p>
-          <p><b>Dampak Finansial:</b> Nilai penghematan pembiayaan hanya diakui pasca ajudikasi resmi dan koreksi klaim final sesuai regulasi.</p>
+      <div class="sidebar-footer">
+        <button type="button" class="conn-pill" id="btn-conn-settings" title="Real-time Connection Settings">
+          <span class="conn-dot" aria-hidden="true">●</span>
+          <span id="conn-status-text">HEALTHKATHON-2026</span>
+        </button>
+
+        <div class="user-auth-area" id="user-auth-area">
+          <button type="button" class="user-chip-btn" id="btn-user-switch" title="User Details">
+            <span class="avatar" id="user-avatar" aria-hidden="true">VB</span>
+            <span class="role" id="user-name">BPJS Auditor</span>
+          </button>
+          <button type="button" class="btn-logout" id="btn-logout" title="Sign Out">
+            Sign Out
+          </button>
         </div>
       </div>
-    </details>
+    </aside>
 
-    <footer>
-      <span>JEJAK JKN · BPJS Kesehatan Healthkathon 2026 · Tim TranspemGo</span>
-      <span>Sistem Verifikasi Deterministik Bukti Sesi Layanan</span>
-    </footer>
-  </main>
+    <!-- Main View Content -->
+    <main class="app-main" id="app-main">
+      <header class="main-topbar" id="main-topbar">
+        <div class="topbar-left">
+          <span class="topbar-title" id="topbar-title">Claims Verification Workbench</span>
+        </div>
+        <div class="topbar-right">
+          <button type="button" class="button secondary small" id="export-csv">Export CSV</button>
+          <button type="button" class="button secondary small" id="reset">Reset Demo</button>
+        </div>
+      </header>
+
+      <div class="audit-metric-strip stats" id="stats" aria-live="polite"></div>
+
+      <div id="view-root"></div>
+
+      <div id="pitch-root" hidden></div>
+    </main>
+  </div>
 
   <div id="ticket-modal-root" hidden></div>
   <div class="toast" role="status" id="toast" hidden></div>
