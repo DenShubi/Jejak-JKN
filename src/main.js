@@ -206,9 +206,12 @@ function initJejakApp() {
           connText.textContent = `Lokal: ${connState.room}`;
           connPill.className = 'conn-pill conn-pill-local';
         }
+      } else if (connState.connecting) {
+        connText.textContent = `Cloud: ${connState.room}...`;
+        connPill.className = 'conn-pill conn-pill-local';
       } else {
-        connText.textContent = `Terputus: ${connState.room}`;
-        connPill.className = 'conn-pill conn-pill-off';
+        connText.textContent = `Lokal: ${connState.room}`;
+        connPill.className = 'conn-pill conn-pill-local';
       }
     }
 

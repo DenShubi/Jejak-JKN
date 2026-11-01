@@ -60,7 +60,7 @@ export function createFaskesPortal({
         el(
           'button',
           {
-            class: `badge ${connState.connected ? (connState.mode === 'supabase' ? 'badge-ok' : 'badge-info') : 'badge-warn'} faskes-conn-btn`,
+            class: `badge ${connState.connected ? (connState.mode === 'supabase' ? 'badge-ok' : 'badge-info') : 'badge-info'} faskes-conn-btn`,
             type: 'button',
             onclick: onOpenConnectionModal,
             title: 'Klik untuk ubah ruang atau sambungan cloud'
@@ -70,7 +70,9 @@ export function createFaskesPortal({
               ? connState.mode === 'supabase'
                 ? `🟢 Cloud Live: ${currentRoom}`
                 : `🟡 Sync Lokal: ${currentRoom}`
-              : `⚪ Terputus: ${currentRoom}`
+              : connState.connecting
+              ? `🟡 Menghubungkan: ${currentRoom}...`
+              : `🟡 Sync Lokal: ${currentRoom}`
           ]
         ),
         // Facility Switcher Dropdown

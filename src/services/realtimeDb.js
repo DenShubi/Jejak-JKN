@@ -91,7 +91,7 @@ class RealtimeDbService {
             if (status === 'SUBSCRIBED') {
               this.connected = true;
               this._notifyStatus();
-            } else if (status === 'CLOSED' || status === 'CHANNEL_ERROR') {
+            } else if (status === 'CLOSED' || status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
               this.connected = false;
               this._notifyStatus();
             }
@@ -141,6 +141,7 @@ class RealtimeDbService {
     return {
       mode: this.mode,
       connected: this.connected,
+      connecting: this.mode === 'supabase' && !this.connected,
       room: this.room,
       hasCloudConfig: !!(this.cloudConfig && this.cloudConfig.url)
     };
